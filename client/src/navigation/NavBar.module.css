@@ -1,0 +1,41 @@
+.header {
+    background: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100vw;
+    /* set max-width via padding */
+    padding: 0 calc((100vw - 1500px) / 2);
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* simulate inner padding */
+.header:before {
+    content: "";
+    padding-left: 50px;
+}
+.header:after {
+    content: "";
+    padding-right: 50px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    margin-right: 1em;
+    justify-content: center;
+}
+
+.title > h1 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.drawer :global(.ant-drawer-body) {
+    padding: 0;
+}

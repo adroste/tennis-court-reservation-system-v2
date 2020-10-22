@@ -1,0 +1,12 @@
+.leftMenu {
+    flex: 1;
+    min-width: 0;
+    /* overflow: hidden; */
+    /* overflow-x: auto;
+    overflow-y: visible; */
+}
+
+.leftMenu,
+.rightMenu {
+    border: 0;
+}
