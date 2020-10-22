@@ -14,11 +14,11 @@
 /* simulate inner padding */
 .header:before {
     content: "";
-    padding-left: 50px;
+    padding-left: 30px;
 }
 .header:after {
     content: "";
-    padding-right: 50px;
+    padding-right: 30px;
 }
 
 .title {
@@ -36,6 +36,27 @@
     white-space: nowrap;
 }
 
+.horizontalMenuWrapper {
+    display: none;
+}
+
+.drawerMenuWrapper {
+    flex: 1;
+    text-align: right;
+}
+
 .drawer :global(.ant-drawer-body) {
     padding: 0;
+}
+
+@media (min-width: 950px) {
+    .horizontalMenuWrapper {
+        display: flex;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .drawerMenuWrapper {
+        display: none;
+    }
 }

@@ -10,3 +10,8 @@
 .rightMenu {
     border: 0;
 }
+
+.menuButton {
+    margin: 8px 20px;
+    align-self: center;
+}
