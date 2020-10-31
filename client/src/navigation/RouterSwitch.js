@@ -1,5 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { CalendarPage } from '../calendar/CalendarPage';
 import React from 'react';
 
 export function RouterSwitch() {
@@ -8,7 +9,7 @@ export function RouterSwitch() {
         <Switch>
 
             <Route exact path="/">
-                Kalender
+                <CalendarPage />
             </Route>
 
             <Route exact path="/myreservations">

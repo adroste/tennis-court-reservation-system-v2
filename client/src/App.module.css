@@ -1,0 +1,8 @@
+.content {
+    /* navbar 64px */
+    margin: calc(64px + 32px) auto 0;
+    background: #fff;
+    /* padding: 0 32px; */
+    border-radius: 2px;
+    max-width: 100%;
+}

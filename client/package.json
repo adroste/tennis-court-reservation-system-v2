@@ -5,6 +5,9 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "antd": "^4.7.2",
+    "classnames": "^2.2.6",
+    "dayjs": "^1.9.4",
+    "fontsource-inter": "^3.0.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

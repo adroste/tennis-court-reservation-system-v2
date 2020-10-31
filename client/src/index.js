@@ -1,11 +1,21 @@
 import 'antd/dist/antd.css';
 import './index.css';
+import 'dayjs/locale/de';
+import 'fontsource-inter/latin-400.css';
+import 'fontsource-inter/latin-600.css';
 
 import * as serviceWorker from './serviceWorker';
 
 import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+import weekYear from 'dayjs/plugin/weekYear';
+
+dayjs.locale('de');
+dayjs.extend(weekOfYear);
+dayjs.extend(weekYear);
 
 ReactDOM.render(
     <App />,

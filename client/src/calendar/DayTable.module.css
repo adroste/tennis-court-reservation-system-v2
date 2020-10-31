@@ -1,0 +1,46 @@
+.dayTableWrapper {
+    padding: 0 5px;
+    border-left: 1px solid #ddd;
+}
+
+.court,
+.slot {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timeCell {
+    cursor: pointer;
+    padding: 3px 3px;
+}
+
+.slot {
+    padding: 7px 5px;
+    border-radius: 2px;
+    background: #9dc88d;
+    color: #fff;
+    opacity: 0.25;
+    height: 32px;
+    width: 100px;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.timeCell:hover .slot {
+    opacity: 1;
+}
+
+.timeCell .free::after {
+    content: attr(data-text);
+}
+
+.timeCell:hover .free::after {
+    content: attr(data-text-hover);
+}
+
+.reserved {
+    opacity: 1;
+    color: #fff;
+    background: #FF4136;
+}

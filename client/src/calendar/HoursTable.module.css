@@ -1,0 +1,19 @@
+.hoursTableWrapper {
+    padding-top: 48px;
+    background: #fff;
+    border-right: 1px solid #ddd;
+}
+
+.hoursTable th {
+    height: 38px;
+}
+
+.hour {
+    line-height: 13px;
+    padding: 0 8px;
+}
+
+.hour .til {
+    color: #bbb;
+    font-size: 11px;
+}

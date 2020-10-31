@@ -1,0 +1,54 @@
+.wrapper.wrapper {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wrapper {
+    text-align: center;
+    width: 320px;
+}
+
+.picker {
+    display: block;
+    width: 320px;
+}
+
+.picker * {
+    font-size: 16px!important;
+}
+
+.pickerPanel :global(.ant-picker-header) > button:first-child,
+.pickerPanel :global(.ant-picker-header) > button:last-child {
+    display: none;
+}
+
+.pickerPanel :global(.ant-picker-header) > button {
+    padding: 0 20px;
+}
+
+.leftButton,
+.rightButton {
+    width: 150px;
+    overflow: hidden;
+    padding: 0;
+    margin: 0 5px;
+}
+
+
+@media (min-width: 750px) {
+    .wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .leftButton,
+    .rightButton {
+        margin: 0 30px;
+    }
+
+    .leftButton {
+        order: -1;
+    }
+}
