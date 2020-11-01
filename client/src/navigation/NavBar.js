@@ -17,7 +17,7 @@ export function NavBar({
         <Layout.Header className={styles.header}>
             <div className={styles.title}>
                 <h1>
-                    {title.substr(0, 25)}
+                    {title}
                 </h1>
                 <Typography.Text type="secondary">
                     Reservierungssystem

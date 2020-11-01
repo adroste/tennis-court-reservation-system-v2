@@ -10,6 +10,7 @@ import styles from './App.module.css';
 function App() {
 
     const title = "Tennisclub Braunlage";
+    // const title = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
 
     return (
         <ConfigProvider locale={locale}>
@@ -18,14 +19,10 @@ function App() {
                     <NavBar
                         title={title}
                     />
-                    <Layout.Content
-                        className={styles.content}
-                    >
+                    <Layout.Content className={styles.content}>
                         <RouterSwitch />
                     </Layout.Content>
-                    <Layout.Footer
-                        style={{ textAlign: 'center' }}
-                    >
+                    <Layout.Footer className={styles.footer}>
                         <p>
                             <Link to="/imprint-privacy">Impressum / Datenschutz</Link>
                         </p>

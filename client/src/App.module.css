@@ -4,3 +4,8 @@
     border-radius: 2px;
     max-width: 100%;
 }
+
+.footer {
+    text-align: center;
+    overflow: hidden;
+}

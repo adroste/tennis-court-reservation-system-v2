@@ -3,7 +3,10 @@ import { Button, Menu } from 'antd';
 import React, { useCallback } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import classNames from 'classnames/bind';
 import styles from './MainMenu.module.css';
+
+const cn = classNames.bind(styles);
 
 export function MainMenu({
     horizontal = false
@@ -24,7 +27,10 @@ export function MainMenu({
     return (
         <>
             <Menu
-                className={styles.leftMenu}
+                className={cn({
+                    menu: true,
+                    horizontal
+                })}
                 mode={horizontal ? 'horizontal' : 'inline'}
                 theme='light'
                 selectedKeys={[pathname]}
@@ -54,14 +60,7 @@ export function MainMenu({
                         Textbausteine
                     </Menu.Item>
                 </Menu.SubMenu>
-            </Menu>
-            <Menu
-                className={styles.rightMenu}
-                mode={horizontal ? 'horizontal' : 'inline'}
-                theme='light'
-                selectedKeys={[pathname]}
-                onClick={handleClick}
-            >
+                <span className={styles.stretch} />
                 <Menu.Item key="/myaccount" icon={<UserOutlined />}>
                     Mein Benutzerkonto
                 </Menu.Item>
