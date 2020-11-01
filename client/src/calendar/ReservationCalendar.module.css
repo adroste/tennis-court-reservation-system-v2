@@ -1,19 +1,17 @@
-.wrapper {
-    position: relative;
+.wrapper > * {
+    padding: 10px 0;
+}
+
+.tableWrapper {
+    padding: 30px 0;
+    display: flex;
+    overflow: hidden;
     background: #fff;
+    border-radius: 2px;
     /* fake padding with box-shadow
         cause it does not take up space 
         and is not scrollable */
     box-shadow: 30px 0 #fff, -30px 0 #fff;
-}
-
-.wrapper > *{
-    margin: 20px 0;
-}
-
-.tableWrapper {
-    display: flex;
-    overflow: hidden;
 }
 
 .tableWrapper table {

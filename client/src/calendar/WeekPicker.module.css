@@ -10,7 +10,8 @@
 
 .picker {
     display: block;
-    width: 320px;
+    width: 310px;
+    margin: 5px;
 }
 
 .picker * {
@@ -29,9 +30,10 @@
 .leftButton,
 .rightButton {
     width: 150px;
+    height: 35px;
     overflow: hidden;
     padding: 0;
-    margin: 0 5px;
+    margin: 5px;
 }
 
 

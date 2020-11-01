@@ -24,7 +24,7 @@ export function WeekPicker({
                 picker="week"
                 inputReadOnly
                 allowClear={false}
-                bordered={false}
+                bordered={true}
                 value={date}
                 format={weekFormat}
                 panelRender={panel => 
