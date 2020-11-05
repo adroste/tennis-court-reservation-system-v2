@@ -1,34 +1,39 @@
-import React from 'react';
-import classNames from 'classnames/bind';
+import React, { useCallback } from 'react';
+
+import { SlotCell } from './SlotCell';
+import { findReservation } from './helper';
 import styles from './DayTable.module.css';
 
-const cn = classNames.bind(styles);
-
-function getReservation(reservations, date, court, hour) {
-    for (let [curDateStr, curCourt, curHour, name] of reservations)
-        if (date.isSame(curDateStr) && court === curCourt && hour === curHour)
-            return name;
-}
-
 export function DayTable({
-    date,
     courts,
-    visibleHours,
+    date,
+    onSlotClick,
     reservations,
+    isToday,
+    visibleHours,
 }) {
+    const handleClick = useCallback(({ court, hour, reservation }) => {
+        onSlotClick({ 
+            court, 
+            date: date.hour(hour), 
+            reservation,
+        });
+    }, [date, onSlotClick]);
+
     return (
-        <div className={cn('dayTableWrapper')}>
-            <table className={cn('dayTable')}>
+        <div className={styles.wrapper}>
+            <table>
                 <thead>
                     <tr>
-                        <th colSpan={courts.length}>
-                            {date.format('dd D')}
+                        <th className={styles.date} colSpan={courts.length}>
+                            {isToday && <span className={styles.today}>Heute</span>}
+                            {date.format('dd l')}
                         </th>
                     </tr>
                     <tr>
                         {courts.map(court => (
-                            <td>
-                                <div className={cn('court')}>
+                            <td key={court}>
+                                <div className={styles.court}>
                                     {court}
                                 </div>
                             </td>
@@ -37,24 +42,16 @@ export function DayTable({
                 </thead>
                 <tbody>
                     {visibleHours.map(hour => (
-                        <tr className={styles.bodyRow}>
-                            {courts.map(court => {
-                                const reservedBy = getReservation(reservations, date, court, hour);
-                                return (
-                                    <td className={cn('timeCell')}>
-                                        <div className={cn({
-                                            slot: true,
-                                            reserved: reservedBy,
-                                            free: !reservedBy,
-                                        })}
-                                            data-text="Frei"
-                                            data-text-hover={`${hour} Uhr, ${court}`}
-                                        >
-                                            <span>{reservedBy}</span>
-                                        </div>
-                                    </td>
-                                );
-                            })}
+                        <tr key={hour}>
+                            {courts.map(court => (
+                                <SlotCell 
+                                    key={court}
+                                    court={court}
+                                    hour={hour}
+                                    onClick={handleClick}
+                                    reservation={findReservation(reservations, date.hour(hour), court)} 
+                                />
+                            ))}
                         </tr>
                     ))}
                 </tbody>

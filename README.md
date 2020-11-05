@@ -8,6 +8,10 @@ Reservation system for tennis courts. Only german at the moment.
 
 * I did not use a condensed font for the reservation table cause they are hard to read
 
+# Features
+
+* Kiosk Modus with auto refresh, auto day switch
+
 # Todos
 
 * [ ] Cookie Notice
@@ -18,3 +22,5 @@ Reservation system for tennis courts. Only german at the moment.
   * [ ] Clock + Date
   * [ ] URL + QR Code
   * [ ] Auto refresh / Auto day switch
+* [ ] .htaccess für client side routing
+* [ ] disabled dates for reservation < today

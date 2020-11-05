@@ -1,0 +1,36 @@
+.cell {
+    cursor: pointer;
+    padding: 3px 3px;
+}
+
+.slot {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 7px 5px;
+    border-radius: 2px;
+    background: #9dc88d;
+    color: #fff;
+    opacity: 0.35;
+    height: 32px;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.cell:hover .slot {
+    opacity: 1;
+}
+
+.cell .free::after {
+    content: attr(data-free-text);
+}
+
+.cell:hover .free::after {
+    content: attr(data-free-text-hover);
+}
+
+.reserved {
+    opacity: 1;
+    color: #fff;
+    background: #FF4136;
+}

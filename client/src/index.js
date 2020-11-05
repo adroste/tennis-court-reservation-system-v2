@@ -10,12 +10,14 @@ import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import weekYear from 'dayjs/plugin/weekYear';
 
 dayjs.locale('de');
 dayjs.extend(weekOfYear);
 dayjs.extend(weekYear);
+dayjs.extend(localizedFormat);
 
 ReactDOM.render(
     <App />,

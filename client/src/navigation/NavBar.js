@@ -1,13 +1,14 @@
 import { Button, Drawer, Layout, Typography } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { MainMenu } from './MainMenu';
 import { MenuOutlined } from '@ant-design/icons';
+import { appContext } from '../AppContext';
 import styles from './NavBar.module.css';
 
-export function NavBar({
-    title
-}) {
+export function NavBar() {
+    const { title } = useContext(appContext);
+
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const openMenu = useCallback(() => setDrawerOpen(true), []);

@@ -1,0 +1,28 @@
+.details > div {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.details.small > div {
+    font-size: 16px;
+}
+
+.userInput {
+    width: 200px;
+}
+
+.details > div.allDates {
+    font-size: inherit;
+    margin-top: 10px;
+    /* margin-left: 24px; */
+}
+
+.dateList {
+    font-weight: 400;
+    margin-left: 24px
+}
+
+.dateList > span {
+    display: block;
+}

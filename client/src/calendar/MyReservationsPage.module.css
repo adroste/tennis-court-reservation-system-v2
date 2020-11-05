@@ -1,0 +1,31 @@
+.wrapper {
+    width: 100vw;
+}
+
+.wrapper > * {
+    padding: 20px 20px 0;
+}
+
+.content {
+    padding: 20px 0;
+    border-radius: 2px;
+}
+
+.card {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.empty {
+    margin: 60px 0 20px;
+}
+
+@media (min-width: 600px) {
+    .wrapper {
+        width: 600px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+}

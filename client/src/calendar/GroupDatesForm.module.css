@@ -1,0 +1,43 @@
+.wrapper {
+    margin: 5px 0;
+}
+
+.enableCheckbox {
+    margin: 16px 0;
+}
+
+.repeatSettings {
+    padding-left: 16px;
+}
+
+.repeatTypes > * {
+    /* display: block; */
+    padding: 5px 0;
+}
+
+.dates > * {
+    display: block;
+    margin-left: 0!important;
+    height: 32px;
+    line-height: 32px;
+}
+
+.dates .extra {
+    font-size: 13px;
+    font-style: italic;
+}
+
+.dates .danger {
+    color: #ff4d4f;
+}
+
+.dates .unchecked .date {
+    text-decoration: line-through;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+.buttons > * {
+    margin-right: 10px;
+}

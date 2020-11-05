@@ -1,48 +1,77 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import React, { useCallback, useState } from 'react';
 
 import Button from 'antd/es/button';
 import { DatePicker } from './DatePicker';
-import React from 'react';
+import dayjs from 'dayjs';
 import styles from './WeekPicker.module.css';
 
-const weekFormat = date => {
-    // const from = date.startOf('week');
-    // const to = date.endOf('week');
-    // return `Kalenderwoche ${date.format('w')}: ${from.format('D.M.YY')} - ${to.format('D.M.YY')}`;
-    return `Kalenderwoche ${date.format('w (YYYY)')}`;
-}
-
-
 export function WeekPicker({
-    date
+    date,
+    onChange,
 }) {
+    const [open, setOpen] = useState(false);
+
+    const handleClick = useCallback(() => {
+        setOpen(true);
+    }, []);
+
+    const handlePreviousButtonClick = useCallback(e => {
+        onChange(date.subtract(7, 'days'));
+        setOpen(false);
+    }, [date, onChange]);
+
+    const handleNextButtonClick = useCallback(e => {
+        onChange(date.add(7, 'days'));
+        setOpen(false);
+    }, [date, onChange]);
+
+    const handleThisWeekButtonClick = useCallback(e => {
+        onChange(dayjs());
+        setOpen(false);
+    }, [onChange]);
+
+    const handleChange = useCallback(date => {
+        onChange(date);
+        setOpen(false);
+    }, [onChange]);
+
     return (
         <div className={styles.wrapper}>
 
             <DatePicker
                 className={styles.picker}
                 picker="week"
+                open={open}
                 inputReadOnly
                 allowClear={false}
                 bordered={true}
                 value={date}
-                format={weekFormat}
+                format={'[Kalenderwoche] w (YYYY)'}
+                onClick={handleClick}
+                onChange={handleChange}
                 panelRender={panel => 
                     <div className={styles.pickerPanel}>
                         {panel}
                     </div>
                 }
                 renderExtraFooter={() => 
-                    <Button type="link">Diese Woche</Button>
+                    <Button onClick={handleThisWeekButtonClick} type="link">Diese Woche</Button>
                 }
             />
 
-            <Button className={styles.leftButton}>
+            <Button 
+                className={styles.leftButton} 
+                onClick={handlePreviousButtonClick}
+            >
                 <LeftOutlined />
                 Vorherige Woche
             </Button>
 
-            <Button className={styles.rightButton}>
+            <Button 
+                className={styles.rightButton} 
+                onClick={handleNextButtonClick}
+            >
                 Nächste Woche
                 <RightOutlined />
             </Button>

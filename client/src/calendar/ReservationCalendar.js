@@ -1,53 +1,71 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DayTable } from './DayTable';
 import { HoursTable } from './HoursTable';
+import { ReservationModal } from './ReservationModal';
 import { WeekPicker } from './WeekPicker';
+import { appContext } from '../AppContext';
 import dayjs from 'dayjs';
 import styles from './ReservationCalendar.module.css';
+import { useWeekReservations } from './useReservations';
+
+const visibleDatesCount = 7; // week
+const checkTodayChangeIntervalMs = 60000; // minute
 
 export function ReservationCalendar() {
 
+    const { courts, visibleHours } = useContext(appContext);
+
+    const [selectedDate, setSelectedDate] = useState(dayjs());
+    const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
 
-    const reservations = [
-        ['2020-10-24', 'Platz 1', 13, 'Müller'],
-        ['2020-10-24', 'Platz 2', 13, 'Peter Jacob'],
-        ['2020-10-25', 'Platz 1', 13, 'Müller Gustagv Petersen'],
-        ['2020-10-20', 'Platz 1', 8, 'Müller Gustagv Petersen'],
-        ['2020-10-20', 'Platz 1', 10, 'Müller Gustagv Petersen franz dieter franx'],
-        ['2020-10-20', 'Platz 1', 18, 'Vera Berger'],
-        ['2020-10-20', 'Platz 2', 18, 'Christian15lww'],
-    ];
+    const reservations = useWeekReservations(selectedDate);
 
-
-    const courts = ['Platz 1', 'Platz 2', 'Platz 3asfdasdfasdfasdf'];
-    // const courts = ['Platz 1', 'Platz 2', 'Platz 3', 'Platz 4'];
-    // const courts = ['Platz 1', 'Platz 2'];
-
-    const fromTilHours = [8, 22];
-    const visibleHours = [];
-    for (let i = fromTilHours[0]; i < fromTilHours[1]; ++i)
-        visibleHours.push(i);
-
-    const visibleDatesCount = 7;
-    const focusedDateIndex = 0;
-    const selectedDate = dayjs('2020-10-19');
-    const visibleDates = [];
-    for (let i = 0; i < visibleDatesCount; ++i) {
-        visibleDates.push(selectedDate.add(i, 'day'));
-    }
+    const visibleDates = useMemo(() => Array.from(Array(visibleDatesCount)).map((_, i) => 
+        selectedDate.startOf('week').add(i, 'day')
+    ), [selectedDate]);
 
     useEffect(() => {
-        if (focusedDateIndex)
-            scrollerRef.current.scrollLeft 
-                = ((scrollerRef.current.scrollWidth) / visibleDatesCount) * focusedDateIndex;
-    }, [focusedDateIndex, visibleDatesCount]);
+        let interval;
+
+        const today = dayjs();
+        if (selectedDate.isSame(today, 'week')) {
+            const index = Math.abs(selectedDate.startOf('week').diff(today, 'day'));
+            // scroll automatically to today's date
+            requestAnimationFrame(() => {
+                scrollerRef.current.scrollLeft
+                    = ((scrollerRef.current.scrollWidth) / visibleDatesCount) * index;
+            });
+            
+            // check peridically if today's date change
+            interval = setInterval(() => {
+                const newToday = dayjs();
+                if (!selectedDate.isSame(newToday, 'day'))
+                    setSelectedDate(newToday);
+            }, checkTodayChangeIntervalMs);
+        }
+
+        return () => clearInterval(interval);
+    }, [selectedDate]);
+
+    const handleSlotClicked = useCallback(selectedSlot => {
+        setSelectedSlot(selectedSlot);
+    }, []);
+
+    const handleReservationFinish = useCallback(() => {
+        setSelectedSlot(null);
+    }, []);
+
+    const handleWeekChange = useCallback(date => {
+        setSelectedDate(date);
+    }, []);
 
     return (
         <div className={styles.wrapper}>
-            <WeekPicker 
+            <WeekPicker
                 date={selectedDate}
+                onChange={handleWeekChange}
             />
 
             <div className={styles.tableWrapper}>
@@ -58,13 +76,24 @@ export function ReservationCalendar() {
                         <DayTable
                             key={date}
                             date={date}
+                            isToday={date.isSame(dayjs(), 'day')}
                             courts={courts}
                             visibleHours={visibleHours}
                             reservations={reservations}
+                            onSlotClick={handleSlotClicked}
                         />
                     ))}
                 </div>
             </div>
+
+            {selectedSlot &&
+                <ReservationModal
+                    date={selectedSlot?.date}
+                    court={selectedSlot?.court}
+                    reservation={selectedSlot?.reservation}
+                    onFinish={handleReservationFinish}
+                />
+            }
         </div>
     );
 }
