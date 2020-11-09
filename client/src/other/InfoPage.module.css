@@ -1,0 +1,12 @@
+.wrapper {
+    width: 100vw;
+    padding: 20px;
+    margin-top: 20px;
+    background: #fff;
+}
+
+@media (min-width: 750px) {
+    .wrapper {
+        width: 750px;
+    }
+}
