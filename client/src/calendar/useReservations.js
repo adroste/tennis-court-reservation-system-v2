@@ -4,10 +4,12 @@ import { useMemo } from 'react';
 const from = 8;
 const til = 22;
 
-const courts = [
-    'Platz 1',
-    'Platz 2',
-];
+// const courts = [
+//     'Platz 1',
+//     'Platz 2',
+// ];
+
+const courtCount = 2;
 
 const names = [
     'Müller',
@@ -27,9 +29,9 @@ function mockSingleReservation(i, mDate, groupId, customName) {
 
     const id = `${i}_${mDate}`;
 
-    const court = courts[i % courts.length];
+    const courtId = i % courtCount;
 
-    const userId = (i * 3) % names.length + 1;
+    const userId = ((i * 3) % names.length) + 1;
     const name = names[userId - 1];
 
     const date = mDate.add(((i * 9) % (til - from)) + from, 'hour');
@@ -40,7 +42,7 @@ function mockSingleReservation(i, mDate, groupId, customName) {
         userId,
         name,
         customName,
-        court,
+        courtId,
         groupId,
     };
 }

@@ -6,6 +6,11 @@
     padding: 20px 20px 0;
 }
 
+.wrapper > h2 {
+    margin-bottom: 0;
+    font-size: 24px;
+}
+
 .content {
     padding: 20px 0;
     border-radius: 2px;

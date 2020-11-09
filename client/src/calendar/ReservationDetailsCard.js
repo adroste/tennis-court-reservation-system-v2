@@ -1,8 +1,9 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { Button } from 'antd';
 import { ReservationDetails } from './ReservationDetails';
+import { appContext } from '../AppContext';
 import styles from './ReservationDetailsCard.module.css';
 
 export function ReservationDetailsCard({
@@ -10,7 +11,11 @@ export function ReservationDetailsCard({
     reservation,
     onEditClick,
 }) {
-    const { date, court, name, customName } = reservation;
+    const { courts } = useContext(appContext);
+
+    const { date, courtId, name, customName } = reservation;
+
+    const courtName = courts.find(c => c.courtId === courtId)?.name;
 
     const handleEditClick = useCallback(() => {
         onEditClick(reservation);
@@ -29,7 +34,7 @@ export function ReservationDetailsCard({
             <ReservationDetails
                 small
                 date={date}
-                court={court}
+                courtName={courtName}
                 groupDates={groupDates}
                 name={customName || name}
                 showAllDates

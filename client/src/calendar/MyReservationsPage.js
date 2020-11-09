@@ -1,8 +1,9 @@
-import { Empty, Typography } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
+import { Empty } from 'antd';
 import { ReservationDetailsCard } from './ReservationDetailsCard';
 import { ReservationModal } from './ReservationModal';
+import { authContext } from '../AuthContext';
 import styles from './MyReservationsPage.module.css';
 import { useUserReservations } from './useReservations';
 
@@ -16,11 +17,11 @@ function getGroupDates(myReservations, reservation) {
 
 export function MyReservationsPage() {
 
+    const { userId } = useContext(authContext);
+
     const [selectedReservation, setSelectedReservation] = useState();
 
-    // const myReservations = useUserReservations(3);
-    const myReservations = useUserReservations(1);
-    // const myReservations = [];
+    const myReservations = useUserReservations(userId);
 
     const handleEditClick = useCallback(reservation => {
         setSelectedReservation(reservation);
@@ -43,9 +44,10 @@ export function MyReservationsPage() {
 
             {myReservations?.length > 0 &&
                 <>
-                    <Typography.Title level={2}>Nächster Termin</Typography.Title>
+                    <h2>Nächster Termin</h2>
                     <div className={styles.content}>
                         <ReservationDetailsCard
+                            key={myReservations[0].id}
                             reservation={myReservations[0]}
                             groupDates={getGroupDates(myReservations, myReservations[0])}
                             onEditClick={handleEditClick}
@@ -56,13 +58,14 @@ export function MyReservationsPage() {
 
             {myReservations?.length > 1 &&
                 <>
-                    <Typography.Title level={2}>Weitere Termine</Typography.Title>
+                    <h2>Weitere Termine</h2>
                     <div className={styles.content}>
                         {myReservations.map((reservation, i) => {
                             if (i === 0)
                                 return null;
                             return (
                                 <ReservationDetailsCard
+                                    key={reservation.id}
                                     reservation={reservation}
                                     groupDates={getGroupDates(myReservations, reservation)}
                                     onEditClick={handleEditClick}
@@ -76,7 +79,7 @@ export function MyReservationsPage() {
             {selectedReservation &&
                 <ReservationModal
                     date={selectedReservation?.date}
-                    court={selectedReservation?.court}
+                    courtId={selectedReservation?.courtId}
                     reservation={selectedReservation}
                     onFinish={handleReservationEditFinish}
                 />

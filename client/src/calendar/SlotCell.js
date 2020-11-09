@@ -6,18 +6,25 @@ import styles from './SlotCell.module.css';
 const cn = classNames.bind(styles);
 
 export function SlotCell({
-    court,
+    courtId,
+    courtName,
+    disabled = false,
     hour,
+    inPast,
     onClick,
     reservation,
 }) {
     const handleClick = useCallback(() => {
-        onClick({ court, hour, reservation });
-    }, [court, hour, onClick, reservation]);
+        if (!disabled)
+            onClick({ courtId, hour, reservation });
+    }, [courtId, disabled, hour, onClick, reservation]);
 
     return (
         <td
-            className={cn('cell')}
+            className={cn({
+                cell: true,
+                enabled: !disabled && !inPast,
+            })}
             onClick={handleClick}
         >
             <div
@@ -25,11 +32,13 @@ export function SlotCell({
                     slot: true,
                     reserved: reservation,
                     free: !reservation,
+                    disabled,
                 })}
+                data-disabled-text="Gesperrt"
                 data-free-text="Frei"
-                data-free-text-hover={`${hour} Uhr, ${court}`}
+                data-free-text-hover={`${hour} Uhr, ${courtName}`}
             >
-                {reservation && (reservation.customName ?? reservation.name)}
+                {!disabled && reservation && (reservation.customName ?? reservation.name)}
             </div>
         </td>
     );

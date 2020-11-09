@@ -1,0 +1,11 @@
+.wrapper > * {
+    margin-top: 20px;
+}
+
+.alert {
+    text-align: center;
+}
+
+.alert > * {
+    display: inline-block;
+}

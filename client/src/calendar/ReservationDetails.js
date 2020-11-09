@@ -12,7 +12,7 @@ const formatVal = 'dd L';
 
 export function ReservationDetails({
     allowEditName = false,
-    court,
+    courtName,
     date,
     groupDates,
     name,
@@ -63,7 +63,7 @@ export function ReservationDetails({
             small,
         })}>
             <div><CalendarOutlined />&nbsp;&nbsp;{dateStr}</div>
-            <div><ClockCircleOutlined />&nbsp;&nbsp;{`${date.format('H')} bis ${date.add(1, 'h').format('H')} Uhr, ${court}`}</div>
+            <div><ClockCircleOutlined />&nbsp;&nbsp;{`${date.format('H')} bis ${date.add(1, 'h').format('H')} Uhr, ${courtName}`}</div>
             <div>
                 <UserOutlined />&nbsp;&nbsp;
                 {editName ?

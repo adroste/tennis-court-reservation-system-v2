@@ -3,20 +3,18 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { DayTable } from './DayTable';
 import { HoursTable } from './HoursTable';
 import { ReservationModal } from './ReservationModal';
-import { WeekPicker } from './WeekPicker';
 import { appContext } from '../AppContext';
-import dayjs from 'dayjs';
 import styles from './ReservationCalendar.module.css';
 import { useWeekReservations } from './useReservations';
 
 const visibleDatesCount = 7; // week
-const checkTodayChangeIntervalMs = 60000; // minute
 
-export function ReservationCalendar() {
-
+export function ReservationCalendar({
+    selectedDate,
+    today,
+}) {
     const { courts, visibleHours } = useContext(appContext);
 
-    const [selectedDate, setSelectedDate] = useState(dayjs());
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
 
@@ -26,28 +24,16 @@ export function ReservationCalendar() {
         selectedDate.startOf('week').add(i, 'day')
     ), [selectedDate]);
 
+    // scroll automatically to today's date
     useEffect(() => {
-        let interval;
-
-        const today = dayjs();
         if (selectedDate.isSame(today, 'week')) {
-            const index = Math.abs(selectedDate.startOf('week').diff(today, 'day'));
-            // scroll automatically to today's date
+            const index = Math.abs(today.startOf('week').diff(today, 'day'));
             requestAnimationFrame(() => {
                 scrollerRef.current.scrollLeft
                     = ((scrollerRef.current.scrollWidth) / visibleDatesCount) * index;
             });
-            
-            // check peridically if today's date change
-            interval = setInterval(() => {
-                const newToday = dayjs();
-                if (!selectedDate.isSame(newToday, 'day'))
-                    setSelectedDate(newToday);
-            }, checkTodayChangeIntervalMs);
         }
-
-        return () => clearInterval(interval);
-    }, [selectedDate]);
+    }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
         setSelectedSlot(selectedSlot);
@@ -57,17 +43,8 @@ export function ReservationCalendar() {
         setSelectedSlot(null);
     }, []);
 
-    const handleWeekChange = useCallback(date => {
-        setSelectedDate(date);
-    }, []);
-
     return (
-        <div className={styles.wrapper}>
-            <WeekPicker
-                date={selectedDate}
-                onChange={handleWeekChange}
-            />
-
+        <>
             <div className={styles.tableWrapper}>
                 <HoursTable visibleHours={visibleHours} />
 
@@ -76,7 +53,7 @@ export function ReservationCalendar() {
                         <DayTable
                             key={date}
                             date={date}
-                            isToday={date.isSame(dayjs(), 'day')}
+                            today={today}
                             courts={courts}
                             visibleHours={visibleHours}
                             reservations={reservations}
@@ -89,11 +66,11 @@ export function ReservationCalendar() {
             {selectedSlot &&
                 <ReservationModal
                     date={selectedSlot?.date}
-                    court={selectedSlot?.court}
+                    courtId={selectedSlot?.courtId}
                     reservation={selectedSlot?.reservation}
                     onFinish={handleReservationFinish}
                 />
             }
-        </div>
+        </>
     );
 }

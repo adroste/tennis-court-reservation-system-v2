@@ -1,6 +1,10 @@
 .cell {
-    cursor: pointer;
+    cursor: default;
     padding: 3px 3px;
+}
+
+.cell.enabled {
+    cursor: pointer;
 }
 
 .slot {
@@ -11,25 +15,33 @@
     border-radius: 2px;
     background: #9dc88d;
     color: #fff;
-    opacity: 0.35;
+    opacity: 0.5;
     height: 32px;
     font-size: 12px;
     line-height: 18px;
 }
 
-.cell:hover .slot {
+.cell:not(.enabled) .slot {
+    background: #aaa;
+}
+
+.cell.enabled:hover .slot {
     opacity: 1;
 }
 
-.cell .free::after {
+.cell.enabled .free::after {
     content: attr(data-free-text);
 }
 
-.cell:hover .free::after {
+.cell.enabled:hover .free::after {
     content: attr(data-free-text-hover);
 }
 
-.reserved {
+.cell .disabled::after {
+    content: attr(data-disabled-text);
+}
+
+.reserved:not(.disabled) {
     opacity: 1;
     color: #fff;
     background: #FF4136;

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { SlotCell } from './SlotCell';
 import { findReservation } from './helper';
@@ -9,13 +9,27 @@ export function DayTable({
     date,
     onSlotClick,
     reservations,
-    isToday,
+    today,
     visibleHours,
 }) {
-    const handleClick = useCallback(({ court, hour, reservation }) => {
-        onSlotClick({ 
-            court, 
-            date: date.hour(hour), 
+    const isToday = today.isSame(date, 'day');
+    const inPast = date.isBefore(today, 'day');
+
+    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabledFrom, disabledTil }) => ({
+        courtId,
+        name,
+        disabled: disabledFrom ?
+            (
+                disabledTil 
+                    ? date.isBetween(disabledFrom, disabledTil, 'day', '[]')
+                    : date.isSameOrAfter(disabledFrom, 'day')
+            ) : false,
+    })), [courts, date]);
+
+    const handleClick = useCallback(({ courtId, hour, reservation }) => {
+        onSlotClick({
+            courtId,
+            date: date.hour(hour),
             reservation,
         });
     }, [date, onSlotClick]);
@@ -25,16 +39,16 @@ export function DayTable({
             <table>
                 <thead>
                     <tr>
-                        <th className={styles.date} colSpan={courts.length}>
+                        <th className={styles.date} colSpan={courtsToday.length}>
                             {isToday && <span className={styles.today}>Heute</span>}
                             {date.format('dd l')}
                         </th>
                     </tr>
                     <tr>
-                        {courts.map(court => (
-                            <td key={court}>
+                        {courtsToday.map(({ courtId, name }) => (
+                            <td key={courtId}>
                                 <div className={styles.court}>
-                                    {court}
+                                    {name}
                                 </div>
                             </td>
                         ))}
@@ -43,13 +57,16 @@ export function DayTable({
                 <tbody>
                     {visibleHours.map(hour => (
                         <tr key={hour}>
-                            {courts.map(court => (
-                                <SlotCell 
-                                    key={court}
-                                    court={court}
+                            {courtsToday.map(({ courtId, name, disabled }) => (
+                                <SlotCell
+                                    key={courtId}
+                                    courtId={courtId}
+                                    courtName={name}
+                                    inPast={inPast}
                                     hour={hour}
+                                    disabled={disabled}
                                     onClick={handleClick}
-                                    reservation={findReservation(reservations, date.hour(hour), court)} 
+                                    reservation={findReservation(reservations, date.hour(hour), courtId)}
                                 />
                             ))}
                         </tr>
