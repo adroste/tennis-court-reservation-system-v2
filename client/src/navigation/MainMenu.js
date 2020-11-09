@@ -50,17 +50,17 @@ export function MainMenu({
                     title="Verwaltung"
                     icon={<SettingOutlined />}
                 >
+                    <Menu.Item key="/admin/general">
+                        Allgemein
+                    </Menu.Item>
                     <Menu.Item key="/admin/users">
                         Nutzerverwaltung
-                    </Menu.Item>
-                    <Menu.Item key="/admin/reservations">
-                        Reservierungsverwaltung
                     </Menu.Item>
                     <Menu.Item key="/admin/texts">
                         Textbausteine
                     </Menu.Item>
                 </Menu.SubMenu>
-                <span className={styles.stretch} />
+                <span key="stretch" className={styles.stretch} />
                 <Menu.Item key="/myaccount" icon={<UserOutlined />}>
                     Mein Benutzerkonto
                 </Menu.Item>
