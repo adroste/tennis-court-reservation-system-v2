@@ -1,6 +1,7 @@
 import { ConfigProvider, Layout } from 'antd';
 
 import { AppContextProvider } from './AppContext';
+import { AuthContextProvider } from './AuthContext';
 import { Footer } from './Footer';
 import { NavBar } from './navigation/NavBar';
 import React from 'react';
@@ -13,17 +14,19 @@ function App() {
     return (
         <ConfigProvider locale={locale}>
             <AppContextProvider>
-                <Router>
-                    <Layout>
-                        <NavBar />
-                        <Layout.Content className={styles.content}>
-                            <RouterSwitch />
-                        </Layout.Content>
-                        <Layout.Footer className={styles.footer}>
-                            <Footer />
-                        </Layout.Footer>
-                    </Layout>
-                </Router>
+                <AuthContextProvider>
+                    <Router>
+                        <Layout>
+                            <NavBar />
+                            <Layout.Content className={styles.content}>
+                                <RouterSwitch />
+                            </Layout.Content>
+                            <Layout.Footer className={styles.footer}>
+                                <Footer />
+                            </Layout.Footer>
+                        </Layout>
+                    </Router>
+                </AuthContextProvider>
             </AppContextProvider>
         </ConfigProvider>
     );
