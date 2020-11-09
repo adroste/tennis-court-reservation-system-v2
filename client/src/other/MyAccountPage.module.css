@@ -1,0 +1,29 @@
+.wrapper {
+    width: 100vw;
+    padding: 20px;
+    margin-top: 20px;
+    background: #fff;
+}
+
+@media (min-width: 750px) {
+    .wrapper {
+        width: 750px;
+    }
+}
+
+.buttonWrapper {
+    margin: 20px 0;
+}
+
+.buttonWrapper > * {
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.buttonWrapper > *:first-child {
+    margin-right: 15px;
+}
+
+.accountForm {
+    max-width: 400px;
+}
