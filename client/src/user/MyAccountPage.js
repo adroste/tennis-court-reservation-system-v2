@@ -29,7 +29,6 @@ export function MyAccountPage() {
                 form={form}
                 className={styles.accountForm}
                 layout="vertical"
-                initialValues={{ remember: true }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
             >
@@ -48,7 +47,7 @@ export function MyAccountPage() {
 
                 <Form.Item
                     name="email"
-                    label="E-mail"
+                    label="E-Mail"
                     initialValue={mail}
                     rules={[
                         { type: 'email', message: 'Beispiel: mustermann@web.de' },
