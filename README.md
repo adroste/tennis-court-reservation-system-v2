@@ -17,7 +17,7 @@ Reservation system for tennis courts. Only german at the moment.
 
 * [ ] Cookie Notice
 * [ ] Legal Notice
-* [ ] Logos
+* [x] Logos
 * [ ] Size + Code-Splitting
 * [ ] Kiosk Mode
   * [ ] Clock + Date
@@ -31,3 +31,7 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] my reservations page auto day switch
 * [ ] my reservations page check for date >= today
 * [ ] announcements
+* [ ] login
+* [ ] registration
+* [ ] loading gate for appcontext
+* [ ] login redirect
