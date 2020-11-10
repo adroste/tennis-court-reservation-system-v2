@@ -1,34 +1,38 @@
-import { ConfigProvider, Layout } from 'antd';
+import React, { useContext } from 'react';
 
-import { AppContextProvider } from './AppContext';
-import { AuthContextProvider } from './AuthContext';
+import { Ball } from './Ball';
 import { Footer } from './Footer';
+import { Layout } from 'antd';
 import { NavBar } from './navigation/NavBar';
-import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { RouterSwitch } from './navigation/RouterSwitch';
-import locale from 'antd/lib/locale/de_DE';
+import { appContext } from './AppContext';
 import styles from './App.module.css';
 
 function App() {
+    const appData = useContext(appContext);
+
     return (
-        <ConfigProvider locale={locale}>
-            <AppContextProvider>
-                <AuthContextProvider>
-                    <Router>
-                        <Layout>
-                            <NavBar />
-                            <Layout.Content className={styles.content}>
-                                <RouterSwitch />
-                            </Layout.Content>
-                            <Layout.Footer className={styles.footer}>
-                                <Footer />
-                            </Layout.Footer>
-                        </Layout>
-                    </Router>
-                </AuthContextProvider>
-            </AppContextProvider>
-        </ConfigProvider>
+        <>
+            <Ball
+                visible={!appData}
+                preloader
+                spin
+            />
+            {appData &&
+                <Router>
+                    <Layout>
+                        <NavBar />
+                        <Layout.Content className={styles.content}>
+                            <RouterSwitch />
+                        </Layout.Content>
+                        <Layout.Footer className={styles.footer}>
+                            <Footer />
+                        </Layout.Footer>
+                    </Layout>
+                </Router>
+            }
+        </>
     );
 }
 
