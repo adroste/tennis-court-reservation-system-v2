@@ -1,11 +1,21 @@
+import React, { useContext } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { CalendarPage } from '../calendar/CalendarPage';
+import { GeneralSettingsPage } from '../admin/GeneralSettingsPage';
+import { InfoPage } from '../other/InfoPage';
+import { LegalPrivacyPage } from '../other/LegalPrivacyPage';
+import { LoginPage } from '../user/LoginPage';
+import { MyAccountPage } from '../user/MyAccountPage';
 import { MyReservationsPage } from '../calendar/MyReservationsPage';
-import React from 'react';
+import { ProtectedRoute } from './ProtectedRoute';
+import { TextBlocksPage } from '../admin/TextBlocksPage';
+import { authContext } from '../AuthContext';
 
 export function RouterSwitch() {
-    const isAdmin = true;
+
+    const { admin, loggedIn } = useContext(authContext);
+
     return (
         <Switch>
 
@@ -13,47 +23,41 @@ export function RouterSwitch() {
                 <CalendarPage />
             </Route>
 
-            <Route exact path="/myreservations">
-                <MyReservationsPage />
-            </Route>
-
             <Route exact path="/info">
-                Info
+                <InfoPage />
             </Route>
 
-            <Route exact path="/myaccount">
-                account
+            <Route exact path="/legalnotice-privacy">
+                <LegalPrivacyPage />
             </Route>
 
-            <Route exact path="/imprint-privacy">
-                imprint
-            </Route>
-
-            <Route path="/admin"
-                render={() => isAdmin ?
-                    (
-                        <Switch>
-                            <Route exact path="/admin/users">
-                                Verwaltung: User
-                            </Route>
-
-                            <Route exact path="/admin/reservations">
-                                Verwaltung: Reservations
-                            </Route>
-
-                            <Route exact path="/admin/texts">
-                                Verwaltung: Texts
-                            </Route>
-
-                            <Route path="*">
-                                <Redirect to="/" />
-                            </Route>
-                        </Switch>
-                    ) : (
-                        <Redirect to="/" />
-                    )
+            <Route path="/login"
+                render={() => 
+                    loggedIn 
+                        ? <Redirect to="/" />
+                        : <LoginPage />
                 }
             />
+
+            <ProtectedRoute condition={admin} path="/admin/general">
+                <GeneralSettingsPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute condition={admin} exact path="/admin/users">
+                Verwaltung: User
+            </ProtectedRoute>
+
+            <ProtectedRoute condition={admin} exact path="/admin/texts">
+                <TextBlocksPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute condition={loggedIn} exact path="/myreservations">
+                <MyReservationsPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute condition={loggedIn} path="/myaccount">
+                <MyAccountPage />
+            </ProtectedRoute>
 
             <Route path="*">
                 <Redirect to="/" />

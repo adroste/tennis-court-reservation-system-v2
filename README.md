@@ -34,4 +34,4 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] login
 * [ ] registration
 * [x] loading gate for appcontext
-* [ ] login redirect
+* [ ] login redirect to referrer

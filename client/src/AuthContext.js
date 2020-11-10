@@ -9,6 +9,8 @@ export function AuthContextProvider({ children }) {
     useEffect(() => {
         (async () => {
             setAuth({
+                loggedIn: false,
+                admin: false,
                 userId: 1,
                 name: 'Müller',
                 mail: 'mueller@example.com',

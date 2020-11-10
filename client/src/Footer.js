@@ -9,7 +9,7 @@ export function Footer() {
     return (
         <>
             <p>
-                <Link to="/imprint-privacy">Impressum / Datenschutz</Link>
+                <Link to="/legalnotice-privacy">Impressum / Datenschutz</Link>
             </p>
             <p>
                 ©2020 {title} - entwickelt von <a target="_blank" rel="noopener noreferrer" href="https://github.com/alexdroste/reservierungssystem-tennis-v2">Alexander&nbsp;Droste</a>
