@@ -1,0 +1,25 @@
+.wrapper {
+    width: 100vw;
+    padding: 20px;
+    margin-top: 20px;
+    background: #fff;
+}
+
+@media (min-width: 400px) {
+    .wrapper {
+        width: 400px;
+    }
+}
+
+.loginButton {
+    width: 100%;
+}
+
+.forgotLink {
+    float: right;
+}
+
+.registerItem {
+    text-align: center;
+    margin-bottom: 0;
+}
