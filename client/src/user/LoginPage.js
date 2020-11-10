@@ -1,7 +1,7 @@
-import { Button, Checkbox, Divider, Form, Input, Typography } from 'antd';
-import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import React, { useContext, useEffect } from 'react';
+import { Alert, Button, Checkbox, Form, Input, Typography } from 'antd';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 
+import React from 'react';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
@@ -15,6 +15,12 @@ export function LoginPage() {
     };
 
     return (
+        <>
+        <div className={styles.cta}>
+            <Alert type="info" message={
+                <span>Sie haben noch keinen Account? <a href="">Jetzt&nbsp;Registrieren!</a></span>
+            } />
+        </div>
         <div className={styles.wrapper}>
             <Typography.Title level={3}>Anmelden</Typography.Title>
 
@@ -63,5 +69,6 @@ export function LoginPage() {
                 </Form.Item>
             </Form>
         </div>
+        </>
     );
 }

@@ -1,3 +1,7 @@
+.cta {
+    margin: 30px 0;
+}
+
 .wrapper {
     width: 100vw;
     padding: 20px;
@@ -22,4 +26,8 @@
 .registerItem {
     text-align: center;
     margin-bottom: 0;
+}
+
+.registerItem button > span {
+    font-size: 1.2em;
 }
