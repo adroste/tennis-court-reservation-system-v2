@@ -92,7 +92,7 @@ export function ReservationDetails({
                     <span>Wiederkehrender Termin:</span>
                     <div className={styles.dateList}>
                         {pastGroupEventsCount > 0 && <span>{pastGroupEventsCount} vergangene Termine</span>}
-                        {futureGroupEvents?.map(d => <span>{d.format(formatVal)}</span>)}
+                        {futureGroupEvents?.map(d => <span key={d}>{d.format(formatVal)}</span>)}
                     </div>
                 </div>
             }
