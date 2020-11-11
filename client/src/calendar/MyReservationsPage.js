@@ -5,6 +5,7 @@ import { ReservationDetailsCard } from './ReservationDetailsCard';
 import { ReservationModal } from './ReservationModal';
 import { authContext } from '../AuthContext';
 import styles from './MyReservationsPage.module.css';
+import { useToday } from './useToday';
 import { useUserReservations } from './useReservations';
 
 function getGroupDates(myReservations, reservation) {
@@ -17,11 +18,12 @@ function getGroupDates(myReservations, reservation) {
 
 export function MyReservationsPage() {
 
-    const { userId } = useContext(authContext);
+    const { user: { userId } } = useContext(authContext);
 
+    const today = useToday();
     const [selectedReservation, setSelectedReservation] = useState();
 
-    const myReservations = useUserReservations(userId);
+    const myReservations = useUserReservations(today, userId);
 
     const handleEditClick = useCallback(reservation => {
         setSelectedReservation(reservation);

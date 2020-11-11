@@ -1,34 +1,18 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import { Alert } from 'antd';
 import { ReservationCalendar } from './ReservationCalendar';
 import { WeekPicker } from './WeekPicker';
 import { appContext } from '../AppContext';
-import dayjs from 'dayjs';
 import styles from './CalendarPage.module.css';
-
-const checkTodayChangeIntervalMs = 6000; // minute
+import { useToday } from './useToday';
 
 export function CalendarPage() {
 
     const { announcement, courts } = useContext(appContext);
 
-    const [today, setToday] = useState(dayjs());
-    const [selectedDate, setSelectedDate] = useState(dayjs());
-
-    // check peridically if today's date changed
-    useEffect(() => {
-        const todayCheckInterval = setInterval(() => {
-            const newToday = dayjs();
-            if (!today.isSame(newToday, 'day')) {
-                setToday(newToday);
-                if (selectedDate.isSame(today, 'week'))
-                    setSelectedDate(newToday);
-            }
-        }, checkTodayChangeIntervalMs);
-
-        return () => clearInterval(todayCheckInterval);
-    }, [selectedDate, today]);
+    const today = useToday();
+    const [selectedDate, setSelectedDate] = useState(null);
 
     const handleWeekChange = useCallback(date => {
         setSelectedDate(date);
@@ -60,12 +44,12 @@ export function CalendarPage() {
             ))}
 
             <WeekPicker
-                date={selectedDate}
+                date={selectedDate || today}
                 onChange={handleWeekChange}
             />
 
             <ReservationCalendar
-                selectedDate={selectedDate}
+                selectedDate={selectedDate || today}
                 today={today}
             />
         </div>

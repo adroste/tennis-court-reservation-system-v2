@@ -36,6 +36,10 @@ export function WeekPicker({
         setOpen(false);
     }, [onChange]);
 
+    const handleOpenChange = useCallback(newOpen => {
+        setOpen(newOpen);
+    }, []);
+
     return (
         <div className={styles.wrapper}>
 
@@ -47,6 +51,7 @@ export function WeekPicker({
                 allowClear={false}
                 bordered={true}
                 value={date}
+                onOpenChange={handleOpenChange}
                 format={'[Kalenderwoche] w (YYYY)'}
                 onClick={handleClick}
                 onChange={handleChange}

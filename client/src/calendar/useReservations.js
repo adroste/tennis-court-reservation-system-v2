@@ -50,7 +50,7 @@ function mockSingleReservation(i, mDate, groupId, customName) {
 function mockReservations() {
 
     const start = dayjs().startOf('week');
-    const reservationPerDay = [3,4,1,7,1,0,2];
+    const reservationPerDay = [3, 4, 1, 7, 1, 0, 2];
 
     // group reservations (repeat = 1)
     let gId = 1;
@@ -91,13 +91,16 @@ export function useGroupReservations(groupId) {
 }
 
 
-export function useUserReservations(userId) {
+export function useUserReservations(afterDate, userId) {
     if (!reservations.length)
         mockReservations();
 
     return useMemo(() => {
-        const r = reservations.filter(r => userId && r.userId === userId)
+        const r = reservations.filter(r => (
+            r.userId === userId
+            && r.date.isSameOrAfter(afterDate, 'day')
+        ));
         r.sort((a, b) => a.date.valueOf() - b.date.valueOf());
         return r;
-    }, [userId]);
+    }, [afterDate, userId]);
 }
