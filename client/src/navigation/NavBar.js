@@ -40,7 +40,7 @@ export function NavBar() {
                     className={styles.drawer}
                     onClose={closeDrawer}
                 >
-                    <MainMenu />
+                    <MainMenu onClick={closeDrawer} />
                 </Drawer>
             </div>
         </Layout.Header>

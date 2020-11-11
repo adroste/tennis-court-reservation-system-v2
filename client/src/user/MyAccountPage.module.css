@@ -23,7 +23,3 @@
 .buttonWrapper > *:first-child {
     margin-right: 15px;
 }
-
-.accountForm {
-    max-width: 400px;
-}

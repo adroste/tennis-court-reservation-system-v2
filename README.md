@@ -24,14 +24,22 @@ Reservation system for tennis courts. Only german at the moment.
   * [ ] URL + QR Code
   * [ ] Auto refresh / Auto day switch
 * [ ] .htaccess for client side routing
-* [ ] disabled dates for reservation < today
+* [x] disabled dates for reservation < today
 * [ ] php sanitize html text blocks (remove script tags)
 * [ ] insert custom head tags
 * [ ] html editor switch
-* [ ] my reservations page auto day switch
-* [ ] my reservations page check for date >= today
+* [ ] editor 16px font-size
+* [x] my reservations page auto day switch
+* [x] my reservations page check for date >= today
 * [ ] announcements
-* [ ] login
-* [ ] registration
+* [x] login
+* [x] registration
+* [ ] registration step 2/confirm
 * [x] loading gate for appcontext
 * [ ] login redirect to referrer
+* [x] weekpicker fix outside tap
+* [x] close sidedrawer on click
+* [x] input font-size 16px
+* [ ] redirect to login on calendar item click
+* [ ] demo mode
+* [ ] antd message for reservation successful, change, cancel, ...

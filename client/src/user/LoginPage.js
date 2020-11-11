@@ -1,13 +1,18 @@
 import { Alert, Button, Checkbox, Form, Input, Typography } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import React, { useContext } from 'react';
 
-import React from 'react';
+import { Link } from 'react-router-dom';
+import { authContext } from '../AuthContext';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
 
+    const { login } = useContext(authContext);
+
     const onFinish = values => {
         console.log('Success:', values);
+        login(values);
     };
 
     const onFinishFailed = errorInfo => {
@@ -18,7 +23,7 @@ export function LoginPage() {
         <>
         <div className={styles.cta}>
             <Alert type="info" message={
-                <span>Sie haben noch keinen Account? <a href="">Jetzt&nbsp;Registrieren!</a></span>
+                <span>Sie haben noch keinen Account? <Link to="/register">Jetzt&nbsp;Registrieren!</Link></span>
             } />
         </div>
         <div className={styles.wrapper}>
@@ -30,7 +35,7 @@ export function LoginPage() {
                 onFinishFailed={onFinishFailed}
             >
                 <Form.Item
-                    name="email"
+                    name="mail"
                     rules={[{ required: true, message: 'E-Mail Adresse ist erforderlich' }]}
                 >
                     <Input prefix={<MailOutlined />} placeholder="E-Mail" />
@@ -44,7 +49,7 @@ export function LoginPage() {
                 </Form.Item>
 
                 <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Form.Item name="rememberLogin" valuePropName="checked" noStyle>
                         <Checkbox>Angemeldet bleiben</Checkbox>
                     </Form.Item>
 
@@ -61,11 +66,8 @@ export function LoginPage() {
                 
 
                 <Form.Item className={styles.registerItem}>
-                    <span>oder</span>
-
-                    <Button type="link">
-                        Kostenlos Registrieren
-                    </Button>
+                    <span>oder </span>
+                    <Link to="/register">Kostenlos Registrieren</Link>
                 </Form.Item>
             </Form>
         </div>

@@ -18,6 +18,10 @@
 }
 
 .menuButton {
-    margin: 8px 20px;
+    margin: 8px 0 8px 24px;
     align-self: center;
+}
+
+.menuButton.horizontal {
+    margin-left: 20px;
 }

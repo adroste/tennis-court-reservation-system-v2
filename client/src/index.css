@@ -18,3 +18,7 @@ code {
 h2 {
     font-size: 1.3em;
 }
+
+input {
+    font-size: 16px!important;
+}
