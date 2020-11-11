@@ -4,7 +4,9 @@ import { DayTable } from './DayTable';
 import { HoursTable } from './HoursTable';
 import { ReservationModal } from './ReservationModal';
 import { appContext } from '../AppContext';
+import { authContext } from '../AuthContext';
 import styles from './ReservationCalendar.module.css';
+import { useHistory } from 'react-router-dom';
 import { useWeekReservations } from './useReservations';
 
 const visibleDatesCount = 7; // week
@@ -13,7 +15,9 @@ export function ReservationCalendar({
     selectedDate,
     today,
 }) {
+    const { user } = useContext(authContext);
     const { courts, visibleHours } = useContext(appContext);
+    const history = useHistory();
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
@@ -36,8 +40,11 @@ export function ReservationCalendar({
     }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
-        setSelectedSlot(selectedSlot);
-    }, []);
+        if (user)
+            setSelectedSlot(selectedSlot);
+        else 
+            history.replace('/login');
+    }, [user]);
 
     const handleReservationFinish = useCallback(() => {
         setSelectedSlot(null);

@@ -40,6 +40,6 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] weekpicker fix outside tap
 * [x] close sidedrawer on click
 * [x] input font-size 16px
-* [ ] redirect to login on calendar item click
+* [x] redirect to login on calendar item click
 * [ ] demo mode
 * [ ] antd message for reservation successful, change, cancel, ...
