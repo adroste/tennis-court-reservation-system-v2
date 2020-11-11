@@ -1,14 +1,23 @@
 import { Alert, Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { Link } from 'react-router-dom';
 import { authContext } from '../AuthContext';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
 
-    const { login } = useContext(authContext);
+    const { user, login } = useContext(authContext);
+    const location = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
+        if (user) {
+            const { from } = location.state || { from: { pathname: "/" } };
+            history.replace(from);
+        }
+    }, [history, location, user])
 
     const onFinish = values => {
         console.log('Success:', values);

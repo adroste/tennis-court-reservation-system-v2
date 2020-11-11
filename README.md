@@ -36,7 +36,7 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] registration
 * [ ] registration step 2/confirm
 * [x] loading gate for appcontext
-* [ ] login redirect to referrer
+* [x] login redirect to referrer
 * [x] weekpicker fix outside tap
 * [x] close sidedrawer on click
 * [x] input font-size 16px
