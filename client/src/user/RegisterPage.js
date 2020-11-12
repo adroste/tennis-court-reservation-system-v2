@@ -1,9 +1,7 @@
-import { Alert, Button, Checkbox, Form, Input, Typography } from 'antd';
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
-
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { RegisterForm } from './RegisterForm';
+import { Typography } from 'antd';
 import styles from './RegisterPage.module.css';
 
 export function RegisterPage() {
@@ -21,10 +19,10 @@ export function RegisterPage() {
 
             <Typography.Title level={3}>
                 Registrieren
-            <div className={styles.loginItem}>
-                <span>Bereits registriert? </span>
-                <Link to="/login">Anmelden</Link>
-            </div>
+                <div className={styles.loginItem}>
+                    <span>Bereits registriert? </span>
+                    <Link to="/login">Anmelden</Link>
+                </div>
             </Typography.Title>
 
             <RegisterForm

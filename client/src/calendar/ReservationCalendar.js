@@ -2,11 +2,11 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 
 import { DayTable } from './DayTable';
 import { HoursTable } from './HoursTable';
+import { LoginModal } from '../user/LoginModal';
 import { ReservationModal } from './ReservationModal';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import styles from './ReservationCalendar.module.css';
-import { useHistory } from 'react-router-dom';
 import { useWeekReservations } from './useReservations';
 
 const visibleDatesCount = 7; // week
@@ -17,14 +17,13 @@ export function ReservationCalendar({
 }) {
     const { user } = useContext(authContext);
     const { courts, visibleHours } = useContext(appContext);
-    const history = useHistory();
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
 
     const reservations = useWeekReservations(selectedDate);
 
-    const visibleDates = useMemo(() => Array.from(Array(visibleDatesCount)).map((_, i) => 
+    const visibleDates = useMemo(() => Array.from(Array(visibleDatesCount)).map((_, i) =>
         selectedDate.startOf('week').add(i, 'day')
     ), [selectedDate]);
 
@@ -40,11 +39,8 @@ export function ReservationCalendar({
     }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
-        if (user)
-            setSelectedSlot(selectedSlot);
-        else 
-            history.replace('/login');
-    }, [user]);
+        setSelectedSlot(selectedSlot);
+    }, []);
 
     const handleReservationFinish = useCallback(() => {
         setSelectedSlot(null);
@@ -70,13 +66,19 @@ export function ReservationCalendar({
                 </div>
             </div>
 
-            {selectedSlot &&
-                <ReservationModal
-                    date={selectedSlot?.date}
-                    courtId={selectedSlot?.courtId}
-                    reservation={selectedSlot?.reservation}
-                    onFinish={handleReservationFinish}
-                />
+            {selectedSlot && (user ?
+                (
+                    <ReservationModal
+                        date={selectedSlot?.date}
+                        courtId={selectedSlot?.courtId}
+                        reservation={selectedSlot?.reservation}
+                        onFinish={handleReservationFinish}
+                    />
+                ) : (
+                    <LoginModal 
+                        onClose={handleReservationFinish}
+                    />
+                ))
             }
         </>
     );
