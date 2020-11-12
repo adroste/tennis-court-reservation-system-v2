@@ -1,9 +1,9 @@
 import { Button, Checkbox, Divider, Radio } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { appContext } from '../AppContext';
 import classNames from 'classnames/bind';
-import dayjs from 'dayjs';
 import styles from './GroupDatesForm.module.css';
 
 const cn = classNames.bind(styles);
@@ -15,26 +15,49 @@ const defaultRepeatValuesMap = {
 };
 
 export function GroupDatesForm({
+    courtId,
     date,
     defaultAddCount = 2,
     onGroupDatesChange,
     repeatValuesMap = defaultRepeatValuesMap,
     reservations,
+    today,
+    unavailableDates,
 }) {
+    const { courts, reservationDaysInAdvance } = useContext(appContext);
+
     const [enabled, setEnabled] = useState(false);
     const [repeatValue, setRepeatValue] = useState();
     const [visibleDates, setVisibleDates] = useState([]);
-    const [selectedDates, setSelectedDates] = useState([]);
+    const [selectedDates, _setSelectedDates] = useState([]);
+
+    const courtDisabledFromTil = useMemo(() =>
+        (courts.find(c => c.courtId === courtId))?.disabledFromTil, [courts, courtId]);
+
+    const checkIfNotAvailable = useCallback(date => (
+        date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day')
+        || (courtDisabledFromTil && date.isBetween(courtDisabledFromTil[0], courtDisabledFromTil[1], 'day', '[]'))
+        || (unavailableDates && unavailableDates.some(d => date.isSame(d, 'day')))
+    ), [courtDisabledFromTil, today, reservationDaysInAdvance, unavailableDates]);
 
     const dates = useMemo(() => {
-        const today = dayjs();
         return visibleDates.map(d => ({
             date: d,
             checked: selectedDates.findIndex(gd => gd.isSame(d, 'day')) !== -1,
             reserved: reservations?.findIndex(r => r.date.isSame(d, 'day')) !== -1,
             past: d.isBefore(today, 'day'),
+            notAvailable: checkIfNotAvailable(d),
         }));
-    }, [selectedDates, reservations, visibleDates]);
+    }, [checkIfNotAvailable, selectedDates, reservations, visibleDates, today]);
+
+    const setSelectedDates = useCallback(selectedDates => {
+        _setSelectedDates(_selectedDates => {
+            let dates = selectedDates;
+            if (typeof selectedDates === 'function')
+                dates = selectedDates(_selectedDates);
+            return dates.filter(d => !checkIfNotAvailable(d));
+        });
+    }, [checkIfNotAvailable]);
 
     useEffect(() => {
         onGroupDatesChange(selectedDates);
@@ -73,7 +96,7 @@ export function GroupDatesForm({
 
         setVisibleDates(visibleDates);
         setSelectedDates(selectedDates);
-    }, [reservations, date, repeatValuesMap]);
+    }, [reservations, date, repeatValuesMap, setSelectedDates]);
 
     const addDate = useCallback(() => {
         setVisibleDates(visibleDates => {
@@ -82,7 +105,7 @@ export function GroupDatesForm({
             setSelectedDates(selectedDates => [...selectedDates, add]);
             return [...visibleDates, add];
         });
-    }, [repeatValue]);
+    }, [repeatValue, setSelectedDates]);
 
     const removeDate = useCallback(() => {
         setVisibleDates(visibleDates => {
@@ -93,7 +116,7 @@ export function GroupDatesForm({
             setSelectedDates(selectedDates => selectedDates.filter(gd => !gd.isSame(last, 'day')));
             return visibleDates.slice(0, -1);
         });
-    }, [reservations]);
+    }, [reservations, setSelectedDates]);
 
     const handleEnabledChange = useCallback(e => {
         setEnabled(e.target.checked);
@@ -109,7 +132,7 @@ export function GroupDatesForm({
 
         setVisibleDates(newDates);
         setSelectedDates(newDates);
-    }, [date, defaultAddCount]);
+    }, [date, defaultAddCount, setSelectedDates]);
 
     const handleCheckedChange = useCallback(e => {
         const index = e.target.value;
@@ -123,7 +146,7 @@ export function GroupDatesForm({
             newSelection.sort((a, b) => a.valueOf() - b.valueOf());
             return newSelection;
         });
-    }, [visibleDates]);
+    }, [visibleDates, setSelectedDates]);
 
     return (
         <div className={styles.wrapper}>
@@ -156,7 +179,7 @@ export function GroupDatesForm({
                             <Divider />
 
                             <div className={styles.dates}>
-                                {dates.map(({ date, checked, reserved, past }, i) => (
+                                {dates.map(({ date, checked, reserved, past, notAvailable }, i) => (
                                     <Checkbox
                                         className={cn({
                                             unchecked: !checked,
@@ -164,14 +187,15 @@ export function GroupDatesForm({
                                         })}
                                         key={date}
                                         value={i}
-                                        disabled={past}
+                                        disabled={past || notAvailable}
                                         checked={checked}
                                         onChange={handleCheckedChange}
                                     >
                                         <span className={styles.date}>{date.format('dd L')}</span>
-                                        {!past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
-                                        {!past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
-                                        {past && <span className={styles.extra}> Bereits vergangen</span>}
+                                        {!notAvailable && !past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
+                                        {!notAvailable && !past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
+                                        {!notAvailable && past && <span className={styles.extra}> Bereits vergangen</span>}
+                                        {notAvailable && <span className={styles.extra}> Nicht verfügbar</span>}
                                     </Checkbox>
                                 ))}
                             </div>

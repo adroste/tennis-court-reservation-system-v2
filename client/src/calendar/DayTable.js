@@ -13,15 +13,13 @@ export function DayTable({
     hours,
     reservationDaysInAdvance,
 }) {
-    const isToday = today.isSame(date, 'day');
-    const inPast = date.isBefore(today, 'day');
-    const tooFarAhead = date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day');
+    const isToday = useMemo(() => today.isSame(date, 'day'), [date, today]);
+    const inPast = useMemo(() => date.isBefore(today, 'day'), [date, today]);
+    const tooFarAhead = useMemo(() => 
+        date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day'), [date, reservationDaysInAdvance, today]);
 
-    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabledFrom, disabledTil }) => {
-        const manuallyDisabled = disabledFrom && (
-                disabledTil
-                    ? date.isBetween(disabledFrom, disabledTil, 'day', '[]')
-                    : date.isSameOrAfter(disabledFrom, 'day'));
+    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabled, disabledFromTil }) => {
+        const manuallyDisabled = disabled && date.isBetween(disabledFromTil[0], disabledFromTil[1], 'day', '[]');
         return {
             courtId,
             name,

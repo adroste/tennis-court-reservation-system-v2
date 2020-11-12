@@ -68,3 +68,5 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] demo mode
 * [ ] antd message for reservation successful, change, cancel, ...
 * [ ] admin cancel reservation => reason 
+* [x] reset button for forms
+* [x] groupdatesform check tooFarAhead and disabledDates

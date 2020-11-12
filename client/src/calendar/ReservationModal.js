@@ -12,6 +12,7 @@ export function ReservationModal({
     date,
     courtId,
     reservation,
+    today,
     onFinish,
 }) {
     const { courts, texts: { reservationPrice, reservationTos } } = useContext(appContext);
@@ -111,9 +112,12 @@ export function ReservationModal({
 
                     {canEdit && (!reservation || groupReservations.length > 1) &&
                         <GroupDatesForm
+                            courtId={courtId}
                             date={date}
                             onGroupDatesChange={handleGroupDatesChange}
                             reservations={groupReservations}
+                            today={today}
+                            // unavailableDates= //TODO
                         />
                     }
                 </div>

@@ -74,14 +74,18 @@ export function AppContextProvider({ children }) {
                 announcement: "Beispielankündigung: abcdefg bla bla",
                 courts: [
                     {
-                        courtId: 0,
+                        courtId: 1,
                         name: 'Platz 1',
                     },
                     {
-                        courtId: 1,
+                        courtId: 2,
                         name: 'Platz 2',
-                        disabledFrom: dayjs().subtract(2, 'week'),
-                        disabledTil: dayjs().add(4, 'week'),
+                        disabled: true,
+                        disabledFromTil: [
+                            dayjs().subtract(2, 'week'),
+                            dayjs().add(4, 'week'),
+                            // dayjs().add(8, 'week'),
+                        ],
                         disabledReason: '<hier beliebigen Grund einsetzen>',
                     },
                     // {

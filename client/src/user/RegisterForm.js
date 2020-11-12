@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input } from 'antd';
-import React, { useContext, useEffect } from 'react';
+import { Button, Checkbox, Form, Input, Space } from 'antd';
+import React, { useCallback, useContext, useEffect } from 'react';
 
 import { appContext } from '../AppContext';
 import styles from './RegisterForm.module.css';
@@ -8,10 +8,13 @@ export function RegisterForm({
     newUser,
     currentName,
     currentMail,
+    reset,
 }) {
     const { texts: { systemTos } } = useContext(appContext);
 
     const [form] = Form.useForm();
+
+    const resetForm = useCallback(() => form.resetFields(), [form]);
 
     useEffect(() => {
         form.resetFields();
@@ -127,9 +130,16 @@ export function RegisterForm({
             }
 
             <Form.Item>
-                <Button type="primary" htmlType="submit">
-                    {newUser ? "Registrieren" : "Speichern"}
-                </Button>
+                <Space>
+                    <Button type="primary" htmlType="submit">
+                        {newUser ? "Registrieren" : "Speichern"}
+                    </Button>
+                    {reset &&
+                        <Button type="default" onClick={resetForm}>
+                            Zurücksetzen
+                        </Button>
+                    }
+                </Space>
             </Form.Item>
         </Form>
     );

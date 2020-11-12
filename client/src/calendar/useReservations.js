@@ -29,7 +29,7 @@ function mockSingleReservation(i, mDate, groupId, customName) {
 
     const id = `${i}_${mDate}`;
 
-    const courtId = i % courtCount;
+    const courtId = (i % courtCount) + 1;
 
     const userId = ((i * 3) % names.length) + 1;
     const name = names[userId - 1];

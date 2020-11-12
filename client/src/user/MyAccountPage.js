@@ -1,5 +1,5 @@
 import { Button, Divider, Form, Typography } from 'antd';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 
 import { RegisterForm } from './RegisterForm';
 import { authContext } from '../AuthContext';
@@ -10,9 +10,11 @@ export function MyAccountPage() {
     const { user: { name, mail } } = useContext(authContext);
     const [form] = Form.useForm();
 
-    useEffect(() => {
-        form.resetFields();
-    }, [form, name, mail]);
+    // const resetForm = useCallback(() => form.resetFields(), [form]);
+
+    // useEffect(() => {
+    //     form.resetFields();
+    // }, [form, name, mail]);
 
     // const onFinish = values => {
     //     console.log('Success:', values);
@@ -29,6 +31,7 @@ export function MyAccountPage() {
             <RegisterForm
                 currentMail={mail}
                 currentName={name}
+                reset
             />
 
             <Divider />

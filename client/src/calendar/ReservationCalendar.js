@@ -80,6 +80,7 @@ export function ReservationCalendar({
                         date={selectedSlot?.date}
                         courtId={selectedSlot?.courtId}
                         reservation={selectedSlot?.reservation}
+                        today={today}
                         onFinish={handleReservationFinish}
                     />
                 ) : (
