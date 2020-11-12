@@ -2,13 +2,13 @@ import React from 'react';
 import styles from './HoursTable.module.css';
 
 export function HoursTable({
-    visibleHours,
+    hours,
 }) {
     return (
         <div className={styles.hoursTableWrapper}>
             <table className={styles.hoursTable}>
                 <tbody>
-                    {visibleHours.map(hour => (
+                    {hours.map(hour => (
                         <tr key={hour}>
                             <th>
                                 <div className={styles.hour}>

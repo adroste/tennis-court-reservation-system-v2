@@ -9,8 +9,8 @@ export function SlotCell({
     courtId,
     courtName,
     disabled = false,
+    disabledText,
     hour,
-    inPast,
     onClick,
     reservation,
 }) {
@@ -23,7 +23,7 @@ export function SlotCell({
         <td
             className={cn({
                 cell: true,
-                enabled: !disabled && !inPast,
+                enabled: !disabled,
             })}
             onClick={handleClick}
         >
@@ -31,14 +31,14 @@ export function SlotCell({
                 className={cn({
                     slot: true,
                     reserved: reservation,
-                    free: !reservation,
                     disabled,
+                    disabledText,
                 })}
-                data-disabled-text="Gesperrt"
                 data-free-text="Frei"
                 data-free-text-hover={`${hour} Uhr, ${courtName}`}
             >
-                {!disabled && reservation && (reservation.customName ?? reservation.name)}
+                {!(disabled && disabledText) && reservation && (reservation.customName ?? reservation.name)}
+                {disabled && disabledText}
             </div>
         </td>
     );

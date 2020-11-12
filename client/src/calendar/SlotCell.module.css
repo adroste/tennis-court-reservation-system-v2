@@ -29,11 +29,11 @@
     opacity: 1;
 }
 
-.cell.enabled .free::after {
+.cell.enabled .slot:not(.reserved)::after {
     content: attr(data-free-text);
 }
 
-.cell.enabled:hover .free::after {
+.cell.enabled:hover .slot:not(.reserved)::after {
     content: attr(data-free-text-hover);
 }
 
@@ -41,7 +41,7 @@
     content: attr(data-disabled-text);
 }
 
-.reserved:not(.disabled) {
+.reserved:not(.disabledText) {
     opacity: 1;
     color: #fff;
     background: #FF4136;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { appContext } from './AppContext';
 
 export function Footer() {
-    const { title } = useContext(appContext);
+    const { orgName } = useContext(appContext);
 
     return (
         <>
@@ -12,7 +12,7 @@ export function Footer() {
                 <Link to="/legalnotice-privacy">Impressum / Datenschutz</Link>
             </p>
             <p>
-                ©2020 {title} - entwickelt von <a target="_blank" rel="noopener noreferrer" href="https://github.com/alexdroste/reservierungssystem-tennis-v2">Alexander&nbsp;Droste</a>
+                ©2020 {orgName} - entwickelt von <a target="_blank" rel="noopener noreferrer" href="https://github.com/alexdroste/reservierungssystem-tennis-v2">Alexander&nbsp;Droste</a>
             </p>
         </>
     );

@@ -16,12 +16,19 @@ export function ReservationCalendar({
     today,
 }) {
     const { user } = useContext(authContext);
-    const { courts, visibleHours } = useContext(appContext);
+    const { courts, visibleHours, reservationDaysInAdvance } = useContext(appContext);
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
 
     const reservations = useWeekReservations(selectedDate);
+
+    const hours = useMemo(() => {
+        const hours = [];
+        for (let i = visibleHours[0]; i < visibleHours[1]; ++i)
+            hours.push(i);
+        return hours;
+    }, [visibleHours]);
 
     const visibleDates = useMemo(() => Array.from(Array(visibleDatesCount)).map((_, i) =>
         selectedDate.startOf('week').add(i, 'day')
@@ -49,7 +56,7 @@ export function ReservationCalendar({
     return (
         <>
             <div className={styles.tableWrapper}>
-                <HoursTable visibleHours={visibleHours} />
+                <HoursTable hours={hours} />
 
                 <div className={styles.tableScroller} ref={scrollerRef}>
                     {visibleDates.map(date => (
@@ -58,9 +65,10 @@ export function ReservationCalendar({
                             date={date}
                             today={today}
                             courts={courts}
-                            visibleHours={visibleHours}
+                            hours={hours}
                             reservations={reservations}
                             onSlotClick={handleSlotClicked}
+                            reservationDaysInAdvance={reservationDaysInAdvance}
                         />
                     ))}
                 </div>

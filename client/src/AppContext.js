@@ -68,10 +68,6 @@ export function AppContextProvider({ children }) {
 
     useEffect(() => {
         (async () => {
-            const fromTilHours = [8, 22];
-            const visibleHours = [];
-            for (let i = fromTilHours[0]; i < fromTilHours[1]; ++i)
-                visibleHours.push(i);
 
             setTimeout(() => 
             setData({
@@ -93,10 +89,14 @@ export function AppContextProvider({ children }) {
                     //     name: 'Platz 3',
                     // }
                 ],
-                visibleHours,
-                title: 'Tennisclub Beispiel',
+                visibleHours: [8, 22],
+                orgName: 'Tennisclub Beispiel',
                 texts,
                 mailTemplates,
+                serverMail: 'abc@def.de',
+                url: 'https://reservierung.xyz.de',
+                reservationDaysInAdvance: 90,
+                reservationMaxActiveCount: 15,
             })
             , 400);
         })();

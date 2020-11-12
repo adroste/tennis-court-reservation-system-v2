@@ -7,7 +7,7 @@ import { appContext } from '../AppContext';
 import styles from './NavBar.module.css';
 
 export function NavBar() {
-    const { title } = useContext(appContext);
+    const { orgName } = useContext(appContext);
 
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -18,7 +18,7 @@ export function NavBar() {
         <Layout.Header className={styles.header}>
             <div className={styles.title}>
                 <h1>
-                    {title}
+                    {orgName}
                 </h1>
                 <Typography.Text type="secondary">
                     Reservierungssystem
@@ -34,7 +34,7 @@ export function NavBar() {
                     onClick={openMenu}
                 />
                 <Drawer
-                    title={`${title}\nReservierungssystem`}
+                    title={`${orgName}\nReservierungssystem`}
                     visible={drawerOpen}
                     width={300}
                     className={styles.drawer}

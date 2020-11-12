@@ -10,21 +10,25 @@ export function DayTable({
     onSlotClick,
     reservations,
     today,
-    visibleHours,
+    hours,
+    reservationDaysInAdvance,
 }) {
     const isToday = today.isSame(date, 'day');
     const inPast = date.isBefore(today, 'day');
+    const tooFarAhead = date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day');
 
-    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabledFrom, disabledTil }) => ({
-        courtId,
-        name,
-        disabled: disabledFrom ?
-            (
-                disabledTil 
+    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabledFrom, disabledTil }) => {
+        const manuallyDisabled = disabledFrom && (
+                disabledTil
                     ? date.isBetween(disabledFrom, disabledTil, 'day', '[]')
-                    : date.isSameOrAfter(disabledFrom, 'day')
-            ) : false,
-    })), [courts, date]);
+                    : date.isSameOrAfter(disabledFrom, 'day'));
+        return {
+            courtId,
+            name,
+            disabled: inPast || tooFarAhead || manuallyDisabled,
+            disabledText: manuallyDisabled ? 'Gesperrt' : null,
+        };
+    }), [courts, date, inPast, tooFarAhead]);
 
     const handleClick = useCallback(({ courtId, hour, reservation }) => {
         onSlotClick({
@@ -55,16 +59,16 @@ export function DayTable({
                     </tr>
                 </thead>
                 <tbody>
-                    {visibleHours.map(hour => (
+                    {hours.map(hour => (
                         <tr key={hour}>
-                            {courtsToday.map(({ courtId, name, disabled }) => (
+                            {courtsToday.map(({ courtId, name, disabled, disabledText }) => (
                                 <SlotCell
                                     key={courtId}
                                     courtId={courtId}
                                     courtName={name}
-                                    inPast={inPast}
                                     hour={hour}
                                     disabled={disabled}
+                                    disabledText={disabledText}
                                     onClick={handleClick}
                                     reservation={findReservation(reservations, date.hour(hour), courtId)}
                                 />

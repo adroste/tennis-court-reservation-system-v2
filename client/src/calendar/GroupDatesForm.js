@@ -95,7 +95,7 @@ export function GroupDatesForm({
         });
     }, [reservations]);
 
-    const handleEnableChange = useCallback(e => {
+    const handleEnabledChange = useCallback(e => {
         setEnabled(e.target.checked);
     }, []);
 
@@ -130,7 +130,7 @@ export function GroupDatesForm({
             <div className={styles.enableCheckbox}>
                 <Checkbox
                     checked={enabled}
-                    onChange={handleEnableChange}
+                    onChange={handleEnabledChange}
                     disabled={reservations?.length}
                 >
                     Wiederholen / Regelmäßiger Termin
