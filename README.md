@@ -46,8 +46,6 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] .htaccess for client side routing
 * [x] disabled dates for reservation < today
 * [x] reservations days in advance (implement)
-* [ ] php sanitize html text blocks (remove script tags)
-* [ ] insert custom head tags
 * [ ] html editor switch
 * [ ] editor 16px font-size
 * [x] replace antd typography heading

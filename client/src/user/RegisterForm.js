@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Typography } from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
 import React, { useContext, useEffect } from 'react';
 
 import { appContext } from '../AppContext';

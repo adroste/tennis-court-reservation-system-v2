@@ -1,8 +1,7 @@
-import { Alert, Button, Checkbox, Form, Input, Typography } from 'antd';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import React, { useContext, useEffect } from 'react';
 
+import { Alert } from 'antd';
 import { LoginForm } from './LoginForm';
 import { authContext } from '../AuthContext';
 import styles from './LoginPage.module.css';

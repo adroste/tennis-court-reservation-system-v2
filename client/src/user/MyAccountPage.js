@@ -14,13 +14,13 @@ export function MyAccountPage() {
         form.resetFields();
     }, [form, name, mail]);
 
-    const onFinish = values => {
-        console.log('Success:', values);
-    };
+    // const onFinish = values => {
+    //     console.log('Success:', values);
+    // };
 
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
+    // const onFinishFailed = errorInfo => {
+    //     console.log('Failed:', errorInfo);
+    // };
 
     return (
         <div className={styles.wrapper}>

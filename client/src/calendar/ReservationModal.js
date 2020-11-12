@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal, Typography } from 'antd';
+import { Button, Checkbox, Modal } from 'antd';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { DoReservationModal } from './DoReservationModal';
@@ -21,14 +21,14 @@ export function ReservationModal({
     const [tosAccepted, setTosAccepted] = useState(false);
     const [newCustomName, setNewCustomName] = useState(null);
     const [newGroupDates, setNewGroupDates] = useState();
-    const [cancelConfirm, setCancelConfirm] = useState(false);
-    const [changeConfirm, setChangeConfirm] = useState(false);
+    // const [cancelConfirm, setCancelConfirm] = useState(false);
+    // const [changeConfirm, setChangeConfirm] = useState(false);
 
     // todo user context
     const name = reservation?.name || "Günther Jacob";
     const customName = reservation?.customName;
     const admin = true;
-    const myReservation = false;
+    // const myReservation = false;
     const canEdit = true;
 
     const groupReservations = useGroupReservations(reservation?.groupId);
@@ -48,9 +48,9 @@ export function ReservationModal({
         setTosAccepted(e.target.checked);
     }, []);
 
-    const showCancelConfirm = useCallback(() => {
-        setCancelConfirm(true);
-    }, []);
+    // const showCancelConfirm = useCallback(() => {
+    //     setCancelConfirm(true);
+    // }, []);
 
     const handleNewCustomNameChange = useCallback(name => {
         setNewCustomName(name);
