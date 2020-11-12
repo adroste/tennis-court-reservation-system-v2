@@ -17,9 +17,9 @@ export function NavBar() {
     return (
         <Layout.Header className={styles.header}>
             <div className={styles.title}>
-                <h1>
+                <div className={styles.orgName}>
                     {orgName}
-                </h1>
+                </div>
                 <Typography.Text type="secondary">
                     Reservierungssystem
                 </Typography.Text>

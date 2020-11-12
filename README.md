@@ -45,13 +45,14 @@ Reservation system for tennis courts. Only german at the moment.
     * [ ] device
 * [ ] .htaccess for client side routing
 * [x] disabled dates for reservation < today
+* [x] reservations days in advance (implement)
 * [ ] php sanitize html text blocks (remove script tags)
 * [ ] insert custom head tags
 * [ ] html editor switch
 * [ ] editor 16px font-size
 * [ ] replace antd typography heading
 * [ ] style h1 / h2 / h3 elements
-* [ ] navbar replace h1
+* [x] navbar replace h1
 * [x] my reservations page auto day switch
 * [x] my reservations page check for date >= today
 * [x] announcements
@@ -69,12 +70,3 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] demo mode
 * [ ] antd message for reservation successful, change, cancel, ...
 * [ ] admin cancel reservation => reason 
-
-#### settings
-
-* URL
-* Vereinsname
-* Tage im voraus reservieren
-* Wie viele aktive Reservierungen pro Nutzer
-* E-Mail Adresse (senden)
-* Angezeigte Zeiten (8-22 Uhr)
