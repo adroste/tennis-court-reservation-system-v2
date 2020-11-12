@@ -15,8 +15,9 @@ code {
     box-sizing: border-box;
 }
 
-h2 {
-    font-size: 1.3em;
+h1 {
+    font-weight: 600;
+    font-size: 24px;
 }
 
 input {

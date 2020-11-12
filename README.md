@@ -50,8 +50,8 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] insert custom head tags
 * [ ] html editor switch
 * [ ] editor 16px font-size
-* [ ] replace antd typography heading
-* [ ] style h1 / h2 / h3 elements
+* [x] replace antd typography heading
+* [x] style h1 / h2 / h3 elements
 * [x] navbar replace h1
 * [x] my reservations page auto day switch
 * [x] my reservations page check for date >= today

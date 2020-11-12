@@ -46,7 +46,7 @@ export function MyReservationsPage() {
 
             {myReservations?.length > 0 &&
                 <>
-                    <h2>Nächster Termin</h2>
+                    <h1>Nächster Termin</h1>
                     <div className={styles.content}>
                         <ReservationDetailsCard
                             key={myReservations[0].id}
@@ -60,7 +60,7 @@ export function MyReservationsPage() {
 
             {myReservations?.length > 1 &&
                 <>
-                    <h2>Weitere Termine</h2>
+                    <h1>Weitere Termine</h1>
                     <div className={styles.content}>
                         {myReservations.map((reservation, i) => {
                             if (i === 0)

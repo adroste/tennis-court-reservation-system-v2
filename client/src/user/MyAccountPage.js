@@ -24,7 +24,7 @@ export function MyAccountPage() {
 
     return (
         <div className={styles.wrapper}>
-            <Typography.Title level={3}>Benutzerkonto</Typography.Title>
+            <h1>Benutzerkonto</h1>
 
             <RegisterForm
                 currentMail={mail}
@@ -33,7 +33,7 @@ export function MyAccountPage() {
 
             <Divider />
 
-            <Typography.Title level={3}>Datenschutz</Typography.Title>
+            <h1>Datenschutz</h1>
             <div className={styles.buttonWrapper}>
                 <Button>
                     Datenauskunft anfordern

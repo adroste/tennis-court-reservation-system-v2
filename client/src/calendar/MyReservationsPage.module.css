@@ -6,9 +6,9 @@
     padding: 20px 20px 0;
 }
 
-.wrapper > h2 {
+.wrapper > h1 {
     margin-bottom: 0;
-    font-size: 24px;
+    font-weight: 400;
 }
 
 .content {

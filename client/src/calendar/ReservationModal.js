@@ -122,18 +122,14 @@ export function ReservationModal({
                     <>
                         {reservationPrice &&
                             <div>
-                                <Typography.Title level={4}>
-                                    Preis
-                                </Typography.Title>
+                                <h1>Preis</h1>
                                 <div dangerouslySetInnerHTML={{ __html: reservationPrice }} />
                             </div>
                         }
 
                         {reservationTos &&
                             <div>
-                                <Typography.Title level={4}>
-                                    Nutzungsordnung
-                                </Typography.Title>
+                                <h1>Nutzungsordnung</h1>
                                 <div dangerouslySetInnerHTML={{ __html: reservationTos }} />
 
                                 <Checkbox

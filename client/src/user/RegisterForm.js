@@ -105,9 +105,7 @@ export function RegisterForm({
             {newUser &&
                 <>
                     <div>
-                        <Typography.Title level={4}>
-                            Nutzungsbedingungen
-                        </Typography.Title>
+                        <h1>Nutzungsbedingungen</h1>
                         <div dangerouslySetInnerHTML={{ __html: systemTos }} />
                     </div>
 

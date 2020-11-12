@@ -28,7 +28,7 @@ export function LoginPage() {
             } />
         </div>
         <div className={styles.wrapper}>
-            <Typography.Title level={3}>Anmelden</Typography.Title>
+            <h1>Anmelden</h1>
 
             <LoginForm />
         </div>
