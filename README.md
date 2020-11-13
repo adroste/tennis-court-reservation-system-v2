@@ -71,6 +71,6 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] reset button for forms
 * [x] groupdatesform check tooFarAhead and disabledDates
 * [x] fix disabled announcement not showing
-* [ ] weekpicker => heute button
+* [x] weekpicker => heute button
 * [x] isEmpty check for templates
 * [ ] test mail template button

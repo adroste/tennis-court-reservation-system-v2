@@ -43,27 +43,37 @@ export function WeekPicker({
     return (
         <div className={styles.wrapper}>
 
-            <DatePicker
-                className={styles.picker}
-                picker="week"
-                open={open}
-                inputReadOnly
-                allowClear={false}
-                bordered={true}
-                value={date}
-                onOpenChange={handleOpenChange}
-                format={'[Kalenderwoche] w (YYYY)'}
-                onClick={handleClick}
-                onChange={handleChange}
-                panelRender={panel => 
-                    <div className={styles.pickerPanel}>
-                        {panel}
-                    </div>
-                }
-                renderExtraFooter={() => 
-                    <Button onClick={handleThisWeekButtonClick} type="link">Diese Woche</Button>
-                }
-            />
+            <div className={styles.middlePicker}>
+                <DatePicker
+                    className={styles.picker}
+                    picker="week"
+                    open={open}
+                    inputReadOnly
+                    allowClear={false}
+                    bordered={true}
+                    value={date}
+                    onOpenChange={handleOpenChange}
+                    format={'[Kalenderwoche] w (YYYY)'}
+                    onClick={handleClick}
+                    onChange={handleChange}
+                    panelRender={panel => 
+                        <div className={styles.pickerPanel}>
+                            {panel}
+                        </div>
+                    }
+                    renderExtraFooter={() => 
+                        <Button onClick={handleThisWeekButtonClick} type="link">Diese Woche</Button>
+                    }
+                />
+
+                <Button 
+                    className={styles.outerThisWeekButton}
+                    onClick={handleThisWeekButtonClick} 
+                    type="link"
+                >
+                    Zu Heute springen
+                </Button>
+            </div>
 
             <Button 
                 className={styles.leftButton} 

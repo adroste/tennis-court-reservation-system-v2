@@ -8,6 +8,15 @@
     width: 320px;
 }
 
+.middlePicker {
+    display: flex;
+    align-items: center;
+}
+
+.outerThisWeekButton {
+    display: none;
+}
+
 .picker {
     display: block;
     width: 310px;
@@ -52,5 +61,11 @@
 
     .leftButton {
         order: -1;
+    }
+}
+
+@media (min-width: 900px) {
+    .outerThisWeekButton {
+        display: initial;
     }
 }
