@@ -31,11 +31,11 @@ export function CalendarPage() {
                 </div>
             }
 
-            {courts.map(({ courtId, name, disabledFrom, disabledTil, disabledReason }) => (
-                disabledFrom && (
+            {courts.map(({ courtId, name, disabled, disabledFromTil, disabledReason }) => (
+                disabled && (
                     <div key={courtId} className={styles.alert}>
                         <Alert
-                            message={`${name} ist gesperrt ab ${disabledFrom.format('dd L')}${disabledTil ? disabledTil.format('[ bis] dd L') : ''}${disabledReason ? `: ${disabledReason}` : ''}`}
+                            message={`${name} ist gesperrt ab ${disabledFromTil[0].format('dd L')}${disabledFromTil[1] ? disabledFromTil[1].format('[ bis] dd L') : ''}${disabledReason ? `: ${disabledReason}` : ''}`}
                             type="warning"
                             showIcon
                         />

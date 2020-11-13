@@ -70,3 +70,5 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] admin cancel reservation => reason 
 * [x] reset button for forms
 * [x] groupdatesform check tooFarAhead and disabledDates
+* [x] fix disabled announcement not showing
+* [ ] weekpicker => heute button
