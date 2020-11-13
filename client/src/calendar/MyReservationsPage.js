@@ -5,7 +5,7 @@ import { ReservationDetailsCard } from './ReservationDetailsCard';
 import { ReservationModal } from './ReservationModal';
 import { authContext } from '../AuthContext';
 import styles from './MyReservationsPage.module.css';
-import { useToday } from './useToday';
+import { useTime } from './useTime';
 import { useUserReservations } from './useReservations';
 
 function getGroupDates(myReservations, reservation) {
@@ -20,7 +20,7 @@ export function MyReservationsPage() {
 
     const { user: { userId } } = useContext(authContext);
 
-    const today = useToday();
+    const today = useTime('day');
     const [selectedReservation, setSelectedReservation] = useState();
 
     const myReservations = useUserReservations(today, userId);

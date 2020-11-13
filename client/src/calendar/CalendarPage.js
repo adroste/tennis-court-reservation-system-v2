@@ -5,13 +5,13 @@ import { ReservationCalendar } from './ReservationCalendar';
 import { WeekPicker } from './WeekPicker';
 import { appContext } from '../AppContext';
 import styles from './CalendarPage.module.css';
-import { useToday } from './useToday';
+import { useTime } from './useTime';
 
 export function CalendarPage() {
 
     const { announcement, courts } = useContext(appContext);
 
-    const today = useToday();
+    const today = useTime('day');
     const [selectedDate, setSelectedDate] = useState(null);
 
     const handleWeekChange = useCallback(date => {

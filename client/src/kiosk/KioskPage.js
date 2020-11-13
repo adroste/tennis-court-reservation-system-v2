@@ -6,13 +6,13 @@ import { ReservationCalendar } from '../calendar/ReservationCalendar';
 import { SystemLinkQr } from './SystemLinkQr';
 import { appContext } from '../AppContext';
 import styles from './KioskPage.module.css';
-import { useToday } from '../calendar/useToday';
+import { useTime } from '../calendar/useTime';
 
 export function KioskPage() {
 
     const { announcement, courts, orgName } = useContext(appContext);
 
-    const today = useToday();
+    const hour = useTime('hour');
 
     return (
         <div className={styles.wrapper}>
@@ -59,8 +59,9 @@ export function KioskPage() {
             ))}
 
             <ReservationCalendar
-                selectedDate={today}
-                today={today}
+                selectedDate={hour}
+                today={hour}
+                highlightHour={hour.hour()}
             />
         </div>
     );
