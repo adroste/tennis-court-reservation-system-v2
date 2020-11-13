@@ -1,0 +1,13 @@
+.court {
+    display: flex;
+    flex-direction: column;
+}
+
+.court > div + div {
+    margin-top: -20px;
+}
+
+.courtIdInput {
+    width: 20px;
+    padding: 0;
+}
