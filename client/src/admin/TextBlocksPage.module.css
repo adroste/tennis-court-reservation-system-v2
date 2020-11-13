@@ -1,0 +1,20 @@
+.wrapper {
+    width: 100vw;
+    padding: 20px 0;
+}
+
+.tabs > div:first-child {
+    margin-bottom: 0!important;
+}
+
+.content {
+    padding: 20px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+@media (min-width: 800px) {
+    .wrapper {
+        width: 800px;
+    }
+}

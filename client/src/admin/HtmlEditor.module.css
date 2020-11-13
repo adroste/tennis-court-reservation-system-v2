@@ -1,0 +1,8 @@
+.toolbar {
+    background: #fff!important;
+}
+
+.varWidth {
+    width: inherit !important;
+    padding: 0 2px !important;
+}
