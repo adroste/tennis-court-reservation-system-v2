@@ -25,9 +25,11 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] Logos
 * [ ] Size + Code-Splitting
 * [ ] Kiosk Mode
-  * [ ] Clock + Date
-  * [ ] URL + QR Code
-  * [ ] Auto refresh / Auto day switch
+  * [x] Clock + Date
+  * [x] URL + QR Code
+  * [ ] Auto refresh reservation data
+  * [x] Auto day switch
+  * [ ] highlight current row
 * [ ] Analytics
   * [ ] backend: create fingerprint by header + ip, change daily
   * [ ] mark user count as predicted

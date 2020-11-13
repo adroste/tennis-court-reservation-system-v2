@@ -1,0 +1,32 @@
+.wrapper {
+    display: inline-block;
+    padding: 20px;
+}
+
+.time {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.date {
+    text-align: center;
+    font-size: 20px;
+}
+
+.clockDots {
+
+    animation: blink 2s linear infinite;
+}
+
+@keyframes blink {  
+    0% { 
+        opacity: 0; 
+    }
+    50% { 
+        opacity: 1; 
+    }
+    100% { 
+        opacity: 0; 
+    }
+}

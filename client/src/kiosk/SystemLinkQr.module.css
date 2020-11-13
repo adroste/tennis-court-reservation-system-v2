@@ -1,0 +1,15 @@
+.wrapper {
+    display: inline-block;
+    padding: 20px;
+}
+
+.qr {
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.plain {
+    text-align: center;
+    font-size: 20px;
+}

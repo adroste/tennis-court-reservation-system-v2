@@ -1,0 +1,44 @@
+.wrapper > * {
+    margin-top: 20px;
+}
+
+.wrapper {
+    padding-top: 150px;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    padding: 0 8vw;
+    margin: 0;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.title,
+.linkQr {
+    flex: 1;
+}
+
+.linkQr {
+    text-align: right;
+}
+
+.orgName {
+    font-size: 36px;
+}
+
+.subTitle {
+    font-size: 24px;
+}
+
+.alert {
+    text-align: center;
+}
+
+.alert > * {
+    display: inline-block;
+}

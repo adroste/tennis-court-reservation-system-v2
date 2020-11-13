@@ -1,6 +1,6 @@
 .content {
     /* navbar 64px */
-    margin: calc(64px) auto 0;
+    margin: 64px auto 0;
     border-radius: 2px;
     max-width: 100%;
 }
