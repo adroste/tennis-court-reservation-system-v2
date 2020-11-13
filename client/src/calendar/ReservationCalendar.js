@@ -14,6 +14,7 @@ const visibleDatesCount = 7; // week
 export function ReservationCalendar({
     selectedDate,
     today,
+    highlightHour,
 }) {
     const { user } = useContext(authContext);
     const { courts, visibleHours, reservationDaysInAdvance } = useContext(appContext);
@@ -25,7 +26,7 @@ export function ReservationCalendar({
 
     const hours = useMemo(() => {
         const hours = [];
-        for (let i = visibleHours[0]; i < visibleHours[1]; ++i)
+        for (let i = parseInt(visibleHours[0]); i < parseInt(visibleHours[1]); ++i)
             hours.push(i);
         return hours;
     }, [visibleHours]);
@@ -56,7 +57,10 @@ export function ReservationCalendar({
     return (
         <>
             <div className={styles.tableWrapper}>
-                <HoursTable hours={hours} />
+                <HoursTable 
+                    hours={hours} 
+                    highlightHour={highlightHour}
+                />
 
                 <div className={styles.tableScroller} ref={scrollerRef}>
                     {visibleDates.map(date => (

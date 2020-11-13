@@ -24,12 +24,11 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] Legal Notice
 * [x] Logos
 * [ ] Size + Code-Splitting
-* [ ] Kiosk Mode
+* [x] Kiosk Mode
   * [x] Clock + Date
   * [x] URL + QR Code
-  * [ ] Auto refresh reservation data
   * [x] Auto day switch
-  * [ ] highlight current row
+  * [x] highlight current row
 * [ ] Analytics
   * [ ] backend: create fingerprint by header + ip, change daily
   * [ ] mark user count as predicted
@@ -46,6 +45,7 @@ Reservation system for tennis courts. Only german at the moment.
     * [ ] os
     * [ ] device
 * [ ] .htaccess for client side routing
+* [ ] Auto refresh reservation data (interval in useWeekReservations, ... hooks)
 * [x] disabled dates for reservation < today
 * [x] reservations days in advance (implement)
 * [x] html editor switch
