@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input, InputNumber, Slider, Space } from 'antd';
-import { CaretDownFilled, CaretDownOutlined, CaretUpOutlined, DeleteOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Space } from 'antd';
+import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { DatePicker } from '../calendar/DatePicker';
@@ -33,9 +33,9 @@ export function CourtConfigForm() {
         console.log('Success:', values);
     };
 
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
+    // const onFinishFailed = errorInfo => {
+    //     console.log('Failed:', errorInfo);
+    // };
 
     return (
         <Form

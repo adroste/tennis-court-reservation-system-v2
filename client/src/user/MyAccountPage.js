@@ -1,5 +1,5 @@
-import { Button, Divider, Form, Typography } from 'antd';
-import React, { useCallback, useContext, useEffect } from 'react';
+import { Button, Divider, Typography } from 'antd';
+import React, { useContext } from 'react';
 
 import { RegisterForm } from './RegisterForm';
 import { authContext } from '../AuthContext';
@@ -8,21 +8,6 @@ import styles from './MyAccountPage.module.css';
 export function MyAccountPage() {
 
     const { user: { name, mail } } = useContext(authContext);
-    const [form] = Form.useForm();
-
-    // const resetForm = useCallback(() => form.resetFields(), [form]);
-
-    // useEffect(() => {
-    //     form.resetFields();
-    // }, [form, name, mail]);
-
-    // const onFinish = values => {
-    //     console.log('Success:', values);
-    // };
-
-    // const onFinishFailed = errorInfo => {
-    //     console.log('Failed:', errorInfo);
-    // };
 
     return (
         <div className={styles.wrapper}>
