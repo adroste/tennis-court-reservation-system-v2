@@ -12,9 +12,10 @@ import { useWeekReservations } from './useReservations';
 const visibleDatesCount = 7; // week
 
 export function ReservationCalendar({
+    highlightHour,
+    kiosk = false,
     selectedDate,
     today,
-    highlightHour,
 }) {
     const { user } = useContext(authContext);
     const { courts, visibleHours, reservationDaysInAdvance } = useContext(appContext);
@@ -47,8 +48,9 @@ export function ReservationCalendar({
     }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
-        setSelectedSlot(selectedSlot);
-    }, []);
+        if (!kiosk)
+            setSelectedSlot(selectedSlot);
+    }, [kiosk]);
 
     const handleReservationFinish = useCallback(() => {
         setSelectedSlot(null);
