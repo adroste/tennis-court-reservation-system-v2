@@ -20,8 +20,8 @@ Reservation system for tennis courts. Only german at the moment.
 
 # Todos
 
-* [ ] Cookie Notice
-* [ ] Legal Notice
+* [x] Cookie Notice
+* [x] Legal Notice
 * [x] Logos
 * [ ] Size + Code-Splitting
 * [ ] Kiosk Mode
@@ -46,8 +46,8 @@ Reservation system for tennis courts. Only german at the moment.
 * [ ] .htaccess for client side routing
 * [x] disabled dates for reservation < today
 * [x] reservations days in advance (implement)
-* [ ] html editor switch
-* [ ] editor 16px font-size
+* [x] html editor switch
+* [x] editor 16px font-size
 * [x] replace antd typography heading
 * [x] style h1 / h2 / h3 elements
 * [x] navbar replace h1

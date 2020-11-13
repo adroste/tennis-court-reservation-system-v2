@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import { Ball } from './Ball';
+import { CookieNotice } from './CookieNotice';
 import { Footer } from './Footer';
 import { Layout } from 'antd';
 import { NavBar } from './navigation/NavBar';
@@ -12,26 +13,29 @@ import styles from './App.module.css';
 function App() {
     const appData = useContext(appContext);
 
-    return (
-        <>
+    if (!appData)
+        return (
             <Ball
                 visible={!appData}
                 preloader
                 spin
             />
-            {appData &&
-                <Router>
-                    <Layout>
-                        <NavBar />
-                        <Layout.Content className={styles.content}>
-                            <RouterSwitch />
-                        </Layout.Content>
-                        <Layout.Footer className={styles.footer}>
-                            <Footer />
-                        </Layout.Footer>
-                    </Layout>
-                </Router>
-            }
+        );
+
+    return (
+        <>
+            <Router>
+                <Layout>
+                    <NavBar />
+                    <Layout.Content className={styles.content}>
+                        <RouterSwitch />
+                    </Layout.Content>
+                    <Layout.Footer className={styles.footer}>
+                        <Footer />
+                    </Layout.Footer>
+                </Layout>
+            </Router>
+            <CookieNotice />
         </>
     );
 }
