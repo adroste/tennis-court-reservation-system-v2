@@ -31,7 +31,9 @@ export function KioskPage() {
                 <DateClock />
 
                 <div className={styles.linkQr}>
-                    <SystemLinkQr />
+                    <SystemLinkQr 
+                        bgColor="#f0f2f5"
+                    />
                 </div>
 
             </div>

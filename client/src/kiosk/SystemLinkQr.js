@@ -4,7 +4,9 @@ import QrCode from 'qrcode.react';
 import { appContext } from '../AppContext';
 import styles from './SystemLinkQr.module.css';
 
-export function SystemLinkQr() {
+export function SystemLinkQr({
+    bgColor,
+}) {
 
     const { url } = useContext(appContext);
 
@@ -14,10 +16,11 @@ export function SystemLinkQr() {
                 <QrCode
                     value={url}
                     size={150}
+                    bgColor={bgColor}
                 />
             </div>
             <div className={styles.plain}>
-                {url}
+                {url.replace(/(http|https):\/\//, '')}
             </div>
         </div>
     );
