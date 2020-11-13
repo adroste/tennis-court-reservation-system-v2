@@ -11,6 +11,7 @@ import { MyAccountPage } from '../user/MyAccountPage';
 import { MyReservationsPage } from '../calendar/MyReservationsPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RegisterPage } from '../user/RegisterPage';
+import { StatsPage } from '../admin/StatsPage';
 import { TextBlocksPage } from '../admin/TextBlocksPage';
 import { authContext } from '../AuthContext';
 
@@ -54,7 +55,7 @@ export function RouterSwitch() {
             </ProtectedRoute>
 
             <ProtectedRoute condition={user?.admin} exact path="/admin/stats">
-                Statistiken
+                <StatsPage />
             </ProtectedRoute>
 
             <ProtectedRoute condition={user?.admin} exact path="/admin/users">

@@ -1,0 +1,22 @@
+.wrapper {
+    width: 100vw;
+    padding: 20px;
+    margin-top: 20px;
+    background: #fff;
+}
+
+@media (min-width: 750px) {
+    .wrapper {
+        width: 750px;
+    }
+}
+
+.wrapper h3 {
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+.spacer {
+    width: 30px;
+}
