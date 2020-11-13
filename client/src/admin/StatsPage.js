@@ -75,6 +75,7 @@ export function StatsPage() {
                     <Statistic
                         title="Besucher"
                         value={123}
+                        prefix="&#177;"
                     />
 
                     <Statistic
