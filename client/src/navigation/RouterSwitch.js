@@ -6,15 +6,17 @@ import { GeneralSettingsPage } from '../admin/GeneralSettingsPage';
 import { InfoPage } from '../other/InfoPage';
 import { LegalPrivacyPage } from '../other/LegalPrivacyPage';
 import { LoginPage } from '../user/LoginPage';
+import { LogoutPage } from '../user/LogoutPage';
 import { MyAccountPage } from '../user/MyAccountPage';
 import { MyReservationsPage } from '../calendar/MyReservationsPage';
 import { ProtectedRoute } from './ProtectedRoute';
+import { RegisterPage } from '../user/RegisterPage';
 import { TextBlocksPage } from '../admin/TextBlocksPage';
 import { authContext } from '../AuthContext';
 
 export function RouterSwitch() {
 
-    const { admin, loggedIn } = useContext(authContext);
+    const { user } = useContext(authContext);
 
     return (
         <Switch>
@@ -31,31 +33,43 @@ export function RouterSwitch() {
                 <LegalPrivacyPage />
             </Route>
 
-            <Route path="/login"
-                render={() => 
-                    loggedIn 
+            <Route exact path="/logout">
+                <LogoutPage />
+            </Route>
+
+            <Route exact path="/login">
+                <LoginPage />
+            </Route>
+
+            <Route exact path="/register"
+                render={() =>
+                    user
                         ? <Redirect to="/" />
-                        : <LoginPage />
+                        : <RegisterPage />
                 }
             />
 
-            <ProtectedRoute condition={admin} path="/admin/general">
+            <ProtectedRoute condition={user?.admin} exact path="/admin/general">
                 <GeneralSettingsPage />
             </ProtectedRoute>
 
-            <ProtectedRoute condition={admin} exact path="/admin/users">
+            <ProtectedRoute condition={user?.admin} exact path="/admin/stats">
+                Statistiken
+            </ProtectedRoute>
+
+            <ProtectedRoute condition={user?.admin} exact path="/admin/users">
                 Verwaltung: User
             </ProtectedRoute>
 
-            <ProtectedRoute condition={admin} exact path="/admin/texts">
+            <ProtectedRoute condition={user?.admin} exact path="/admin/texts">
                 <TextBlocksPage />
             </ProtectedRoute>
 
-            <ProtectedRoute condition={loggedIn} exact path="/myreservations">
+            <ProtectedRoute condition={user} exact path="/myreservations">
                 <MyReservationsPage />
             </ProtectedRoute>
 
-            <ProtectedRoute condition={loggedIn} path="/myaccount">
+            <ProtectedRoute condition={user} exact path="/myaccount">
                 <MyAccountPage />
             </ProtectedRoute>
 

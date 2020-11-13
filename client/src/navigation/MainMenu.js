@@ -34,7 +34,7 @@ export function MainMenu({
 
     const handleLogoutClick = useCallback(() => {
         handleClick({ key: '/logout' });
-    }, []);
+    }, [handleClick]);
 
     /* Keys of Menu.Items match with the corresponding routes
      * in RouterSwitch to be able to map location.pathname directly
@@ -75,6 +75,9 @@ export function MainMenu({
                     >
                         <Menu.Item key="/admin/general">
                             Allgemein
+                        </Menu.Item>
+                        <Menu.Item key="/admin/stats">
+                            Statistiken
                         </Menu.Item>
                         <Menu.Item key="/admin/users">
                             Nutzerverwaltung
