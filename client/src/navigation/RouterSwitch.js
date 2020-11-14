@@ -10,6 +10,7 @@ const InfoPage = lazy(() => import('../other/InfoPage').then(m => ({ default: m.
 const LegalPrivacyPage = lazy(() => import('../other/LegalPrivacyPage').then(m => ({ default: m.LegalPrivacyPage })));
 const LoginPage = lazy(() => import('../user/LoginPage').then(m => ({ default: m.LoginPage })));
 const LogoutPage = lazy(() => import('../user/LogoutPage').then(m => ({ default: m.LogoutPage })));
+const VerifyMailPage = lazy(() => import('../user/VerifyMailPage').then(m => ({ default: m.VerifyMailPage })));
 const MyAccountPage = lazy(() => import('../user/MyAccountPage').then(m => ({ default: m.MyAccountPage })));
 const MyReservationsPage = lazy(() => import('../calendar/MyReservationsPage').then(m => ({ default: m.MyReservationsPage })));
 const RegisterPage = lazy(() => import('../user/RegisterPage').then(m => ({ default: m.RegisterPage })));
@@ -51,6 +52,10 @@ export function RouterSwitch() {
                         : <RegisterPage />
                 }
             />
+
+            <Route path="/verifymail/:verifyKey">
+                <VerifyMailPage />
+            </Route>
 
             <ProtectedRoute condition={user?.admin} exact path="/admin/general">
                 <GeneralSettingsPage />
