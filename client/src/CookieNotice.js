@@ -1,5 +1,5 @@
 import { Button, notification } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 export function CookieNotice() {
 
@@ -22,7 +22,7 @@ export function CookieNotice() {
             description: (
                 <>
                     <div>
-                        Zur Gewährleistung der Funktionalität wird eine zu Cookies alternative Technologie benutzt.
+                        Funktionsbedingt wird eine zu Cookies alternative Technologie verwendet.
                     </div>
                     <div>
                         Es werden keine 3rd-Party oder Tracking Cookies gesetzt.
