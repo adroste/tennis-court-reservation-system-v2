@@ -13,11 +13,11 @@ export function LogoutPage() {
     useEffect(() => logout(), [logout]);
 
     const handleLoginClick = useCallback(() => {
-        history.push('/login');
+        history.replace('/login');
     }, [history]);
 
     const handleCalendarClick = useCallback(() => {
-        history.push('/');
+        history.replace('/');
     }, [history]);
 
     return (
