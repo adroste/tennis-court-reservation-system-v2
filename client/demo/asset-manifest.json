@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.a5c260d9.chunk.css",
-    "main.js": "/static/js/main.10b89273.chunk.js",
-    "main.js.map": "/static/js/main.10b89273.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.a39fb222.js",
-    "runtime-main.js.map": "/static/js/runtime-main.a39fb222.js.map",
-    "static/css/2.012b0d28.chunk.css": "/static/css/2.012b0d28.chunk.css",
-    "static/js/2.2eb1c238.chunk.js": "/static/js/2.2eb1c238.chunk.js",
-    "static/js/2.2eb1c238.chunk.js.map": "/static/js/2.2eb1c238.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.012b0d28.chunk.css.map": "/static/css/2.012b0d28.chunk.css.map",
-    "static/css/main.a5c260d9.chunk.css.map": "/static/css/main.a5c260d9.chunk.css.map",
-    "static/js/2.2eb1c238.chunk.js.LICENSE.txt": "/static/js/2.2eb1c238.chunk.js.LICENSE.txt",
-    "static/media/latin-400.css": "/static/media/inter-latin-400-normal.f8a10326.woff2",
-    "static/media/latin-600.css": "/static/media/inter-latin-600-normal.f8a10326.woff2"
+    "main.css": "/tennis-court-reservation-system-v2/client/demo/static/css/main.a5c260d9.chunk.css",
+    "main.js": "/tennis-court-reservation-system-v2/client/demo/static/js/main.c69bfc87.chunk.js",
+    "main.js.map": "/tennis-court-reservation-system-v2/client/demo/static/js/main.c69bfc87.chunk.js.map",
+    "runtime-main.js": "/tennis-court-reservation-system-v2/client/demo/static/js/runtime-main.3ebf852b.js",
+    "runtime-main.js.map": "/tennis-court-reservation-system-v2/client/demo/static/js/runtime-main.3ebf852b.js.map",
+    "static/css/2.8ab80fd3.chunk.css": "/tennis-court-reservation-system-v2/client/demo/static/css/2.8ab80fd3.chunk.css",
+    "static/js/2.763f0df8.chunk.js": "/tennis-court-reservation-system-v2/client/demo/static/js/2.763f0df8.chunk.js",
+    "static/js/2.763f0df8.chunk.js.map": "/tennis-court-reservation-system-v2/client/demo/static/js/2.763f0df8.chunk.js.map",
+    "index.html": "/tennis-court-reservation-system-v2/client/demo/index.html",
+    "static/css/2.8ab80fd3.chunk.css.map": "/tennis-court-reservation-system-v2/client/demo/static/css/2.8ab80fd3.chunk.css.map",
+    "static/css/main.a5c260d9.chunk.css.map": "/tennis-court-reservation-system-v2/client/demo/static/css/main.a5c260d9.chunk.css.map",
+    "static/js/2.763f0df8.chunk.js.LICENSE.txt": "/tennis-court-reservation-system-v2/client/demo/static/js/2.763f0df8.chunk.js.LICENSE.txt",
+    "static/media/latin-400.css": "/tennis-court-reservation-system-v2/client/demo/static/media/inter-latin-400-normal.f8a10326.woff2",
+    "static/media/latin-600.css": "/tennis-court-reservation-system-v2/client/demo/static/media/inter-latin-600-normal.f8a10326.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.a39fb222.js",
-    "static/css/2.012b0d28.chunk.css",
-    "static/js/2.2eb1c238.chunk.js",
+    "static/js/runtime-main.3ebf852b.js",
+    "static/css/2.8ab80fd3.chunk.css",
+    "static/js/2.763f0df8.chunk.js",
     "static/css/main.a5c260d9.chunk.css",
-    "static/js/main.10b89273.chunk.js"
+    "static/js/main.c69bfc87.chunk.js"
   ]
 }

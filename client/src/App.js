@@ -14,6 +14,8 @@ import styles from './App.module.css';
 function App() {
     const appData = useContext(appContext);
 
+    const basename = process.env.PUBLIC_URL;
+
     if (!appData)
         return (
             <Ball
@@ -25,7 +27,7 @@ function App() {
 
     return (
         <>
-            <Router>
+            <Router basename={basename}>
                 <Layout>
                     <Switch>
 
