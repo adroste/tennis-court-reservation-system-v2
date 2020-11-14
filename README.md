@@ -77,3 +77,4 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] isEmpty check for templates
 * [ ] test mail template button
 * [x] user management sorting
+* [x] show npm version

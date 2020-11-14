@@ -9,6 +9,8 @@ export function Footer({
 }) {
     const { orgName } = useContext(appContext);
 
+    const version = process.env.REACT_APP_VERSION;
+
     return (
         <>
             {!noLinks &&
@@ -17,7 +19,7 @@ export function Footer({
                 </p>
             }
             <p>
-                {`©${dayjs().format('YYYY')} ${orgName} - entwickelt von `}
+                {`©${dayjs().format('YYYY')} ${orgName} - v${version} - entwickelt von `}
                 {noLinks 
                     ? <span>Alexander&nbsp;Droste</span>
                     : <a target="_blank" rel="noopener noreferrer" href="https://github.com/alexdroste/reservierungssystem-tennis-v2">Alexander&nbsp;Droste</a>
