@@ -18,7 +18,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build-demo-gh": "rm -R demo && PUBLIC_URL=/tennis-court-reservation-system-v2/client/demo/ react-scripts build && mv build demo",
+    "start-demo": "REACT_APP_DEMO=true react-scripts start",
+    "build-demo-gh": "rm -R demo && PUBLIC_URL=/tennis-court-reservation-system-v2/client/demo/ REACT_APP_DEMO=true react-scripts build && mv build demo",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

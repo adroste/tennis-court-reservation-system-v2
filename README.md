@@ -24,6 +24,7 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] Legal Notice
 * [x] Logos
 * [ ] Size + Code-Splitting
+  * [ ] react lazy for routes
 * [x] Kiosk Mode
   * [x] Clock + Date
   * [x] URL + QR Code
