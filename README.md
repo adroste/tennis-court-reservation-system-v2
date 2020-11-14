@@ -1,24 +1,50 @@
-# Reservierungssystem Tennis v2
+# Tennis Court Reservation System v2
 
 *License: AGPL*
 
-Reservation system for tennis courts. Only german at the moment.
+🇺🇸 Free, modern, open source tennis court reservation system.
 
-# Notes
+🇩🇪 Kostenloses, modernes, Open Source Tennisplatz Reservierungssystem. 
 
-* I did not use a condensed font for the reservation table cause they are hard to read
 
-# devnotes
+## Languages / Sprachen
+
+* [x] German / Deutsch
+* [ ] English (planned)
+
+## Demo
+
+[https://adroste.github.io/tennis-court-reservation-system-v2/client/demo/](https://adroste.github.io/tennis-court-reservation-system-v2/client/demo/)
+
+&nbsp;
+
+# 🇩🇪
+
+## Funktionen
+
+* Kiosk Modus
+* // todo
+
+&nbsp;
+
+# 🇺🇸
+
+## Features
+
+* Kiosk Mode
+* // todo
+
+&nbsp;
+
+# Developer Notes
+
+## notes
 
 * Keine reservation reminder, Reservierungsbestätigungen sind ausreichend
 * Keine Reservierungsbestätigungen an admins (unnötig)
 * Storniert: wenn selbst storniert und wenn durch admin storniert
 
-# Features
-
-* Kiosk Modus with auto refresh, auto day switch
-
-# Todos
+## todos
 
 * [x] Cookie Notice
 * [x] Legal Notice
