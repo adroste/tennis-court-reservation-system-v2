@@ -5,19 +5,24 @@ import styles from './Ball.module.css';
 const cn = classNames.bind(styles);
 
 export function Ball({
-    size,
+    centered,
+    large,
     preloader,
-    visible,
     spin,
+    visible,
 }) {
     return (
         <div className={cn({
-            wrapper: true,
-            visible,
+            centered,
             preloader,
             spin,
+            visible,
+            wrapper: true,
         })}>
-            <div className={styles.ballWrapper}>
+            <div className={cn({
+                ballWrapper: true,
+                large,
+            })}>
                 <div className={styles.ball}>
                 </div>
             </div>

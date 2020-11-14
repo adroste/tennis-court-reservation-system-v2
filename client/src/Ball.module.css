@@ -1,13 +1,26 @@
 .wrapper {
+    display: inline-block;
     opacity: 0;
     pointer-events: none;
-    font-size: 40px;
     transition: all .3s;
+}
+
+.ballWrapper {
+    font-size: 40px;
+}
+
+.large {
+    font-size: 80px;
 }
 
 .visible {
     opacity: 1;
     pointer-events: all;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
 }
 
 .preloader {
