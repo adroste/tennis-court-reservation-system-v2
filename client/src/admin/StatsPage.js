@@ -1,4 +1,4 @@
-import { Divider, List, Radio, Space, Statistic, Typography } from 'antd';
+import { Card, Col, List, Radio, Row, Statistic } from 'antd';
 import React, { useCallback, useState } from 'react';
 
 import styles from './StatsPage.module.css';
@@ -21,6 +21,9 @@ export function StatsPage() {
             ['Windows 10', 19],
             ['Mac OS', 18],
         ],
+        referrer: [
+            ['google', 20],
+        ],
     });
 
     const handleTimePeriodChange = useCallback(e => {
@@ -30,94 +33,132 @@ export function StatsPage() {
     return (
         <div className={styles.wrapper}>
 
-            <h1>Nutzungstatistiken</h1>
-            <Space>
-                <Typography.Text>Zeige Statistiken für Zeitraum:</Typography.Text>
-                <Radio.Group onChange={handleTimePeriodChange} value={timePeriod}>
-                    <Radio value={7}>7 Tage</Radio>
-                    <Radio value={30}>30 Tage</Radio>
-                    <Radio value={365}>1 Jahr</Radio>
-                    <Radio value={0}>Alle</Radio>
-                </Radio.Group>
-            </Space>
+            <Row gutter={[16, 16]} align="middle" justify="space-between">
+                <Col>
+                    <h1>Nutzungstatistiken</h1>
+                </Col>
+                <Col>
+                    <Radio.Group
+                        onChange={handleTimePeriodChange}
+                        value={timePeriod}
+                        buttonStyle="solid"
+                    >
+                        <Radio.Button value={7}>7 Tage</Radio.Button>
+                        <Radio.Button value={30}>30 Tage</Radio.Button>
+                        <Radio.Button value={365}>1 Jahr</Radio.Button>
+                        <Radio.Button value={0}>Alle</Radio.Button>
+                    </Radio.Group>
+                </Col>
+            </Row>
 
-            <Divider />
+            <br />
 
-            <h2>Reservierungsstatistiken</h2>
-            <Space size="large">
-                <Statistic
-                    title="Neue Reservierungen"
-                    value={234}
-                />
+            <Row gutter={[16, 16]}>
+                <Col xs={12} md={8}>
+                    <Statistic
+                        title="Neue Reservierungen"
+                        value={234}
+                    />
+                </Col>
 
-                <Statistic
-                    title="Stornierte Reservierungen"
-                    value={6}
-                />
+                <Col xs={12} md={8}>
+                    <Statistic
+                        title="Stornierte Reservierungen"
+                        value={6}
+                    />
+                </Col>
 
-                <Statistic
-                    title="Gesamte Reservierungen"
-                    value={82}
-                    suffix=" in Zeitraum"
-                />
-            </Space>
+                <Col xs={12} md={8}>
+                    <Statistic
+                        title="Gesamte Reservierungen"
+                        value={82}
+                        suffix=" in Zeitraum"
+                    />
+                </Col>
 
-            <Divider />
-
-            <h2>Besucherstatistiken</h2>
-            <Space direction="vertical">
-                <Space size="large">
+                <Col xs={12} md={8}>
                     <Statistic
                         title="Seitenaufrufe"
                         value={1234}
                     />
+                </Col>
 
+                <Col xs={12} md={8}>
                     <Statistic
                         title="Besucher"
                         value={123}
                         prefix="&#177;"
                     />
+                </Col>
 
+                <Col xs={12} md={8}>
                     <Statistic
                         title="Anteil Mobilgeräte"
                         value={24}
                         suffix="%"
                     />
-                </Space>
+                </Col>
+            </Row>
 
-                <h3>Pro Seite</h3>
-                <List>
-                    {stats.perPage.map(([page, views]) => (
-                        <List.Item key={page}>
-                            <span>{page}</span>
-                            <span className={styles.spacer} />
-                            <span>{views} Aufrufe</span>
-                        </List.Item>
-                    ))}
-                </List>
+            <Row gutter={[16, 16]}>
 
-                <h3>Browser</h3>
-                <List>
-                    {stats.browser.map(([browser, user]) => (
-                        <List.Item key={browser}>
-                            <span>{browser}</span>
-                            <span className={styles.spacer} />
-                            <span>{user} Benutzer</span>
-                        </List.Item>
-                    ))}
-                </List>
+                <Col xs={24} md={12}>
+                    <Card title={<h3>Pro Seite</h3>} bordered={true}>
+                        <List>
+                            {stats.perPage.map(([page, views]) => (
+                                <List.Item key={page}>
+                                    <span>{page}</span>
+                                    <span className={styles.spacer} />
+                                    <span>{views} Aufrufe</span>
+                                </List.Item>
+                            ))}
+                        </List>
+                    </Card>
+                </Col>
 
-                <h3>Betriebssysteme</h3>
-                <List>
-                    {stats.os.map(([os, user]) => (
-                        <List.Item key={os}>
-                            <span>{os}</span>
-                            <span className={styles.spacer} />
-                            <span>{user} Benutzer</span>
-                        </List.Item>
-                    ))}
-                </List>
-            </Space>
+                <Col xs={24} md={12}>
+                    <Card title={<h3>Referrer</h3>} bordered={true}>
+                        <List>
+                            {stats.referrer.map(([referrer, user]) => (
+                                <List.Item key={referrer}>
+                                    <span>{referrer}</span>
+                                    <span className={styles.spacer} />
+                                    <span>{user} Benutzer</span>
+                                </List.Item>
+                            ))}
+                        </List>
+                    </Card>
+                </Col>
+
+                <Col xs={24} md={12}>
+                    <Card title={<h3>Browser</h3>} bordered={true}>
+                        <List>
+                            {stats.browser.map(([browser, user]) => (
+                                <List.Item key={browser}>
+                                    <span>{browser}</span>
+                                    <span className={styles.spacer} />
+                                    <span>{user} Benutzer</span>
+                                </List.Item>
+                            ))}
+                        </List>
+                    </Card>
+                </Col>
+
+                <Col xs={24} md={12}>
+                    <Card title={<h3>Betriebssysteme</h3>} bordered={true}>
+                        <List>
+                            {stats.os.map(([os, user]) => (
+                                <List.Item key={os}>
+                                    <span>{os}</span>
+                                    <span className={styles.spacer} />
+                                    <span>{user} Benutzer</span>
+                                </List.Item>
+                            ))}
+                        </List>
+                    </Card>
+                </Col>
+
+            </Row>
 
         </div>
     );

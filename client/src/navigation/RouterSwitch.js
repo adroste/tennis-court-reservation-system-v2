@@ -13,6 +13,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { RegisterPage } from '../user/RegisterPage';
 import { StatsPage } from '../admin/StatsPage';
 import { TextBlocksPage } from '../admin/TextBlocksPage';
+import { UserManagementPage } from '../admin/UserManagementPage';
 import { authContext } from '../AuthContext';
 
 export function RouterSwitch() {
@@ -59,7 +60,7 @@ export function RouterSwitch() {
             </ProtectedRoute>
 
             <ProtectedRoute condition={user?.admin} exact path="/admin/users">
-                Verwaltung: User
+                <UserManagementPage />
             </ProtectedRoute>
 
             <ProtectedRoute condition={user?.admin} exact path="/admin/texts">

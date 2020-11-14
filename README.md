@@ -29,21 +29,21 @@ Reservation system for tennis courts. Only german at the moment.
   * [x] URL + QR Code
   * [x] Auto day switch
   * [x] highlight current row
+  * [ ] auto reload app context (announcements, courts)
 * [ ] Analytics
   * [ ] backend: create fingerprint by header + ip, change daily
-  * [ ] mark user count as predicted
+  * [x] mark user count as predicted
   * [ ] count users
-  * [ ] get geolocation
-  * [ ] configurable time view
-  * [ ] stats
-    * [ ] New reservation count
-    * [ ] reservation count
-    * [ ] views by page
-    * [ ] unique users / page views
-    * [ ] referrer
-    * [ ] browser
-    * [ ] os
-    * [ ] device
+  * [x] configurable time view
+  * [x] stats
+    * [x] New reservation count
+    * [x] reservation count
+    * [x] views by page
+    * [x] unique users / page views
+    * [x] referrer
+    * [x] browser
+    * [x] os
+    * [x] device
 * [ ] .htaccess for client side routing
 * [ ] Auto refresh reservation data (interval in useWeekReservations, ... hooks)
 * [x] disabled dates for reservation < today
@@ -76,3 +76,4 @@ Reservation system for tennis courts. Only german at the moment.
 * [x] weekpicker => heute button
 * [x] isEmpty check for templates
 * [ ] test mail template button
+* [x] user management sorting
