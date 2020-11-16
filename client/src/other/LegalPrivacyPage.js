@@ -8,7 +8,7 @@ export function LegalPrivacyPage() {
 
     return (
         <div className={styles.wrapper}>
-            <div dangerouslySetInnerHTML={{ __html: legalPrivacy }} />
+            <div dangerouslySetInnerHTML={{ __html: legalPrivacy.body }} />
         </div>
     );
 }

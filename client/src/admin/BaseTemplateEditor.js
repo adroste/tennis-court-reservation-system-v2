@@ -1,49 +1,61 @@
-import { Button, Space } from 'antd';
+import { Input, Space } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { HtmlEditor } from './HtmlEditor';
+import { SubmitButtons } from './SubmitButtons';
 import styles from './BaseTemplateEditor.module.css';
 
 const wrapperStyle = { display: 'flex' };
 
 export function BaseTemplateEditor({
-    before,
+    apiState,
+    hasSubject,
     extra,
-    initialValue,
-    onReset,
+    initialBody,
+    initialSubject,
     onSave,
     replacements,
 }) {
 
-    const [value, setValue] = useState();
+    const [body, setBody] = useState();
+    const [subject, setSubject] = useState();
+
+    const disableReset = body === initialBody 
+        && (!hasSubject || subject === initialSubject);
 
     const save = useCallback(() => {
-        setValue(value => {
-            // check if value only consists of empty tags
-            const cleanValue = value.match(/<.*?>([^<>]+)<.*?>/gim) ? value : '';
-            onSave(cleanValue);
-            return value;
+        // check if value only consists of empty tags
+        const cleanBody = body.match(/<.*?>([^<>]+)<.*?>/gim) ? body : '';
+        onSave({
+            cleanBody,
+            subject,
         });
-    }, [onSave]);
+    }, [subject, body, onSave]);
 
     const reset = useCallback(() => {
-        setValue(initialValue);
-        if (onReset)
-            onReset();
-    }, [initialValue, onReset]);
+        setBody(initialBody);
+        if (hasSubject)
+            setSubject(initialSubject);
+    }, [hasSubject, initialBody, initialSubject]);
 
     useEffect(() => {
         reset();
-    }, [reset, initialValue])
+    }, [reset])
+
+    const handleSubjectChange = useCallback(e => {
+        setSubject(e.target.value);
+    }, []);
 
     return (
         <Space direction="vertical" style={wrapperStyle}>
 
-            {before}
+            {hasSubject &&
+                <Input addonBefore="Betreff:" value={subject} onChange={handleSubjectChange} />
+            }
 
             <HtmlEditor
-                value={value}
-                onChange={setValue}
+                value={body}
+                onChange={setBody}
             />
 
             {replacements &&
@@ -65,14 +77,12 @@ export function BaseTemplateEditor({
                 {extra}
             </div>
 
-            <Space>
-                <Button type="primary" onClick={save}>
-                    Speichern
-                </Button>
-                <Button onClick={reset}>
-                    Zurücksetzen
-                </Button>
-            </Space>
+            <SubmitButtons
+                apiState={apiState}
+                disableReset={disableReset}
+                onSave={save}
+                onReset={reset}
+            />
         </Space>
     );
 }

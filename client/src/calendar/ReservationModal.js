@@ -88,7 +88,7 @@ export function ReservationModal({
                             </>
                         ) : (
                             <Button
-                                disabled={reservationTos && !tosAccepted}
+                                disabled={reservationTos.body && !tosAccepted}
                                 type="primary"
                             >
                                 Reservieren
@@ -124,17 +124,17 @@ export function ReservationModal({
 
                 {!reservation &&
                     <>
-                        {reservationPrice &&
+                        {reservationPrice.body &&
                             <div>
                                 <h1>Preis</h1>
-                                <div dangerouslySetInnerHTML={{ __html: reservationPrice }} />
+                                <div dangerouslySetInnerHTML={{ __html: reservationPrice.body }} />
                             </div>
                         }
 
-                        {reservationTos &&
+                        {reservationTos.body &&
                             <div>
                                 <h1>Nutzungsordnung</h1>
-                                <div dangerouslySetInnerHTML={{ __html: reservationTos }} />
+                                <div dangerouslySetInnerHTML={{ __html: reservationTos.body }} />
 
                                 <Checkbox
                                     checked={tosAccepted}

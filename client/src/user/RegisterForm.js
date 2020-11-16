@@ -104,12 +104,11 @@ export function RegisterForm({
                 <Input.Password placeholder={newUser ? "Mind. 8 Zeichen" : "Nicht ändern"} />
             </Form.Item>
 
-
             {newUser &&
                 <>
                     <div>
                         <h1>Nutzungsbedingungen</h1>
-                        <div dangerouslySetInnerHTML={{ __html: systemTos }} />
+                        <div dangerouslySetInnerHTML={{ __html: systemTos.body }} />
                     </div>
 
                     <Form.Item

@@ -24,6 +24,7 @@ export function MailTemplatesPane() {
             <MailTemplateEditor
                 id='reservationConfirmation'
                 mailTemplates={mailTemplates}
+                setMailTemplates={setMailTemplates}
                 replacements={[
                     {
                         key: '{{name}}',
@@ -42,6 +43,7 @@ export function MailTemplatesPane() {
             <MailTemplateEditor
                 id='reservationCancelled'
                 mailTemplates={mailTemplates}
+                setMailTemplates={setMailTemplates}
                 replacements={[
                     {
                         key: '{{name}}',
@@ -64,6 +66,7 @@ export function MailTemplatesPane() {
             <MailTemplateEditor
                 id='confirmMail'
                 mailTemplates={mailTemplates}
+                setMailTemplates={setMailTemplates}
                 replacements={[
                     {
                         key: '{{name}}',
@@ -82,6 +85,7 @@ export function MailTemplatesPane() {
             <MailTemplateEditor
                 id='resetPassword'
                 mailTemplates={mailTemplates}
+                setMailTemplates={setMailTemplates}
                 replacements={[
                     {
                         key: '{{name}}',

@@ -8,7 +8,7 @@ export function InfoPage() {
 
     return (
         <div className={styles.wrapper}>
-            <div dangerouslySetInnerHTML={{ __html: infoPage }} />
+            <div dangerouslySetInnerHTML={{ __html: infoPage.body }} />
         </div>
     );
 }

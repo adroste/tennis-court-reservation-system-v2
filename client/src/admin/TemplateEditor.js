@@ -2,6 +2,8 @@ import React, { useCallback, useContext } from 'react';
 
 import { BaseTemplateEditor } from './BaseTemplateEditor';
 import { appContext } from '../AppContext';
+import { putTemplatesApi } from '../api';
+import { useApi } from '../useApi';
 
 export function TemplateEditor({
     id,
@@ -9,17 +11,23 @@ export function TemplateEditor({
     replacements,
 }) {
 
-    const { templates } = useContext(appContext);
-    const initialValue = templates[id];
+    const { templates, setTemplates } = useContext(appContext);
+    const { body } = templates[id];
 
-    const save = useCallback(cleanValue => {
-        console.log('save', { value: cleanValue });
-    }, []);
+    const [state, putTemplate] = useApi(putTemplatesApi, setTemplates);
+
+    const save = useCallback(({ cleanBody }) => {
+        putTemplate({
+            id,
+            body: cleanBody,
+        });
+    }, [id, putTemplate]);
 
     return (
         <BaseTemplateEditor
+            apiState={state}
             extra={extra}
-            initialValue={initialValue}
+            initialBody={body}
             onSave={save}
             replacements={replacements}
         />

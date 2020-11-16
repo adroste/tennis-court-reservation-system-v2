@@ -2,44 +2,35 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { BaseTemplateEditor } from './BaseTemplateEditor';
 import { Input } from 'antd';
+import { putMailTemplatesApi } from '../api';
+import { useApi } from '../useApi';
 
 export function MailTemplateEditor({
     id,
     mailTemplates,
+    setMailTemplates,
     extra,
     replacements,
 }) {
     const { body, subject } = mailTemplates[id];
 
-    const [curSubject, setCurSubject] = useState();
+    const [state, putMailTemplate] = useApi(putMailTemplatesApi, setMailTemplates);
 
-    const save = useCallback(cleanValue => {
-        setCurSubject(subject => {
-            console.log('save', { value: cleanValue, subject });
-            return subject;
+    const save = useCallback(({ cleanBody, subject }) => {
+        putMailTemplate({ 
+            id,
+            body: cleanBody,
+            subject,
         });
-    }, []);
-
-    const reset = useCallback(() => {
-        setCurSubject(subject);
-    }, [subject]);
-
-    useEffect(() => {
-        reset();
-    }, [reset, id, mailTemplates])
-
-    const handleSubjectChange = useCallback(e => {
-        setCurSubject(e.target.value);
-    }, []);
+    }, [id, putMailTemplate]);
 
     return (
         <BaseTemplateEditor
-            before={
-                <Input addonBefore="Betreff:" value={curSubject} onChange={handleSubjectChange} />
-            }
+            apiState={state}
             extra={extra}
-            initialValue={body}
-            onReset={reset}
+            hasSubject
+            initialBody={body}
+            initialSubject={subject}
             onSave={save}
             replacements={replacements}
         />
