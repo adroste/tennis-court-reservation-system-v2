@@ -28,11 +28,17 @@ function handleRequests(url, options) {
             return db.mailTemplates;
 
         case cn(putMailTemplatesApi):
-            db.mailTemplates[body.id] = body;
+            db.mailTemplates = {
+                ...db.mailTemplates,
+                ...body,
+            };
             return { success: true };
 
         case cn(putTemplatesApi):
-            db.templates[body.id] = body;
+            db.templates = {
+                ...db.templates,
+                ...body,
+            };
             return { success: true };
 
         default:

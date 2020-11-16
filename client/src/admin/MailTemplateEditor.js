@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 
 import { BaseTemplateEditor } from './BaseTemplateEditor';
-import { Input } from 'antd';
 import { putMailTemplatesApi } from '../api';
 import { useApi } from '../useApi';
 
@@ -18,9 +17,10 @@ export function MailTemplateEditor({
 
     const save = useCallback(({ cleanBody, subject }) => {
         putMailTemplate({ 
-            id,
-            body: cleanBody,
-            subject,
+            [id]: {
+                body: cleanBody,
+                subject,
+            },
         });
     }, [id, putMailTemplate]);
 

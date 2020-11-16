@@ -18,8 +18,9 @@ export function TemplateEditor({
 
     const save = useCallback(({ cleanBody }) => {
         putTemplate({
-            id,
-            body: cleanBody,
+            [id]: {
+                body: cleanBody,
+            },
         });
     }, [id, putTemplate]);
 

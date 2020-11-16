@@ -20,17 +20,17 @@ export const getMailTemplatesApi = {
 export const putMailTemplatesApi = {
     url: `${BASE_PATH}/mail-templates`,
     method: 'PUT',
-    res: (currentData, reqData, resData) => ({
+    res: (currentData, reqData, _) => ({
             ...currentData,
-            [reqData.id]: reqData,
+            ...reqData
     }),
 };
 
 export const putTemplatesApi = {
     url: `${BASE_PATH}/templates`,
     method: 'PUT',
-    res: (currentData, reqData, resData) => ({
+    res: (currentData, reqData, _) => ({
             ...currentData,
-            [reqData.id]: reqData,
+            ...reqData
     }),
 };
