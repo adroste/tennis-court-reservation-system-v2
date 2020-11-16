@@ -28,6 +28,11 @@ export function SystemConfigForm() {
         form.resetFields();
     }, [form, config]);
 
+    useEffect(() => {
+        if (state.success)
+            resetForm();
+    }, [state.success, resetForm]);
+
     const handleFieldsChange = useCallback(() => {
         if (disableReset)
             setDisableReset(false);
