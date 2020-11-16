@@ -13,6 +13,10 @@
     font-size: 80px;
 }
 
+.preloader .ballWrapper {
+    font-size: 150px;
+}
+
 .visible {
     opacity: 1;
     pointer-events: all;
@@ -33,7 +37,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 150px;
     background: #fff;
 }
 
