@@ -110,8 +110,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
 
     users: [
         {
-            key: '3', // required by antd table
-            userId: '3',
+            userId: 3,
             name: 'Jürgen M.',
             mail: 'juergen@example.com',
             verified: true,
@@ -121,8 +120,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             totalReservationCount: 41,
         },
         {
-            key: '1', // required by antd table
-            userId: '8',
+            userId: 8,
             name: 'Müller',
             mail: 'mueller@example.com',
             verified: true,
@@ -132,8 +130,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             totalReservationCount: 41,
         },
         {
-            key: '41', // required by antd table
-            userId: '41',
+            userId: 41,
             name: 'Franz Test',
             mail: 'test.franz.mein.mail@franz.de',
             verified: false,
@@ -146,11 +143,11 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
 
     reservations: [
         {
-            id: '1',
+            id: 1,
             date: dayjs().subtract(3, 'day').hour(11),
-            userId: '3',
+            userId: 3,
             customName: undefined,
-            courtId: '1',
+            courtId: 1,
             groupId: undefined,
         }
     ]

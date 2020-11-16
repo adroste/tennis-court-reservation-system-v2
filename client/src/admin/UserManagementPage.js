@@ -1,64 +1,36 @@
 import { Button, Modal, Space, Table, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, MailOutlined } from '@ant-design/icons';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { deleteUserApi, getUsersApi, putUserApi } from '../api';
 
+import { ErrorResult } from '../ErrorResult';
 import { authContext } from '../AuthContext';
 import dayjs from 'dayjs';
 import styles from './UserManagementPage.module.css';
+import { useApi } from '../useApi';
 
 export function UserManagementPage() {
 
     const { user: { userId } } = useContext(authContext);
 
-    const [userList, setUserList] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [getState,] = useApi(getUsersApi, setUsers, true);
+    const [deleteState, deleteUser] = useApi(deleteUserApi, setUsers);
+    const [putState, putUser] = useApi(putUserApi, setUsers);
 
-    const refreshUserList = useCallback(() => {
-        setUserList([
-            {
-                key: '3', // required by antd table
-                userId: '3',
-                name: 'Jürgen M.',
-                mail: 'juergen@example.com',
-                verified: true,
-                admin: true,
-                lastActivity: dayjs().subtract(4, 'days'),
-                upcomingReservationCount: 3,
-                totalReservationCount: 41,
-            },
-            {
-                key: '1', // required by antd table
-                userId: 1,
-                name: 'Müller',
-                mail: 'mueller@example.com',
-                verified: true,
-                admin: true,
-                lastActivity: dayjs().subtract(1, 'm'),
-                upcomingReservationCount: 3,
-                totalReservationCount: 41,
-            },
-            {
-                key: '41', // required by antd table
-                userId: '41',
-                name: 'Franz Test',
-                mail: 'test.franz.mein.mail@franz.de',
-                verified: false,
-                admin: false,
-                lastActivity: dayjs().subtract(3, 'h'),
-                upcomingReservationCount: 0,
-                totalReservationCount: 140,
-            }
-        ])
-    }, []);
+    // key prop is required for antd
+    const keyedUsers = useMemo(() => users.map(u => ({ ...u, key: u.userId })), [users]);
 
-    // const deleteUser = useCallback(userId => {
-    //     console.log('delete user', userId);
-    //     refreshUserList()
-    // }, [refreshUserList]);
+    const handleDeleteUser = useCallback(userId => {
+        deleteUser({ userId });
+    }, [deleteUser]);
 
-    useEffect(() => {
-        refreshUserList();
-    }, [refreshUserList]);
-
+    const handleSetAdmin = useCallback((userId, admin) => {
+        putUser({
+            userId,
+            admin,
+        });
+    }, [putUser]);
 
     const columns = [
         {
@@ -99,10 +71,7 @@ export function UserManagementPage() {
                                     okType: 'danger',
                                     cancelText: 'Abbrechen',
                                     onOk() {
-                                        console.log('OK');
-                                    },
-                                    onCancel() {
-                                        console.log('Cancel');
+                                        handleSetAdmin(record.userId, !record.admin);
                                     },
                                 });
                             }}
@@ -196,10 +165,7 @@ export function UserManagementPage() {
                                     okType: 'danger',
                                     cancelText: 'Abbrechen',
                                     onOk() {
-                                        console.log('OK');
-                                    },
-                                    onCancel() {
-                                        console.log('Cancel');
+                                        handleDeleteUser(record.userId);
                                     },
                                 });
                             }}
@@ -210,13 +176,16 @@ export function UserManagementPage() {
         },
     ];
 
-    return (
+    if (getState.error || deleteState.error || putState.error)
+        return <ErrorResult />
 
+    return (
         <div className={styles.wrapper}>
             <h1>Nutzerverwaltung</h1>
             <Table
                 columns={columns}
-                dataSource={userList}
+                dataSource={keyedUsers}
+                loading={getState.loading || deleteState.loading || putState.loading}
                 scroll={{ x: 1300 }}
             />
         </div>

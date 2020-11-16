@@ -1,4 +1,4 @@
-import { getBaseDataApi, getMailTemplatesApi, putConfigApi, putCourtsApi, putMailTemplatesApi, putTemplatesApi } from '../api';
+import { deleteUserApi, getBaseDataApi, getMailTemplatesApi, getUsersApi, putConfigApi, putCourtsApi, putMailTemplatesApi, putTemplatesApi, putUserApi } from '../api';
 
 import { db } from './mockDatabase';
 
@@ -43,6 +43,24 @@ function handleRequests(url, options) {
                 ...db.templates,
                 ...body,
             };
+            return { success: true };
+
+        case cn(getUsersApi):
+            return db.users;
+
+        case cn(putUserApi):
+            db.users = db.users.map(u => {
+                if (u.userId === body.userId)
+                    return {
+                        ...u,
+                        ...body,
+                    };
+                return u;
+            });
+            return { success: true };
+        
+        case cn(deleteUserApi):
+            db.users = db.users.filter(u => u.userId !== body.userId);
             return { success: true };
 
         default:

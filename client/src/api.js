@@ -16,7 +16,7 @@ export const putConfigApi = {
 export const putCourtsApi = {
     url: `${BASE_PATH}/courts`,
     method: 'PUT',
-    res: (currentData, reqData, ) => reqData,
+    res: (currentData, reqData, _) => reqData,
 };
 
 export const getMailTemplatesApi = {
@@ -39,4 +39,31 @@ export const putTemplatesApi = {
             ...currentData,
             ...reqData
     }),
+};
+
+export const getUsersApi = {
+    url: `${BASE_PATH}/users`,
+};
+
+export const putUserApi = {
+    url: `${BASE_PATH}/users`,
+    method: 'PUT',
+    res: (users, reqData, _) => (
+        users.map(u => {
+            if (u.userId === reqData.userId)
+                return { 
+                    ...u,
+                    ...reqData,
+                };
+            return u;
+        })
+    ),
+};
+
+export const deleteUserApi = {
+    url: `${BASE_PATH}/users`,
+    method: 'DELETE',
+    res: (users, { userId }, _) => (
+        users.filter(u => u.userId !== userId)
+    ),
 };
