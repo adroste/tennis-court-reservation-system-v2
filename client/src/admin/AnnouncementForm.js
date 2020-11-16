@@ -39,9 +39,11 @@ export function AnnouncementForm() {
             setDisableReset(false);
     }, [disableReset]);
 
-    const handleSave = useCallback(values => {
-        putConfig(values);
-    }, [putConfig]);
+    const handleSave = useCallback(({ announcement }) => {
+        putConfig({
+            announcement: enabled ? announcement : '',
+        });
+    }, [enabled, putConfig]);
 
     return (
         <Form
