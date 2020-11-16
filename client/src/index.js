@@ -27,15 +27,26 @@ dayjs.extend(localizedFormat);
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
 
-ReactDOM.render((
-    <ConfigProvider locale={locale}>
-        <AppContextProvider>
-            <AuthContextProvider>
-                <App />
-            </AuthContextProvider>
-        </AppContextProvider>
-    </ConfigProvider>
-), document.getElementById('root'));
+function renderApp() {
+    ReactDOM.render((
+        <ConfigProvider locale={locale}>
+            <AppContextProvider>
+                <AuthContextProvider>
+                    <App />
+                </AuthContextProvider>
+            </AppContextProvider>
+        </ConfigProvider>
+    ), document.getElementById('root'));
+}
+
+if (process.env.REACT_APP_DEMO) {
+    import('./demo/mockApi').then(mockApi => {
+        mockApi.patchFetch();
+        renderApp();
+    });
+} else {
+    renderApp();
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
