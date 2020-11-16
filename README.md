@@ -123,5 +123,5 @@
 * [x] show npm version
 * [ ] implement fetch/api routines
 * [ ] fix demo login button
-* [ ] fix demo notification overlapping cookie notice on mobile
+* [x] fix demo notification overlapping cookie notice on mobile
 * [ ] bestehende reservierungen bei platzsperre stornieren
