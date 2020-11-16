@@ -1,6 +1,7 @@
-import React, { lazy, useContext } from 'react';
+import React, { Suspense, lazy, useContext } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { Ball } from '../Ball';
 import { ProtectedRoute } from './ProtectedRoute';
 import { authContext } from '../AuthContext';
 
@@ -23,68 +24,70 @@ export function RouterSwitch() {
     const { user } = useContext(authContext);
 
     return (
-        <Switch>
+        <Suspense fallback={<Ball visible large centered spin />}>
+            <Switch>
 
-            <Route exact path="/">
-                <CalendarPage />
-            </Route>
+                <Route exact path="/">
+                    <CalendarPage />
+                </Route>
 
-            <Route exact path="/info">
-                <InfoPage />
-            </Route>
+                <Route exact path="/info">
+                    <InfoPage />
+                </Route>
 
-            <Route exact path="/legalnotice-privacy">
-                <LegalPrivacyPage />
-            </Route>
+                <Route exact path="/legalnotice-privacy">
+                    <LegalPrivacyPage />
+                </Route>
 
-            <Route exact path="/logout">
-                <LogoutPage />
-            </Route>
+                <Route exact path="/logout">
+                    <LogoutPage />
+                </Route>
 
-            <Route exact path="/login">
-                <LoginPage />
-            </Route>
+                <Route exact path="/login">
+                    <LoginPage />
+                </Route>
 
-            <Route exact path="/register"
-                render={() =>
-                    user
-                        ? <Redirect to="/" />
-                        : <RegisterPage />
-                }
-            />
+                <Route exact path="/register"
+                    render={() =>
+                        user
+                            ? <Redirect to="/" />
+                            : <RegisterPage />
+                    }
+                />
 
-            <Route path="/verifymail/:verifyKey">
-                <VerifyMailPage />
-            </Route>
+                <Route path="/verifymail/:verifyKey">
+                    <VerifyMailPage />
+                </Route>
 
-            <ProtectedRoute condition={user?.admin} exact path="/admin/general">
-                <GeneralSettingsPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user?.admin} exact path="/admin/general">
+                    <GeneralSettingsPage />
+                </ProtectedRoute>
 
-            <ProtectedRoute condition={user?.admin} exact path="/admin/stats">
-                <StatsPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user?.admin} exact path="/admin/stats">
+                    <StatsPage />
+                </ProtectedRoute>
 
-            <ProtectedRoute condition={user?.admin} exact path="/admin/users">
-                <UserManagementPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user?.admin} exact path="/admin/users">
+                    <UserManagementPage />
+                </ProtectedRoute>
 
-            <ProtectedRoute condition={user?.admin} exact path="/admin/templates">
-                <EditTemplatesPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user?.admin} exact path="/admin/templates">
+                    <EditTemplatesPage />
+                </ProtectedRoute>
 
-            <ProtectedRoute condition={user} exact path="/myreservations">
-                <MyReservationsPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user} exact path="/myreservations">
+                    <MyReservationsPage />
+                </ProtectedRoute>
 
-            <ProtectedRoute condition={user} exact path="/myaccount">
-                <MyAccountPage />
-            </ProtectedRoute>
+                <ProtectedRoute condition={user} exact path="/myaccount">
+                    <MyAccountPage />
+                </ProtectedRoute>
 
-            <Route path="*">
-                <Redirect to="/" />
-            </Route>
+                <Route path="*">
+                    <Redirect to="/" />
+                </Route>
 
-        </Switch>
+            </Switch>
+        </Suspense>
     );
 }

@@ -21,18 +21,10 @@ function App() {
     const demoMode = process.env.REACT_APP_DEMO;
 
     if (state.error)
-        return (
-            <ErrorResult />
-        );
+        return <ErrorResult />;
 
     if (state.loading)
-        return (
-            <Ball
-                visible
-                preloader
-                spin
-            />
-        );
+        return <Ball visible preloader spin />;
 
     return (
         <Router basename={basename}>
