@@ -41,7 +41,7 @@ export function VerifyMailPage() {
                             </div>
                             <br />
                             <div>
-                                Klicken Sie auf den Bestätigungslink, um ihr Benutzerkonto zu aktivieren.
+                                Klicken Sie auf den Bestätigungslink, um ihre E-Mail Adresse zu verifizieren.
                             </div>
                         </div>
                     }
@@ -56,9 +56,6 @@ export function VerifyMailPage() {
                 title="E-Mail erfolgreich bestätigt."
                 extra={
                     <Space direction="vertical" size="large">
-                        <div>
-                            Ihr Benutzerkonto ist jetzt aktiviert.
-                        </div>
                         <Button type="primary" onClick={handleCalendarClick}>
                             Zum Kalender
                         </Button>
