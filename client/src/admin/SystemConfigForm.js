@@ -1,7 +1,10 @@
-import { Button, Form, Input, InputNumber, Slider, Space } from 'antd';
-import React, { useCallback, useContext, useEffect } from 'react';
+import { Form, Input, InputNumber, Slider } from 'antd';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
+import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
+import { putConfigApi } from '../api';
+import { useApi } from '../useApi';
 
 const sliderMarks = Array.from(Array(24)).reduce((marks, _, i) => {
     marks[i] = i; 
@@ -10,31 +13,37 @@ const sliderMarks = Array.from(Array(24)).reduce((marks, _, i) => {
 
 export function SystemConfigForm() {
 
-    const { config } = useContext(appContext);
+    const { config, setConfig } = useContext(appContext);
+    const [disableReset, setDisableReset] = useState(true);
+    const [state, putConfig] = useApi(putConfigApi, setConfig);
 
     const [form] = Form.useForm();
 
-    const resetForm = useCallback(() => form.resetFields(), [form]);
+    const resetForm = useCallback(() => {
+        form.resetFields();
+        setDisableReset(true);
+    }, [form]);
 
     useEffect(() => {
         form.resetFields();
     }, [form, config]);
 
-    const onFinish = values => {
-        console.log('Success:', values);
-    };
+    const handleFieldsChange = useCallback(() => {
+        if (disableReset)
+            setDisableReset(false);
+    }, [disableReset]);
 
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
+    const handleSave = useCallback(values => {
+        putConfig(values);
+    }, [putConfig]);
 
     return (
         <Form
             form={form}
             layout="vertical"
             initialValues={config}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={handleSave}
+            onFieldsChange={handleFieldsChange}
         >
             <Form.Item
                 name="url"
@@ -98,14 +107,11 @@ export function SystemConfigForm() {
             </Form.Item>
 
             <Form.Item>
-                <Space>
-                    <Button type="primary" htmlType="submit">
-                        Speichern
-                    </Button>
-                    <Button type="default" onClick={resetForm}>
-                        Zurücksetzen
-                    </Button>
-                </Space>
+                <SubmitButtons
+                    apiState={state}
+                    disableReset={disableReset}
+                    onReset={resetForm}
+                />
             </Form.Item>
         </Form>
     );

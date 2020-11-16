@@ -7,6 +7,10 @@ export const getBaseDataApi = {
 export const putConfigApi = {
     url: `${BASE_PATH}/config`,
     method: 'PUT',
+    res: (currentData, reqData, _) => ({
+            ...currentData,
+            ...reqData,
+    }),
 };
 
 export const getMailTemplatesApi = {

@@ -1,5 +1,6 @@
-import { config, courts, mailTemplates, templates } from './mockDatabase';
-import { getBaseDataApi, getMailTemplatesApi, putMailTemplatesApi, putTemplatesApi } from '../api';
+import { getBaseDataApi, getMailTemplatesApi, putConfigApi, putMailTemplatesApi, putTemplatesApi } from '../api';
+
+import { db } from './mockDatabase';
 
 const FAKE_LATENCY_MS = 200;
 
@@ -11,20 +12,27 @@ function handleRequests(url, options) {
     switch (`${url}${options.method}`) {
         case cn(getBaseDataApi):
             return {
-                config,
-                courts,
-                templates,
+                config: db.config,
+                courts: db.courts,
+                templates: db.templates,
             };
 
+        case cn(putConfigApi):
+            db.config = {
+                ...db.config,
+                ...body,
+            };
+            return { success: true };
+
         case cn(getMailTemplatesApi):
-            return mailTemplates;
+            return db.mailTemplates;
 
         case cn(putMailTemplatesApi):
-            mailTemplates[body.id] = body;
+            db.mailTemplates[body.id] = body;
             return { success: true };
 
         case cn(putTemplatesApi):
-            templates[body.id] = body;
+            db.templates[body.id] = body;
             return { success: true };
 
         default:
