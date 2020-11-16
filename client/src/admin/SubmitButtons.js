@@ -46,6 +46,7 @@ export function SubmitButtons({
                     disabled={apiState.loading}
                     onClick={onSave}
                     type="primary" 
+                    htmlType="submit"
                 >
                     Speichern
                 </Button>
@@ -54,6 +55,7 @@ export function SubmitButtons({
                 <Button 
                     disabled={apiState.loading || disableReset}
                     onClick={onReset}
+                    htmlType="reset"
                 >
                     Zurücksetzen
                 </Button>
