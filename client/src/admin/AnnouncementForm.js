@@ -1,42 +1,54 @@
-import { Button, Checkbox, Form, Input, Space } from 'antd';
+import { Checkbox, Form, Input } from 'antd';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
+import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
+import { putConfigApi } from '../api';
+import { useApi } from '../useApi';
 
 export function AnnouncementForm() {
 
-    const { config: { announcement } } = useContext(appContext);
+    const { config: { announcement }, setConfig } = useContext(appContext);
     const [enabled, setEnabled] = useState();
+    const [disableReset, setDisableReset] = useState(true);
+    const [state, putConfig] = useApi(putConfigApi, setConfig);
 
     const [form] = Form.useForm();
 
     const resetForm = useCallback(() => {
         form.resetFields()
         setEnabled(!!announcement);
+        setDisableReset(true);
     }, [form, announcement]);
 
     useEffect(() => {
         resetForm();
     }, [resetForm, announcement]);
 
+    useEffect(() => {
+        if (state.success)
+            resetForm();
+    }, [state.success, resetForm]);
+
     const handleEnabledChange = useCallback(e => {
         setEnabled(e.target.checked);
     }, []);
 
-    const onFinish = values => {
-        console.log('Success:', values);
-    };
+    const handleFieldsChange = useCallback(() => {
+        if (disableReset)
+            setDisableReset(false);
+    }, [disableReset]);
 
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
+    const handleSave = useCallback(values => {
+        putConfig(values);
+    }, [putConfig]);
 
     return (
         <Form
             form={form}
             layout="vertical"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={handleSave}
+            onFieldsChange={handleFieldsChange}
         >
             <Form.Item
                 name="announcement"
@@ -56,14 +68,11 @@ export function AnnouncementForm() {
             </Form.Item>
 
             <Form.Item>
-                <Space>
-                    <Button type="primary" htmlType="submit">
-                        Speichern
-                    </Button>
-                    <Button type="default" onClick={resetForm}>
-                        Zurücksetzen
-                    </Button>
-                </Space>
+                <SubmitButtons
+                    apiState={state}
+                    disableReset={disableReset}
+                    onReset={resetForm}
+                />
             </Form.Item>
         </Form>
     );
