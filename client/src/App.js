@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { Ball } from './Ball';
 import { CookieNotice } from './CookieNotice';
+import { ErrorResult } from './ErrorResult';
 import { Footer } from './Footer';
 import { Layout } from 'antd';
 import { NavBar } from './navigation/NavBar';
@@ -14,15 +15,20 @@ const KioskPage = lazy(() => import('./kiosk/KioskPage').then(m => ({ default: m
 const DemoControls = lazy(() => import('./demo/DemoControls').then(m => ({ default: m.DemoControls })));
 
 function App() {
-    const appData = useContext(appContext);
+    const { state } = useContext(appContext);
 
     const basename = process.env.PUBLIC_URL;
     const demoMode = process.env.REACT_APP_DEMO;
 
-    if (!appData)
+    if (state.error)
+        return (
+            <ErrorResult />
+        );
+
+    if (state.loading)
         return (
             <Ball
-                visible={!appData}
+                visible
                 preloader
                 spin
             />

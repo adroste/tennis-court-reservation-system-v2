@@ -7,7 +7,7 @@ import { appContext } from '../AppContext';
 import styles from './NavBar.module.css';
 
 export function NavBar() {
-    const { orgName } = useContext(appContext);
+    const { config: { orgName } } = useContext(appContext);
 
     const [drawerOpen, setDrawerOpen] = useState(false);
 

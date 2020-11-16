@@ -10,7 +10,7 @@ export function RegisterForm({
     currentMail,
     reset,
 }) {
-    const { texts: { systemTos } } = useContext(appContext);
+    const { templates: { systemTos } } = useContext(appContext);
 
     const [form] = Form.useForm();
 

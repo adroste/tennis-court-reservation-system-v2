@@ -5,7 +5,7 @@ import { appContext } from '../AppContext';
 
 export function AnnouncementForm() {
 
-    const { announcement } = useContext(appContext);
+    const { config: { announcement } } = useContext(appContext);
     const [enabled, setEnabled] = useState();
 
     const [form] = Form.useForm();

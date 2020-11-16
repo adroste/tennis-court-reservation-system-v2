@@ -9,7 +9,7 @@ import { useTime } from './useTime';
 
 export function CalendarPage() {
 
-    const { announcement, courts } = useContext(appContext);
+    const { config: { announcement }, courts } = useContext(appContext);
 
     const today = useTime('day');
     const [selectedDate, setSelectedDate] = useState(null);

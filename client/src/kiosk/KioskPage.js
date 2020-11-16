@@ -10,7 +10,7 @@ import { useTime } from '../calendar/useTime';
 
 export function KioskPage() {
 
-    const { announcement, courts, orgName } = useContext(appContext);
+    const { config: { announcement, orgName }, courts } = useContext(appContext);
 
     const hour = useTime('hour');
 

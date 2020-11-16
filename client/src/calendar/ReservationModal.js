@@ -15,7 +15,7 @@ export function ReservationModal({
     today,
     onFinish,
 }) {
-    const { courts, texts: { reservationPrice, reservationTos } } = useContext(appContext);
+    const { courts, templates: { reservationPrice, reservationTos } } = useContext(appContext);
 
     const courtName = courts.find(c => c.courtId === courtId)?.name;
 

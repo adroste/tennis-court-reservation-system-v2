@@ -10,7 +10,7 @@ const sliderMarks = Array.from(Array(24)).reduce((marks, _, i) => {
 
 export function SystemConfigForm() {
 
-    const app = useContext(appContext);
+    const { config } = useContext(appContext);
 
     const [form] = Form.useForm();
 
@@ -18,7 +18,7 @@ export function SystemConfigForm() {
 
     useEffect(() => {
         form.resetFields();
-    }, [form, app]);
+    }, [form, config]);
 
     const onFinish = values => {
         console.log('Success:', values);
@@ -32,7 +32,7 @@ export function SystemConfigForm() {
         <Form
             form={form}
             layout="vertical"
-            initialValues={app}
+            initialValues={config}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
         >

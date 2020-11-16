@@ -24,7 +24,7 @@ export function GroupDatesForm({
     today,
     unavailableDates,
 }) {
-    const { courts, reservationDaysInAdvance } = useContext(appContext);
+    const { courts, config: { reservationDaysInAdvance } } = useContext(appContext);
 
     const [enabled, setEnabled] = useState(false);
     const [repeatValue, setRepeatValue] = useState();

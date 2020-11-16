@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 export function Footer({
     noLinks,
 }) {
-    const { orgName } = useContext(appContext);
+    const { config: { orgName } } = useContext(appContext);
 
     const version = process.env.REACT_APP_VERSION;
 

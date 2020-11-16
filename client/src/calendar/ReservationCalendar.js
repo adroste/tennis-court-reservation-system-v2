@@ -18,7 +18,7 @@ export function ReservationCalendar({
     today,
 }) {
     const { user } = useContext(authContext);
-    const { courts, visibleHours, reservationDaysInAdvance } = useContext(appContext);
+    const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();

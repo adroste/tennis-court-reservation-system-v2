@@ -8,7 +8,7 @@ export function SystemLinkQr({
     bgColor,
 }) {
 
-    const { url } = useContext(appContext);
+    const { config: { url } } = useContext(appContext);
 
     return (
         <div className={styles.wrapper}>
