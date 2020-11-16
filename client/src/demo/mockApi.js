@@ -1,6 +1,5 @@
-import { config, courts, templates } from './mockDatabase';
-
-import { getBaseDataApi } from '../api';
+import { config, courts, mailTemplates, templates } from './mockDatabase';
+import { getBaseDataApi, getMailTemplatesApi } from '../api';
 
 function handleRequests(url, options) {
     switch (url) {
@@ -10,6 +9,10 @@ function handleRequests(url, options) {
                 courts,
                 templates,
             };
+
+        case getMailTemplatesApi.url:
+            return mailTemplates;
+
         default:
             return null;
     }

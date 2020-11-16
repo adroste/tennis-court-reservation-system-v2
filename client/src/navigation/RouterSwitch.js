@@ -15,7 +15,7 @@ const MyAccountPage = lazy(() => import('../user/MyAccountPage').then(m => ({ de
 const MyReservationsPage = lazy(() => import('../calendar/MyReservationsPage').then(m => ({ default: m.MyReservationsPage })));
 const RegisterPage = lazy(() => import('../user/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const StatsPage = lazy(() => import('../admin/StatsPage').then(m => ({ default: m.StatsPage })));
-const TextBlocksPage = lazy(() => import('../admin/TextBlocksPage').then(m => ({ default: m.TextBlocksPage })));
+const EditTemplatesPage = lazy(() => import('../admin/EditTemplatesPage').then(m => ({ default: m.EditTemplatesPage })));
 const UserManagementPage = lazy(() => import('../admin/UserManagementPage').then(m => ({ default: m.UserManagementPage })));
 
 export function RouterSwitch() {
@@ -69,8 +69,8 @@ export function RouterSwitch() {
                 <UserManagementPage />
             </ProtectedRoute>
 
-            <ProtectedRoute condition={user?.admin} exact path="/admin/texts">
-                <TextBlocksPage />
+            <ProtectedRoute condition={user?.admin} exact path="/admin/templates">
+                <EditTemplatesPage />
             </ProtectedRoute>
 
             <ProtectedRoute condition={user} exact path="/myreservations">

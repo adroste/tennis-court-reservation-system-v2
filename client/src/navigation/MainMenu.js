@@ -82,8 +82,8 @@ export function MainMenu({
                         <Menu.Item key="/admin/users">
                             Nutzerverwaltung
                         </Menu.Item>
-                        <Menu.Item key="/admin/texts">
-                            Textbausteine
+                        <Menu.Item key="/admin/templates">
+                            Textvorlagen
                         </Menu.Item>
                     </Menu.SubMenu>
                 }

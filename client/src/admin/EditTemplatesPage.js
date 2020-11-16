@@ -1,10 +1,11 @@
 import { Divider, Tabs } from 'antd';
 
+import { MailTemplatesPane } from './MailTemplatesPane';
 import React from 'react';
 import { TemplateEditor } from './TemplateEditor';
-import styles from './TextBlocksPage.module.css';
+import styles from './EditTemplatesPage.module.css';
 
-export function TextBlocksPage() {
+export function EditTemplatesPage() {
 
     return (
         <div className={styles.wrapper}>
@@ -13,7 +14,7 @@ export function TextBlocksPage() {
                 <Tabs.TabPane tab="Hinweis-Seite" key="2">
                     <div className={styles.content}>
 
-                        <TemplateEditor textKey='infoPage' />
+                        <TemplateEditor id='infoPage' />
 
                     </div>
                 </Tabs.TabPane>
@@ -22,7 +23,7 @@ export function TextBlocksPage() {
                     <div className={styles.content}>
 
                         <TemplateEditor 
-                            textKey='legalPrivacy' 
+                            id='legalPrivacy' 
                             extra={
                                 <>
                                     <h2>Rechtliche Informationen</h2>
@@ -63,7 +64,7 @@ export function TextBlocksPage() {
 
                         <h1>Preis</h1>
                         <TemplateEditor
-                            textKey='reservationPrice'
+                            id='reservationPrice'
                             extra='Ein leerer Wert deaktiviert diesen Textblock.'
                         />
 
@@ -71,7 +72,7 @@ export function TextBlocksPage() {
 
                         <h1>Nutzungsordnung</h1>
                         <TemplateEditor
-                            textKey='reservationTos'
+                            id='reservationTos'
                             extra={
                                 <>
                                     <div>Der Nutzer muss diese Nutzungsordnung akzeptieren, um eine Reservierung durchzuführen.</div>
@@ -88,7 +89,7 @@ export function TextBlocksPage() {
 
                         <h1>Nutzungsbedingungen</h1>
                         <TemplateEditor
-                            textKey='systemTos'
+                            id='systemTos'
                             extra='Der Nutzer muss diese Nutzungsbedingungen akzeptieren, um sich Registrieren zu können.'
                         />
 
@@ -98,75 +99,7 @@ export function TextBlocksPage() {
                 <Tabs.TabPane tab="E-Mail Vorlagen" key="3">
                     <div className={styles.content}>
 
-                        <h1>Reservierungsbestätigung</h1>
-                        <TemplateEditor
-                            mailKey='reservationConfirmation'
-                            replacements={[
-                                { 
-                                    key: '{{name}}',
-                                    description: 'Wird durch den Namen des Benutzers ersetzt',
-                                },
-                                { 
-                                    key: '{{reservierung}}',
-                                    description: 'Wird durch die Angaben zur getätigen Reservierung ersetzt',
-                                }
-                            ]}
-                        />
-
-                        <Divider />
-
-                        <h1>Stornierung</h1>
-                        <TemplateEditor
-                            mailKey='reservationCancelled'
-                            replacements={[
-                                { 
-                                    key: '{{name}}',
-                                    description: 'Wird durch den Namen des Benutzers ersetzt',
-                                },
-                                { 
-                                    key: '{{reservierung}}',
-                                    description: 'Wird durch die Angaben zur stornierten Reservierung ersetzt',
-                                },
-                                { 
-                                    key: '{{grund}}',
-                                    description: 'Wird durch den Grund der Stornierung ersetzt',
-                                }
-                            ]}
-                        />
-
-                        <Divider />
-
-                        <h1>Registrierung: E-Mail bestätigen</h1>
-                        <TemplateEditor
-                            mailKey='confirmMail'
-                            replacements={[
-                                { 
-                                    key: '{{name}}',
-                                    description: 'Wird durch den Namen des Benutzers ersetzt',
-                                },
-                                { 
-                                    key: '{{link}}',
-                                    description: 'Wird durch den Bestätigungslink ersetzt',
-                                },
-                            ]}
-                        />
-
-                        <Divider />
-
-                        <h1>Registrierung: Passwort vergessen</h1>
-                        <TemplateEditor
-                            mailKey='resetPassword'
-                            replacements={[
-                                { 
-                                    key: '{{name}}',
-                                    description: 'Wird durch den Namen des Benutzers ersetzt',
-                                },
-                                { 
-                                    key: '{{link}}',
-                                    description: 'Wird durch den Link zum Passwort-Reset ersetzt',
-                                },
-                            ]}
-                        />
+                        <MailTemplatesPane />
 
                     </div>
                 </Tabs.TabPane>

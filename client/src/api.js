@@ -8,3 +8,7 @@ export const putConfigApi = {
     url: `${BASE_PATH}/config`,
     method: 'PUT',
 };
+
+export const getMailTemplatesApi = {
+    url: `${BASE_PATH}/mail-templates`,
+};
