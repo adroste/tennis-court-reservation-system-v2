@@ -3,23 +3,36 @@ import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, PlusOutlined } from
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { DatePicker } from '../calendar/DatePicker';
+import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
+import { putCourtsApi } from '../api';
 import styles from './CourtConfigForm.module.css';
+import { useApi } from '../useApi';
 
 export function CourtConfigForm() {
 
-    const { courts } = useContext(appContext);
+    const { courts, setCourts } = useContext(appContext);
     const [, forceUpdate] = useState();
+    const [disableReset, setDisableReset] = useState(true);
+    const [state, putCourts] = useApi(putCourtsApi, setCourts);
 
     const [form] = Form.useForm();
 
     const initialValues = useMemo(() => ({ courts }), [courts]);
 
-    const resetForm = useCallback(() => form.resetFields(), [form]);
+    const resetForm = useCallback(() => {
+        form.resetFields();
+        setDisableReset(true);
+    }, [form]);
 
     useEffect(() => {
         form.resetFields();
     }, [form, courts]);
+
+    useEffect(() => {
+        if (state.success)
+            resetForm();
+    }, [state.success, resetForm]);
 
     const getNextId = useCallback(() => {
         const curCourts = form.getFieldValue('courts') || [];
@@ -29,21 +42,24 @@ export function CourtConfigForm() {
         return maxId + 1;
     }, [courts, form]);
 
-    const onFinish = values => {
-        console.log('Success:', values);
-    };
+    const handleFieldsChange = useCallback(() => {
+        if (disableReset)
+            setDisableReset(false);
+    }, [disableReset]);
 
-    // const onFinishFailed = errorInfo => {
-    //     console.log('Failed:', errorInfo);
-    // };
+    const handleSave = useCallback(({ courts }) => {
+        console.log(courts)
+        putCourts(courts);
+    }, [putCourts]);
 
     return (
         <Form
+            autoComplete="off"
             form={form}
             initialValues={initialValues}
             layout="vertical"
-            onFinish={onFinish}
-            autoComplete="off"
+            onFieldsChange={handleFieldsChange}
+            onFinish={handleSave}
         >
             <Form.List name="courts">
                 {(fields, { add, remove, move }) => (
@@ -121,6 +137,7 @@ export function CourtConfigForm() {
                                             label="Zeitraum der Sperrung"
                                             name={[field.name, 'disabledFromTil']}
                                             fieldKey={[field.fieldKey, 'disabledFromTil']}
+                                            rules={[{ required: true, message: 'Zeitraum erforderlich' }]}
                                         >
                                             <DatePicker.RangePicker />
                                         </Form.Item>
@@ -154,14 +171,11 @@ export function CourtConfigForm() {
             </Form.List>
 
             <Form.Item>
-                <Space>
-                    <Button type="primary" htmlType="submit">
-                        Speichern
-                    </Button>
-                    <Button type="default" onClick={resetForm}>
-                        Zurücksetzen
-                    </Button>
-                </Space>
+                <SubmitButtons
+                    apiState={state}
+                    disableReset={disableReset}
+                    onReset={resetForm}
+                />
             </Form.Item>
         </Form>
     );

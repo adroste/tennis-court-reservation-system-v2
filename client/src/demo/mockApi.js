@@ -1,4 +1,4 @@
-import { getBaseDataApi, getMailTemplatesApi, putConfigApi, putMailTemplatesApi, putTemplatesApi } from '../api';
+import { getBaseDataApi, getMailTemplatesApi, putConfigApi, putCourtsApi, putMailTemplatesApi, putTemplatesApi } from '../api';
 
 import { db } from './mockDatabase';
 
@@ -22,6 +22,10 @@ function handleRequests(url, options) {
                 ...db.config,
                 ...body,
             };
+            return { success: true };
+
+        case cn(putCourtsApi):
+            db.courts = body;
             return { success: true };
 
         case cn(getMailTemplatesApi):

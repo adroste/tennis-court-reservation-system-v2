@@ -13,6 +13,12 @@ export const putConfigApi = {
     }),
 };
 
+export const putCourtsApi = {
+    url: `${BASE_PATH}/courts`,
+    method: 'PUT',
+    res: (currentData, reqData, ) => reqData,
+};
+
 export const getMailTemplatesApi = {
     url: `${BASE_PATH}/mail-templates`,
 };
