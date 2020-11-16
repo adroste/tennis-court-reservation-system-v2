@@ -1,10 +1,13 @@
 # Tennis Court Reservation System v2
 
+*React SPA, PHP 7, MySQL*
+
 *License: AGPL*
 
-🇺🇸 Free, modern, open source tennis court reservation system.
+🇺🇸 Free, modern, open source tennis court reservation system that works on any cheap web-hosting plan.
 
-🇩🇪 Kostenloses, modernes, Open Source Tennisplatz Reservierungssystem. 
+🇩🇪 Kostenloses, modernes, Open Source Tennisplatz Reservierungssystem, das mit jedem günstigen Web-Hosting Anbieter funktioniert.
+
 
 
 ## Languages / Sprachen
@@ -25,6 +28,12 @@
 * Kiosk Modus
 * // todo
 
+## Systemanforderungen
+
+* Web-Server (Apache, nginx, ...)
+* PHP 7
+* MySQL Datenbank
+
 &nbsp;
 
 # 🇺🇸
@@ -33,6 +42,12 @@
 
 * Kiosk Mode
 * // todo
+
+## System requirements
+
+* Web-Server (Apache, nginx, ...)
+* PHP 7
+* MySQL Database
 
 &nbsp;
 
@@ -43,6 +58,7 @@
 * Keine reservation reminder, Reservierungsbestätigungen sind ausreichend
 * Keine Reservierungsbestätigungen an admins (unnötig)
 * Storniert: wenn selbst storniert und wenn durch admin storniert
+* loading indicator ggf mit antd message ersetzen
 
 ## todos
 
@@ -85,7 +101,7 @@
 * [x] announcements
 * [x] login
 * [x] registration
-* [ ] registration step 2/confirm
+* [x] registration step 2/confirm
 * [ ] password recovery
 * [x] loading gate for appcontext
 * [x] login redirect to referrer
@@ -94,7 +110,7 @@
 * [x] input font-size 16px
 * [x] redirect to login on calendar item click
 * [x] calendar item click: login required modal
-* [ ] demo mode
+* [x] demo mode
 * [ ] antd message for reservation successful, change, cancel, ...
 * [ ] admin cancel reservation => reason 
 * [x] reset button for forms
@@ -105,3 +121,5 @@
 * [ ] test mail template button
 * [x] user management sorting
 * [x] show npm version
+* [ ] implement fetch/api routines
+* [ ] fix demo login button
