@@ -26,8 +26,8 @@ export function useApi(
         let cancelled = false;
 
         const doFetch = async (reqData) => {
-            setLoading(true);
             setSuccess(false);
+            setLoading(true);
             try {
                 const response = await fetch(url, {
                     method,
