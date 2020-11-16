@@ -18,7 +18,7 @@ export function AppContextProvider({ children }) {
         setTemplates(templates);
     }, []);
 
-    const getBaseData = useApi(getBaseDataApi, setBaseData, true); 
+    const [getBaseDataState, getBaseData] = useApi(getBaseDataApi, setBaseData, true); 
 
     const value = useMemo(() => ({
         config,
@@ -27,12 +27,13 @@ export function AppContextProvider({ children }) {
         setConfig,
         setCourts,
         setTemplates,
-        state: getBaseData.state,
-        reload: getBaseData.call,
+        state: getBaseDataState,
+        reload: getBaseData,
     }), [
         config,
         courts,
         templates,
+        getBaseDataState,
         getBaseData,
     ]);
 

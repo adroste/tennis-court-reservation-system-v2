@@ -73,14 +73,14 @@ export function useApi(
             return call();
     }, [autoFetch, call])
 
-    return useMemo(() => ({
-        state: {
+    return useMemo(() => ([
+        {
             success,
             loading,
             error,
         },
         call,
-    }), [
+    ]), [
         success,
         loading,
         error,
