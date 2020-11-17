@@ -1,6 +1,5 @@
 .wrapper {
     width: 100vw;
-    padding: 20px;
     margin-top: 20px;
     background: #fff;
 }
@@ -11,8 +10,12 @@
     }
 }
 
+.buttons {
+    margin-top: 40px;
+}
+
 .buttons > * {
     display: block;
     text-align: center;
-    margin: 20px auto 0;
+    margin: 10px auto 0;
 }
