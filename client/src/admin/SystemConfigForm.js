@@ -25,13 +25,8 @@ export function SystemConfigForm() {
     }, [form]);
 
     useEffect(() => {
-        form.resetFields();
-    }, [form, config]);
-
-    useEffect(() => {
-        if (state.success)
-            resetForm();
-    }, [state.success, resetForm]);
+        resetForm();
+    }, [config, resetForm]);
 
     const handleFieldsChange = useCallback(() => {
         if (disableReset)
@@ -39,8 +34,8 @@ export function SystemConfigForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(values => {
-        putConfig(values);
-    }, [putConfig]);
+        putConfig(values, resetForm);
+    }, [putConfig, resetForm]);
 
     return (
         <Form

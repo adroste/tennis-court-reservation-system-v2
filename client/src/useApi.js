@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+
+import { authContext } from './AuthContext';
 
 const defaultResFunc = (currentData, reqData, resData) => resData;
 
@@ -14,12 +16,13 @@ export function useApi(
     autoFetch = false
 ) {
     // todo auth context bearer token
+    const { user, logout } = useContext(authContext) || {};
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(autoFetch);
     const [error, setError] = useState(null);
-    const lastCallRef = useRef();
+    const lastCallRef = useRef(null);
 
-    const call = useCallback((reqData) => {
+    const call = useCallback((reqData, successCallback) => {
         if (lastCallRef.current)
             lastCallRef.current.cancel();
 
@@ -28,12 +31,17 @@ export function useApi(
         const doFetch = async (reqData) => {
             setSuccess(false);
             setLoading(true);
+            let is401 = false;
             try {
+                const headers = {};
+                if (user?.token)
+                    headers['Authorization'] = `Bearer ${user?.token}`;
+                if (reqData)
+                    headers['Content-Type'] = 'application/json';
+
                 const response = await fetch(url, {
                     method,
-                    headers: reqData ? {
-                        'Content-Type': 'application/json'
-                    } : undefined,
+                    headers,
                     body: reqData ? JSON.stringify(reqData) : undefined,
                 });
                 if (cancelled) return;
@@ -45,8 +53,11 @@ export function useApi(
                     setSuccess(true);
                     if (setData)
                         setData(data => res(data, reqData, resData));
+                    if (successCallback)
+                        successCallback();
                 } else {
                     setError(resData);
+                    is401 = response.status === 401;
                 }
             } catch (err) {
                 if (!cancelled)
@@ -54,6 +65,8 @@ export function useApi(
             } finally {
                 if (!cancelled)
                     setLoading(false);
+                if (is401)
+                    logout?.();
             }
         };
 
@@ -66,12 +79,18 @@ export function useApi(
         res,
         setData,
         url,
+        user,
+        logout,
     ]);
 
     useEffect(() => {
-        if (autoFetch)
+        if (autoFetch && !lastCallRef.current)
             return call();
     }, [autoFetch, call])
+
+    useEffect(() => {
+        return () => lastCallRef.current?.cancel?.();
+    }, []);
 
     return useMemo(() => ([
         {

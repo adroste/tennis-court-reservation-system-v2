@@ -3,6 +3,7 @@ import { Button, Menu } from 'antd';
 import React, { useCallback, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { StatusText } from '../admin/StatusText';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
 import styles from './MainMenu.module.css';
@@ -13,7 +14,7 @@ export function MainMenu({
     horizontal = false,
     onClick,
 }) {
-    const { user } = useContext(authContext);
+    const { autoLoginState, user } = useContext(authContext);
     const { pathname } = useLocation();
     const history = useHistory();
 
@@ -97,6 +98,17 @@ export function MainMenu({
                 }
             </Menu>
 
+            {autoLoginState.loading &&
+                <StatusText 
+                    className={cn({
+                        menuButton: true,
+                        horizontal,
+                    })}
+                    loading
+                    text="Anmeldung..."
+                />
+            }
+
             {user &&
                 <Button
                     className={cn({
@@ -109,7 +121,7 @@ export function MainMenu({
                 </Button>
             }
 
-            {!user &&
+            {!user && !autoLoginState.loading &&
                 <Button
                     className={cn({
                         menuButton: true,
@@ -121,7 +133,7 @@ export function MainMenu({
                 </Button>
             }
 
-            {!user &&
+            {!user && !autoLoginState.loading &&
                 <Button
                     className={cn({
                         menuButton: true,

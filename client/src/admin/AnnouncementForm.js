@@ -25,11 +25,6 @@ export function AnnouncementForm() {
         resetForm();
     }, [resetForm, announcement]);
 
-    useEffect(() => {
-        if (state.success)
-            resetForm();
-    }, [state.success, resetForm]);
-
     const handleEnabledChange = useCallback(e => {
         setEnabled(e.target.checked);
     }, []);
@@ -42,8 +37,8 @@ export function AnnouncementForm() {
     const handleSave = useCallback(({ announcement }) => {
         putConfig({
             announcement: enabled ? announcement : '',
-        });
-    }, [enabled, putConfig]);
+        }, resetForm);
+    }, [enabled, putConfig, resetForm]);
 
     return (
         <Form

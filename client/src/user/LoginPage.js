@@ -21,16 +21,16 @@ export function LoginPage() {
 
     return (
         <>
-        <div className={styles.cta}>
-            <Alert type="info" message={
-                <span>Sie haben noch keinen Account? <Link to="/register">Jetzt&nbsp;Registrieren!</Link></span>
-            } />
-        </div>
-        <div className={styles.wrapper}>
-            <h1>Anmelden</h1>
+            <div className={styles.cta}>
+                <Alert type="info" message={
+                    <span>Sie haben noch keinen Account? <Link to="/register">Jetzt&nbsp;Registrieren!</Link></span>
+                } />
+            </div>
+            <div className={styles.wrapper}>
+                <h1>Anmelden</h1>
 
-            <LoginForm />
-        </div>
+                <LoginForm />
+            </div>
         </>
     );
 }

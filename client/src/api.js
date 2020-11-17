@@ -41,23 +41,45 @@ export const putTemplatesApi = {
     }),
 };
 
+export const postLoginApi = {
+    url: `${BASE_PATH}/login`,
+    method: 'POST',
+};
+
+export const postLogoutApi = {
+    url: `${BASE_PATH}/logout`,
+    method: 'POST',
+};
+
 export const getUsersApi = {
     url: `${BASE_PATH}/users`,
+};
+
+export const postRegisterApi = {
+    url: `${BASE_PATH}/register`,
+    method: 'POST',
 };
 
 export const putUserApi = {
     url: `${BASE_PATH}/users`,
     method: 'PUT',
-    res: (users, reqData, _) => (
-        users.map(u => {
-            if (u.userId === reqData.userId)
-                return { 
-                    ...u,
-                    ...reqData,
-                };
-            return u;
-        })
-    ),
+    res: (currentData, reqData, _) => {
+        if (Array.isArray(currentData)) {
+            return currentData.map(u => {
+                if (u.userId === reqData.userId)
+                    return { 
+                        ...u,
+                        ...reqData,
+                    };
+                return u;
+            });
+        } else {
+            return {
+                ...currentData,
+                ...reqData,
+            };
+        }
+    },
 };
 
 export const deleteUserApi = {

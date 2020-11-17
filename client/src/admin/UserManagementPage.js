@@ -1,11 +1,10 @@
 import { Button, Modal, Space, Table, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, MailOutlined } from '@ant-design/icons';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { deleteUserApi, getUsersApi, putUserApi } from '../api';
 
 import { ErrorResult } from '../ErrorResult';
 import { authContext } from '../AuthContext';
-import dayjs from 'dayjs';
 import styles from './UserManagementPage.module.css';
 import { useApi } from '../useApi';
 

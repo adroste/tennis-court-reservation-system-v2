@@ -1,17 +1,31 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import React, { useCallback, useContext } from 'react';
+
+import { ErrorResult } from '../ErrorResult';
 import { RegisterForm } from './RegisterForm';
+import { authContext } from '../AuthContext';
+import { postRegisterApi } from '../api';
 import styles from './RegisterPage.module.css';
+import { useApi } from '../useApi';
 
 export function RegisterPage() {
 
-    // const onFinish = values => {
-    //     console.log('Success:', values);
-    // };
+    const { setUser } = useContext(authContext);
+    const [state, register] = useApi(postRegisterApi, setUser);
+    const history = useHistory();
 
-    // const onFinishFailed = errorInfo => {
-    //     console.log('Failed:', errorInfo);
-    // };
+    const handleFinishUser = useCallback(({ name, mail, password }) => {
+        register({
+            name,
+            mail,
+            password,
+        }, () => { 
+            history.push('/verifymail/new');
+        });
+    }, [register, history]);
+
+    if (state.error)
+        return <ErrorResult />;
 
     return (
         <div className={styles.wrapper}>
@@ -25,7 +39,7 @@ export function RegisterPage() {
             </h1>
 
             <RegisterForm
-                newUser
+                onFinish={handleFinishUser}
             />
         </div>
     );

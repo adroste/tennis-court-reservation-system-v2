@@ -1,47 +1,78 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Alert, Button, Checkbox, Form, Input } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { Link } from 'react-router-dom';
+import { StatusText } from '../admin/StatusText';
 import { authContext } from '../AuthContext';
+import { postLoginApi } from '../api';
 import styles from './LoginForm.module.css';
+import { useApi } from '../useApi';
 
 export function LoginForm() {
 
-    const { login } = useContext(authContext);
+    const { autoLoginState, setUser, setRememberLogin } = useContext(authContext);
+    const [loginState, login] = useApi(postLoginApi, setUser);
 
-    const onFinish = values => {
-        console.log('Success:', values);
-        login(values);
-    };
+    const loading = loginState.loading || autoLoginState.loading;
+    const valStatus = loginState.error ? 'error' : undefined;
 
-    const onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
-    };
+    const onFinish = useCallback(({ mail, password, rememberLogin }) => {
+        setRememberLogin(rememberLogin);
+        login({
+            type: 'plain',
+            mail,
+            password,
+        });
+    }, [login, setRememberLogin]);
 
     return (
         <Form
             layout="vertical"
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
         >
+            {loginState.error &&
+                <Form.Item>
+                    <Alert
+                        type="error"
+                        message="Login fehlgeschlagen."
+                    />
+                </Form.Item>
+            }
+
             <Form.Item
                 name="mail"
                 rules={[{ required: true, message: 'E-Mail Adresse ist erforderlich' }]}
+                validateStatus={valStatus}
             >
-                <Input prefix={<MailOutlined />} placeholder="E-Mail" />
+                <Input
+                    autoComplete="email"
+                    prefix={<MailOutlined style={{ color: '#aaa' }} />}
+                    placeholder="E-Mail"
+                    disabled={loading}
+                />
             </Form.Item>
 
             <Form.Item
                 name="password"
                 rules={[{ required: true, message: 'Passwort ist erforderlich' }]}
+                validateStatus={valStatus}
             >
-                <Input.Password prefix={<LockOutlined />} placeholder="Passwort" />
+                <Input.Password
+                    autoComplete="current-password"
+                    prefix={<LockOutlined style={{ color: '#aaa' }} />}
+                    placeholder="Passwort"
+                    disabled={loading}
+                />
             </Form.Item>
 
             <Form.Item>
                 <Form.Item name="rememberLogin" valuePropName="checked" noStyle>
-                    <Checkbox>Angemeldet bleiben</Checkbox>
+                    <Checkbox
+                        disabled={loading}
+                    >
+                        Angemeldet bleiben
+                    </Checkbox>
                 </Form.Item>
 
                 <a className={styles.forgotLink} href="">
@@ -50,8 +81,16 @@ export function LoginForm() {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className={styles.loginButton}>
-                    Anmelden
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    className={styles.loginButton}
+                    disabled={loading}
+                >
+                    <StatusText
+                        loading={loading}
+                        text={loading ? 'Anmeldung...' : 'Anmelden'}
+                    />
                 </Button>
             </Form.Item>
 

@@ -1,53 +1,67 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { postLoginApi, postLogoutApi } from './api';
+
+import { useApi } from './useApi';
+
+const TOKEN_NAME = 'usertoken';
 
 export const authContext = React.createContext();
 
 export function AuthContextProvider({ children }) {
 
-    const [user, setUser] = useState(() => {
-        let user = sessionStorage.getItem('user') || localStorage.getItem('user');
-        try {
-            return JSON.parse(user)
-        } catch (_) {
-            return null;
-        }
-    });
+    const [user, _setUser] = useState(null);
+    const rememberLoginRef = useRef(false);
 
-    useEffect(() => {
-        if (user) {
-            const serialized = JSON.stringify(user);
-            if (user.rememberLogin)
-                localStorage.setItem('user', serialized);
-            else
-                sessionStorage.setItem('user', serialized);
-        } else {
-            sessionStorage.removeItem('user');
-            localStorage.removeItem('user');
-        }
-    }, [user]);
-
-    const login = useCallback(({ rememberLogin }) => {
-        setUser({
-            admin: true,
-            userId: 1,
-            name: 'Müller',
-            mail: 'mueller@example.com',
-            rememberLogin,
+    const setUser = useCallback(getResult => {
+        _setUser(data => {
+            const newData = getResult(data);
+            if (newData?.token) {
+                if (rememberLoginRef.current)
+                    localStorage.setItem(TOKEN_NAME, newData.token);
+                else
+                    sessionStorage.setItem(TOKEN_NAME, newData.token);
+            }
+            return newData;
         });
     }, []);
 
-    const logout = useCallback(() => {
-        setUser(null);
+    const [autoLoginState, postLogin] = useApi(postLoginApi, setUser);
+    const [, postLogout] = useApi(postLogoutApi);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem(TOKEN_NAME) || localStorage.getItem(TOKEN_NAME);
+        if (token)
+            postLogin({
+                type: 'token',
+                token,
+            });
+    }, [postLogin]);
+
+    const setRememberLogin = useCallback(rememberLogin => {
+        rememberLoginRef.current = rememberLogin;
     }, []);
 
+    const logout = useCallback(() => {
+        postLogout({
+            userId: user?.userId,
+        });
+        _setUser(null);
+        sessionStorage.removeItem(TOKEN_NAME);
+        localStorage.removeItem(TOKEN_NAME);
+    }, [postLogout, user]);
+
     const value = useMemo(() => ({
-        user,
-        login,
+        autoLoginState,
         logout,
+        setRememberLogin,
+        setUser,
+        user,
     }), [
-        user, 
-        login, 
-        logout
+        autoLoginState,
+        logout,
+        setRememberLogin,
+        setUser,
+        user,
     ]);
 
     return (

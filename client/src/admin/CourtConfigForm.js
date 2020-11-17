@@ -29,11 +29,6 @@ export function CourtConfigForm() {
         form.resetFields();
     }, [form, courts]);
 
-    useEffect(() => {
-        if (state.success)
-            resetForm();
-    }, [state.success, resetForm]);
-
     const getNextId = useCallback(() => {
         const curCourts = form.getFieldValue('courts') || [];
         let maxId = 0;
@@ -48,9 +43,8 @@ export function CourtConfigForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(({ courts }) => {
-        console.log(courts)
-        putCourts(courts);
-    }, [putCourts]);
+        putCourts(courts, resetForm);
+    }, [putCourts, resetForm]);
 
     return (
         <Form
