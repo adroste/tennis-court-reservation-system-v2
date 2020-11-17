@@ -1,33 +1,32 @@
-import { Button, Col, Row, Space } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Button, Col, Row } from 'antd';
 
-import { Ball } from '../Ball';
+import { StatusText } from './StatusText';
 
 function SubmitButtonsState({ apiState }) {
     const { success, loading, error } = apiState;
 
     if (loading)
         return (
-            <Space>
-                <Ball visible spin />
-                <span>Speichern...</span>
-            </Space>
+            <StatusText
+                loading
+                text="Speichern..."
+            />
         );
 
     if (error)
         return (
-            <Space>
-                <CloseCircleOutlined style={{ color: '#ff4d4f' }} />
-                <span>Konnte nicht gespeichert werden</span>
-            </Space>
+            <StatusText
+                error
+                text="Konnte nicht gespeichert werden"
+            />
         );
 
     if (success)
         return (
-            <Space>
-                <CheckCircleOutlined style={{ color: '#52c41a' }} />
-                <span>Gespeichert</span>
-            </Space>
+            <StatusText
+                success
+                text="Gespeichert"
+            />
         );
 
     return null;
