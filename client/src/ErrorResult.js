@@ -1,4 +1,4 @@
-import { Button, Result } from 'antd'
+import { Button, Result } from 'antd';
 
 export function ErrorResult() {
 
@@ -8,7 +8,7 @@ export function ErrorResult() {
             title="Etwas ist schiefgelaufen."
             extra={
                 <Button type="primary" onClick={() => window.location.reload()} >
-                    Seite neu laden
+                    Erneut versuchen
                 </Button>
             }
         />
