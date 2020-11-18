@@ -4,6 +4,7 @@ export function ErrorResult() {
 
     return (
         <Result
+            style={{ margin: '0 auto' }}
             status="warning"
             title="Etwas ist schiefgelaufen."
             extra={
