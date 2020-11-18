@@ -1,4 +1,5 @@
-import { Button, Divider, Typography } from 'antd';
+import { Alert, Button, Divider, Typography } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
 import React, { useCallback, useContext } from 'react';
 
 import { RegisterForm } from './RegisterForm';
@@ -6,7 +7,6 @@ import { authContext } from '../AuthContext';
 import { putUserApi } from '../api';
 import styles from './MyAccountPage.module.css';
 import { useApi } from '../useApi';
-import { useHistory } from 'react-router-dom';
 
 export function MyAccountPage() {
 
@@ -25,13 +25,26 @@ export function MyAccountPage() {
         
         putUser(update, () => {
             if (mail !== user.mail)
-                history.push('/verifymail/new');
+                history.push('/verifymail/send');
         });
     }, [putUser, user, history]);
 
     return (
         <div className={styles.wrapper}>
             <h1>Benutzerkonto</h1>
+
+            {!user.verified &&
+                <Alert
+                    className={styles.alert}
+                    type="warning"
+                    showIcon
+                    message={
+                        <div>
+                            E-Mail Adresse nicht verifziert! <Link to="/verifymail/send">Erneut senden</Link>
+                        </div>
+                    }
+                />
+            }
 
             <RegisterForm
                 apiState={putState}

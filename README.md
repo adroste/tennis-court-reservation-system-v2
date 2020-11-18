@@ -125,3 +125,14 @@
 * [ ] fix demo login button
 * [x] fix demo notification overlapping cookie notice on mobile
 * [ ] bestehende reservierungen bei platzsperre stornieren
+* [ ] datenschutz buttons unter mein benutzerkonto implementieren
+* [ ] activity table backend
+* [x] verified email state
+* [x] set verified=false when changing email via myaccount
+* [ ] register: check for unique mail
+
+
+#### auth mechanism
+
+* spa holds token
+  * token contains userId

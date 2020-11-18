@@ -1,10 +1,13 @@
-import { deleteUserApi, getBaseDataApi, getMailTemplatesApi, getUsersApi, postLoginApi, postLogoutApi, postRegisterApi, putConfigApi, putCourtsApi, putMailTemplatesApi, putTemplatesApi, putUserApi } from '../api';
+import { Button, notification } from 'antd';
+import { deleteUserApi, getBaseDataApi, getMailTemplatesApi, getUsersApi, postLoginApi, postLogoutApi, postRegisterApi, postSendVerifyMailApi, postVerifyMailApi, putConfigApi, putCourtsApi, putMailTemplatesApi, putTemplatesApi, putUserApi } from '../api';
 
 import { db } from './mockDatabase';
+import { demoControl } from './DemoControls';
 
 const fakeDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const R_401 = '__401__RESULT__FETCH__';
+const R_404 = '__404__RESULT__FETCH__';
 const R_500 = '__500__RESULT__FETCH__';
 
 const cn = apiDesc => `${apiDesc.url}${apiDesc.method || 'GET'}`;
@@ -57,6 +60,8 @@ async function handleRequests(url, options) {
                     return {
                         ...u,
                         ...body,
+                        verified: u.mail === body.mail 
+                            ? u.verified : false,
                     };
                 return u;
             });
@@ -110,6 +115,34 @@ async function handleRequests(url, options) {
         case cn(deleteUserApi):
             db.users = db.users.filter(u => u.userId !== body.userId);
             return { success: true };
+        
+        case cn(postSendVerifyMailApi): {
+            const verifyToken = btoa(body.mail);
+            notification.warn({
+                key: 'fake-verification',
+                message: 'Demo E-Mail Verifikation',
+                duration: 0,
+                placement: 'bottomRight',
+                description: (
+                    <div>
+                        <p>Dies simuliert den Verifikationsprozess für <strong>{body.mail}</strong>.</p>
+                        <Button onClick={() => demoControl.history?.push(`/verifymail/${verifyToken}`)}>
+                            E-Mail Verifizieren (Demo)
+                        </Button>
+                    </div>
+                ),
+            });
+            return { success: true };
+        }
+        
+        case cn(postVerifyMailApi): {
+            const mail = atob(body.token);
+            const user = db.users.find(u => u.mail === mail);
+            if (!user)
+                return R_404;
+            user.verified = true;
+            return { success: true };
+        }
 
         default:
             return null;
@@ -124,16 +157,29 @@ export function patchFetch() {
 
         await fakeDelay(200);
 
-        const res = await handleRequests(url, options);
+        let res;
+        try {
+            res = await handleRequests(url, options);
+        } catch (err) {
+            res = R_500;
+        }
+
         console.log("Fake API:", {
             request: {url, options},
             response: res,
             db,
         });
+
         if (res === R_401) {
             return Promise.resolve({
                 ok: false,
                 status: 401,
+                json: async () => Promise.resolve({ error: true }),
+            });
+        } else if (res === R_404) {
+            return Promise.resolve({
+                ok: false,
+                status: 404,
                 json: async () => Promise.resolve({ error: true }),
             });
         } else if (res === R_500) {

@@ -110,24 +110,39 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
 
     users: [
         {
+            userId: 9,
+            name: 'Max Mustermann',
+            mail: 'max@example.com',
+            verified: false,
+            admin: false,
+        },
+        {
+            userId: 2,
+            name: 'Otto Probiermal',
+            mail: 'otto@example.com',
+            verified: true,
+            admin: true,
+        },
+        {
             userId: 3,
             name: 'Jürgen M.',
             mail: 'juergen@example.com',
             verified: true,
-            admin: true,
-            lastActivity: dayjs().subtract(4, 'days'),
-            upcomingReservationCount: 3,
-            totalReservationCount: 41,
+            admin: false,
         },
         {
             userId: 8,
-            name: 'Müller',
+            name: 'H. Müller',
             mail: 'mueller@example.com',
             verified: true,
-            admin: true,
-            lastActivity: dayjs().subtract(1, 'm'),
-            upcomingReservationCount: 3,
-            totalReservationCount: 41,
+            admin: false,
+        },
+        {
+            userId: 661,
+            name: 'Nick Sample',
+            mail: 'test.franz.mein.mail@franz.de',
+            verified: true,
+            admin: false,
         },
         {
             userId: 41,
@@ -135,9 +150,6 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'test.franz.mein.mail@franz.de',
             verified: false,
             admin: false,
-            lastActivity: dayjs().subtract(3, 'h'),
-            upcomingReservationCount: 0,
-            totalReservationCount: 140,
         }
     ],
 

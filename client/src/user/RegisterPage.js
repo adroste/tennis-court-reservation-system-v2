@@ -20,7 +20,7 @@ export function RegisterPage() {
             mail,
             password,
         }, () => { 
-            history.push('/verifymail/new');
+            history.push('/verifymail/send');
         });
     }, [register, history]);
 

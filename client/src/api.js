@@ -7,16 +7,16 @@ export const getBaseDataApi = {
 export const putConfigApi = {
     url: `${BASE_PATH}/config`,
     method: 'PUT',
-    res: (currentData, reqData, _) => ({
-            ...currentData,
-            ...reqData,
+    res: (curConfig, newConfig, _) => ({
+            ...curConfig,
+            ...newConfig,
     }),
 };
 
 export const putCourtsApi = {
     url: `${BASE_PATH}/courts`,
     method: 'PUT',
-    res: (currentData, reqData, _) => reqData,
+    res: (_, newCourts) => newCourts,
 };
 
 export const getMailTemplatesApi = {
@@ -26,18 +26,18 @@ export const getMailTemplatesApi = {
 export const putMailTemplatesApi = {
     url: `${BASE_PATH}/mail-templates`,
     method: 'PUT',
-    res: (currentData, reqData, _) => ({
-            ...currentData,
-            ...reqData
+    res: (curMailTemplates, newMailTemplates, _) => ({
+            ...curMailTemplates,
+            ...newMailTemplates
     }),
 };
 
 export const putTemplatesApi = {
     url: `${BASE_PATH}/templates`,
     method: 'PUT',
-    res: (currentData, reqData, _) => ({
-            ...currentData,
-            ...reqData
+    res: (curTemplates, newTemplates, _) => ({
+            ...curTemplates,
+            ...newTemplates
     }),
 };
 
@@ -60,6 +60,20 @@ export const postRegisterApi = {
     method: 'POST',
 };
 
+export const postSendVerifyMailApi = {
+    url: `${BASE_PATH}/send-verify-mail`,
+    method: 'POST',
+};
+
+export const postVerifyMailApi = {
+    url: `${BASE_PATH}/verify-mail`,
+    method: 'POST',
+    res: (user, _) => ({
+            ...user,
+            verified: true,
+    }),
+};
+
 export const putUserApi = {
     url: `${BASE_PATH}/users`,
     method: 'PUT',
@@ -70,6 +84,8 @@ export const putUserApi = {
                     return { 
                         ...u,
                         ...reqData,
+                        verified: u.mail === reqData.mail 
+                            ? u.verified : false,
                     };
                 return u;
             });
@@ -77,6 +93,8 @@ export const putUserApi = {
             return {
                 ...currentData,
                 ...reqData,
+                verified: currentData.mail === reqData.mail 
+                    ? currentData.verified : false,
             };
         }
     },

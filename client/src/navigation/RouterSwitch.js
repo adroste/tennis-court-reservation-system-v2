@@ -55,9 +55,9 @@ export function RouterSwitch() {
                     }
                 />
 
-                <Route path="/verifymail/:verifyKey">
+                <ProtectedRoute condition={user} path="/verifymail/:verifyToken">
                     <VerifyMailPage />
-                </Route>
+                </ProtectedRoute>
 
                 <ProtectedRoute condition={user?.admin} exact path="/admin/general">
                     <GeneralSettingsPage />

@@ -30,12 +30,19 @@ export function AuthContextProvider({ children }) {
 
     useEffect(() => {
         const token = sessionStorage.getItem(TOKEN_NAME) || localStorage.getItem(TOKEN_NAME);
-        if (token)
+        if (token && !user)
             postLogin({
                 type: 'token',
                 token,
             });
-    }, [postLogin]);
+    }, [postLogin, user]);
+
+    useEffect(() => {
+        if (autoLoginState.error) {
+            sessionStorage.removeItem(TOKEN_NAME);
+            localStorage.removeItem(TOKEN_NAME);
+        }
+    }, [autoLoginState]);
 
     const setRememberLogin = useCallback(rememberLogin => {
         rememberLoginRef.current = rememberLogin;
@@ -48,7 +55,7 @@ export function AuthContextProvider({ children }) {
         _setUser(null);
         sessionStorage.removeItem(TOKEN_NAME);
         localStorage.removeItem(TOKEN_NAME);
-    }, [postLogout, user]);
+    }, [postLogout, user?.userId]);
 
     const value = useMemo(() => ({
         autoLoginState,

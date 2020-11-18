@@ -4,6 +4,8 @@ import { authContext } from './AuthContext';
 
 const defaultResFunc = (currentData, reqData, resData) => resData;
 
+// WARNING: function reference to 'call' changes when 
+// user.token or user.userId changes
 export function useApi(
     {
         url,
@@ -15,8 +17,8 @@ export function useApi(
     setData,
     autoFetch = false
 ) {
-    // todo auth context bearer token
     const { user, logout } = useContext(authContext) || {};
+    const userToken = user?.token;
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(autoFetch);
     const [error, setError] = useState(null);
@@ -34,8 +36,8 @@ export function useApi(
             let is401 = false;
             try {
                 const headers = {};
-                if (user?.token)
-                    headers['Authorization'] = `Bearer ${user?.token}`;
+                if (userToken)
+                    headers['Authorization'] = `Bearer ${userToken}`;
                 if (reqData)
                     headers['Content-Type'] = 'application/json';
 
@@ -79,8 +81,8 @@ export function useApi(
         res,
         setData,
         url,
-        user,
-        logout,
+        userToken,
+        logout, // changes when user.userId changes
     ]);
 
     useEffect(() => {
@@ -98,7 +100,7 @@ export function useApi(
             loading,
             error,
         },
-        call,
+        call, // see hint at top of file
     ]), [
         success,
         loading,

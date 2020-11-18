@@ -11,6 +11,10 @@
     }
 }
 
+.alert {
+    margin: 10px 0;
+}
+
 .buttonWrapper {
     margin: 20px 0;
 }

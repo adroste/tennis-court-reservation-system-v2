@@ -5,14 +5,18 @@
     background: #fff;
 }
 
-@media (min-width: 400px) {
+@media (min-width: 560px) {
     .wrapper {
-        width: 400px;
+        width: 560px;
     }
+}
+
+.buttons {
+    margin-top: 20px;
 }
 
 .buttons > * {
     display: block;
     text-align: center;
-    margin: 20px auto 0;
+    margin: 10px auto 0;
 }

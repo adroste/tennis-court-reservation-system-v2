@@ -2,10 +2,8 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 
 import { DayTable } from './DayTable';
 import { HoursTable } from './HoursTable';
-import { LoginModal } from '../user/LoginModal';
 import { ReservationModal } from './ReservationModal';
 import { appContext } from '../AppContext';
-import { authContext } from '../AuthContext';
 import styles from './ReservationCalendar.module.css';
 import { useWeekReservations } from './useReservations';
 
@@ -17,7 +15,6 @@ export function ReservationCalendar({
     selectedDate,
     today,
 }) {
-    const { user } = useContext(authContext);
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
     const [selectedSlot, setSelectedSlot] = useState();
@@ -59,8 +56,8 @@ export function ReservationCalendar({
     return (
         <>
             <div className={styles.tableWrapper}>
-                <HoursTable 
-                    hours={hours} 
+                <HoursTable
+                    hours={hours}
                     highlightHour={highlightHour}
                 />
 
@@ -80,20 +77,14 @@ export function ReservationCalendar({
                 </div>
             </div>
 
-            {selectedSlot && (user ?
-                (
-                    <ReservationModal
-                        date={selectedSlot?.date}
-                        courtId={selectedSlot?.courtId}
-                        reservation={selectedSlot?.reservation}
-                        today={today}
-                        onFinish={handleReservationFinish}
-                    />
-                ) : (
-                    <LoginModal 
-                        onClose={handleReservationFinish}
-                    />
-                ))
+            {selectedSlot &&
+                <ReservationModal
+                    date={selectedSlot?.date}
+                    courtId={selectedSlot?.courtId}
+                    reservation={selectedSlot?.reservation}
+                    today={today}
+                    onFinish={handleReservationFinish}
+                />
             }
         </>
     );

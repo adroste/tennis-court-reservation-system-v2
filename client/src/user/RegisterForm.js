@@ -44,7 +44,6 @@ export function RegisterForm({
             onFinish={onFinish}
             onFieldsChange={handleFieldsChange}
         >
-
             <Form.Item
                 label="Anzeigename"
                 name="name"

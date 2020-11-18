@@ -1,34 +1,49 @@
 import { Button, Result, Space } from 'antd';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { postSendVerifyMailApi, postVerifyMailApi } from '../api';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { Ball } from '../Ball';
+import { ErrorResult } from '../ErrorResult';
 import { authContext } from '../AuthContext';
 import styles from './VerifyMailPage.module.css';
+import { useApi } from '../useApi';
 
 export function VerifyMailPage() {
 
-    const { logout } = useContext(authContext);
+    const { user, setUser } = useContext(authContext);
     const history = useHistory();
-    const { verifyKey } = useParams();
-    const loading = false;
+    const { verifyToken } = useParams();
 
-    useEffect(() => {
-
-    }, [verifyKey]);
+    const send = verifyToken === 'send';
+    const [sendState, sendMail] = useApi(postSendVerifyMailApi);
+    const [verifyState, verifyMail] = useApi(postVerifyMailApi, setUser);
+    const [resendClicked, setResendClicked] = useState(false);
 
     const handleCalendarClick = useCallback(() => {
         history.replace('/');
     }, [history]);
 
-    if (loading)
-        return (
-            <div className={styles.wrapper}>
-                <Ball visible spin centered large />
-            </div>
-        );
+    const handleChangeMailClick = useCallback(() => {
+        history.replace('/myaccount');
+    }, [history]);
 
-    if (verifyKey === 'new')
+    const handleResendMail = useCallback(() => {
+        setResendClicked(true);
+        sendMail({ mail: user.mail });
+    }, [sendMail, user.mail]);
+
+    useEffect(() => {
+        if (send)
+            sendMail({ mail: user.mail });
+    }, [send, sendMail, user.mail]);
+
+    useEffect(() => {
+        if (!send)
+            verifyMail({ token: verifyToken });
+    }, [send, verifyMail, verifyToken]);
+
+    if (send)
         return (
             <div className={styles.wrapper}>
                 <Result
@@ -37,11 +52,23 @@ export function VerifyMailPage() {
                     extra={
                         <div>
                             <div>
-                                Es wurde soeben eine Mail mit einem Bestätigungslink an Ihre E-Mail Adresse versandt.
+                                Es wurde soeben eine Mail mit einem Bestätigungslink an <strong>{user?.mail}</strong> versandt.
                             </div>
                             <br />
                             <div>
                                 Klicken Sie auf den Bestätigungslink, um ihre E-Mail Adresse zu verifizieren.
+                            </div>
+                            <div className={styles.buttons}>
+                                <Button 
+                                    type="link" 
+                                    onClick={handleResendMail}
+                                    disabled={sendState.loading || resendClicked}
+                                >
+                                    Bestätigungslink erneut senden
+                                </Button>
+                                <Button type="link" onClick={handleChangeMailClick}>
+                                    E-Mail Adresse ändern
+                                </Button>
                             </div>
                         </div>
                     }
@@ -49,6 +76,12 @@ export function VerifyMailPage() {
             </div>
         );
 
+    if (verifyState.error)
+        return <ErrorResult />
+
+    if (verifyState.loading)
+        return <Ball visible large spin />;
+    
     return (
         <div className={styles.wrapper}>
             <Result

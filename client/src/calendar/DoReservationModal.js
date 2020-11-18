@@ -5,7 +5,7 @@ import { GroupDatesForm } from './GroupDatesForm';
 import { ReservationDetails } from './ReservationDetails';
 import dayjs from 'dayjs';
 import { findReservation } from './helper';
-import styles from './ReservationModal.module.css';
+import styles from './ReservationModalInner.module.css';
 import { useGroupReservations } from './useReservations';
 
 export function DoReservationModal({

@@ -3,13 +3,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { authContext } from '../AuthContext';
+import { postLoginApi } from '../api';
+import { useApi } from '../useApi';
+
+export const demoControl = {};
 
 export function DemoControls() {
 
-    const { user, login } = useContext(authContext);
+    const { user, setUser } = useContext(authContext);
     const [open, setOpen] = useState(true);
+    const [, login] = useApi(postLoginApi, setUser);
 
     const history = useHistory();
+    demoControl.history = history;
     const location = useLocation();
 
     useEffect(() => {
@@ -39,19 +45,23 @@ export function DemoControls() {
                                     <Button size="middle" onClick={() => history.push('/kiosk')}>
                                         Kiosk Modus
                                     </Button>
-                                    {!user &&
-                                        <>
-                                            <Button size="middle" onClick={() => login({
-                                                rememberLogin: false,
-                                            })}>
-                                                Als Admin anmelden
-                                            </Button>
-                                            <Button size="middle" onClick={() => login({
-                                                rememberLogin: false,
-                                            })}>
-                                                Als Nutzer anmelden
-                                            </Button>
-                                        </>
+                                    {(!user || !user.admin) &&
+                                        <Button size="middle" onClick={() => login({
+                                            type: 'plain',
+                                            mail: 'otto@example.com',
+                                            password: 'demo',
+                                        })}>
+                                            Als Admin anmelden
+                                        </Button>
+                                    }
+                                    {(!user || user.admin) &&
+                                        <Button size="middle" onClick={() => login({
+                                            type: 'plain',
+                                            mail: 'max@example.com',
+                                            password: 'demo',
+                                        })}>
+                                            Als Nutzer anmelden
+                                        </Button>
                                     }
                                 </>
                             )

@@ -1,0 +1,9 @@
+.buttons {
+    margin-top: 20px;
+}
+
+.buttons > * {
+    display: block;
+    text-align: center;
+    margin: 10px auto 0;
+}
