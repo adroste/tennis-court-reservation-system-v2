@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
-import { putConfigApi } from '../api';
+import { patchConfigApi } from '../api';
 import { useApi } from '../useApi';
 
 export function AnnouncementForm() {
@@ -11,7 +11,7 @@ export function AnnouncementForm() {
     const { config: { announcement }, setConfig } = useContext(appContext);
     const [enabled, setEnabled] = useState();
     const [disableReset, setDisableReset] = useState(true);
-    const [state, putConfig] = useApi(putConfigApi, setConfig);
+    const [state, patchConfig] = useApi(patchConfigApi, setConfig);
 
     const [form] = Form.useForm();
 
@@ -35,10 +35,10 @@ export function AnnouncementForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(({ announcement }) => {
-        putConfig({
+        patchConfig(null, {
             announcement: enabled ? announcement : '',
         }, resetForm);
-    }, [enabled, putConfig, resetForm]);
+    }, [enabled, patchConfig, resetForm]);
 
     return (
         <Form

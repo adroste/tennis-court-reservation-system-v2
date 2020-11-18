@@ -4,41 +4,19 @@ export const getBaseDataApi = {
     url: `${BASE_PATH}/base-data`,
 };
 
-export const putConfigApi = {
+export const patchConfigApi = {
     url: `${BASE_PATH}/config`,
-    method: 'PUT',
-    res: (curConfig, newConfig, _) => ({
-            ...curConfig,
-            ...newConfig,
+    method: 'PATCH',
+    setFunc: ({ cur, req }) => ({
+        ...cur,
+        ...req,
     }),
 };
 
 export const putCourtsApi = {
     url: `${BASE_PATH}/courts`,
     method: 'PUT',
-    res: (_, newCourts) => newCourts,
-};
-
-export const getMailTemplatesApi = {
-    url: `${BASE_PATH}/mail-templates`,
-};
-
-export const putMailTemplatesApi = {
-    url: `${BASE_PATH}/mail-templates`,
-    method: 'PUT',
-    res: (curMailTemplates, newMailTemplates, _) => ({
-            ...curMailTemplates,
-            ...newMailTemplates
-    }),
-};
-
-export const putTemplatesApi = {
-    url: `${BASE_PATH}/templates`,
-    method: 'PUT',
-    res: (curTemplates, newTemplates, _) => ({
-            ...curTemplates,
-            ...newTemplates
-    }),
+    setFunc: ({ req }) => req,
 };
 
 export const postLoginApi = {
@@ -51,8 +29,17 @@ export const postLogoutApi = {
     method: 'POST',
 };
 
-export const getUsersApi = {
-    url: `${BASE_PATH}/users`,
+export const getMailTemplatesApi = {
+    url: `${BASE_PATH}/mail-templates`,
+};
+
+export const putMailTemplateApi = {
+    url: `${BASE_PATH}/mail-template/:id`,
+    method: 'PUT',
+    setFunc: ({ cur, req }) => ({ 
+        ...cur,
+        [req.id]: req,
+    }),
 };
 
 export const postRegisterApi = {
@@ -60,50 +47,101 @@ export const postRegisterApi = {
     method: 'POST',
 };
 
+export const getReservationsApi = {
+    url: `${BASE_PATH}/reservations`,
+    method: 'POST',
+};
+
+export const postReservationsApi = {
+    url: `${BASE_PATH}/reservations`,
+    method: 'POST',
+    res: (curReservations, _, newReservations) => ([
+            ...curReservations,
+            ...newReservations,
+    ]),
+};
+
+export const putReservationsApi = {
+    url: `${BASE_PATH}/reservations`,
+    method: 'PUT',
+    res: (curReservations, updatedReservations, _) => (
+        curReservations.map(r => {
+            const update = updatedReservations.find(u => u.id === r.id);
+            if (update)
+                return {
+                    ...r,
+                    ...update,
+                };
+            return r;
+        })
+    ),
+};
+
+export const deleteReservationsApi = {
+    url: `${BASE_PATH}/reservations`,
+    method: 'DELETE',
+    res: (curReservations, deletedIds, _) => (
+        curReservations.filter(r => !deletedIds.includes(r.id))
+    ),
+};
+
 export const postSendVerifyMailApi = {
     url: `${BASE_PATH}/send-verify-mail`,
     method: 'POST',
 };
 
-export const postVerifyMailApi = {
-    url: `${BASE_PATH}/verify-mail`,
-    method: 'POST',
-    res: (user, _) => ({
-            ...user,
-            verified: true,
+export const putTemplateApi = {
+    url: `${BASE_PATH}/template/:id`,
+    method: 'PUT',
+    setFunc: ({ cur, req }) => ({ 
+        ...cur,
+        [req.id]: req,
     }),
 };
 
-export const putUserApi = {
+export const getUsersApi = {
     url: `${BASE_PATH}/users`,
-    method: 'PUT',
-    res: (currentData, reqData, _) => {
-        if (Array.isArray(currentData)) {
-            return currentData.map(u => {
-                if (u.userId === reqData.userId)
+};
+
+export const patchUserApi = {
+    url: `${BASE_PATH}/user/:userId`,
+    method: 'PATCH',
+    setFunc: ({ cur, req }) => {
+        if (Array.isArray(cur)) {
+            return cur.map(u => {
+                if (u.userId === req.userId)
                     return { 
                         ...u,
-                        ...reqData,
-                        verified: u.mail === reqData.mail 
+                        ...req,
+                        verified: (!req.mail || u.mail === req.mail)
                             ? u.verified : false,
                     };
                 return u;
             });
         } else {
             return {
-                ...currentData,
-                ...reqData,
-                verified: currentData.mail === reqData.mail 
-                    ? currentData.verified : false,
+                ...cur,
+                ...req,
+                verified: (!req.mail || cur.mail === req.mail)
+                    ? cur.verified : false,
             };
         }
     },
 };
 
 export const deleteUserApi = {
-    url: `${BASE_PATH}/users`,
+    url: `${BASE_PATH}/user/:userId`,
     method: 'DELETE',
-    res: (users, { userId }, _) => (
-        users.filter(u => u.userId !== userId)
+    setFunc: ({ cur, params }) => (
+        cur.filter(u => u.userId !== params.path.userId)
     ),
+};
+
+export const postVerifyMailApi = {
+    url: `${BASE_PATH}/verify-mail`,
+    method: 'POST',
+    setFunc: ({ cur }) => ({
+            ...cur,
+            verified: true,
+    }),
 };

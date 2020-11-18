@@ -43,7 +43,7 @@ export function CourtConfigForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(({ courts }) => {
-        putCourts(courts, resetForm);
+        putCourts(null, courts, resetForm);
     }, [putCourts, resetForm]);
 
     return (

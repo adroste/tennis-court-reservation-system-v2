@@ -30,17 +30,17 @@ export function VerifyMailPage() {
 
     const handleResendMail = useCallback(() => {
         setResendClicked(true);
-        sendMail({ mail: user.mail });
+        sendMail(null, { mail: user.mail });
     }, [sendMail, user.mail]);
 
     useEffect(() => {
         if (send)
-            sendMail({ mail: user.mail });
+            sendMail(null, { mail: user.mail });
     }, [send, sendMail, user.mail]);
 
     useEffect(() => {
         if (!send)
-            verifyMail({ token: verifyToken });
+            verifyMail(null, { token: verifyToken });
     }, [send, verifyMail, verifyToken]);
 
     if (send)

@@ -46,7 +46,7 @@ export function DemoControls() {
                                         Kiosk Modus
                                     </Button>
                                     {(!user || !user.admin) &&
-                                        <Button size="middle" onClick={() => login({
+                                        <Button size="middle" onClick={() => login(null, {
                                             type: 'plain',
                                             mail: 'otto@example.com',
                                             password: 'demo',
@@ -55,7 +55,7 @@ export function DemoControls() {
                                         </Button>
                                     }
                                     {(!user || user.admin) &&
-                                        <Button size="middle" onClick={() => login({
+                                        <Button size="middle" onClick={() => login(null, {
                                             type: 'plain',
                                             mail: 'max@example.com',
                                             password: 'demo',

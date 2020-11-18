@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 
 import { authContext } from './AuthContext';
 
-const defaultResFunc = (currentData, reqData, resData) => resData;
+const defaultSetFunc = ({ res }) => res;
 
 // WARNING: function reference to 'call' changes when 
 // user.token or user.userId changes
@@ -11,39 +11,49 @@ export function useApi(
         url,
         method = 'GET',
         // res must return new state
-        // signature: (currentData, reqData, resData) => updatedData
-        res = defaultResFunc,
+        // signature: ({ cur, params, req, res }) => updatedData
+        setFunc = defaultSetFunc,
     },
     setData,
-    autoFetch = false
+    // autoFetch can be boolean or object like { reqParams, reqData }
+    autoFetch = false,
 ) {
     const { user, logout } = useContext(authContext) || {};
     const userToken = user?.token;
     const [success, setSuccess] = useState(false);
     const [status, setStatus] = useState(null);
-    const [loading, setLoading] = useState(autoFetch);
+    const [loading, setLoading] = useState(!!autoFetch);
     const [error, setError] = useState(null);
     const lastCallRef = useRef(null);
 
-    const call = useCallback((reqData, successCallback) => {
+    // reqParams like { query: { example: 1 }, path: { id: 4 }}
+    const call = useCallback((reqParams, reqData, successCallback) => {
         if (lastCallRef.current)
             lastCallRef.current.cancel();
 
         let cancelled = false;
 
-        const doFetch = async (reqData) => {
+        const doFetch = async () => {
             setSuccess(false);
             setStatus(null);
             setLoading(true);
             let is401 = false;
             try {
+                let parameterizedUrl = Object.keys(reqParams?.path || {})
+                    .reduce((acc, param) => acc.replace(`:${param}`, reqParams.path[param]), url);
+                const queryString = Object.keys(reqParams?.query || {})
+                    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(reqParams[key])}`)
+                    .join('&');
+                if (queryString)
+                    parameterizedUrl += `?${queryString}`;
+
                 const headers = {};
                 if (userToken)
                     headers['Authorization'] = `Bearer ${userToken}`;
                 if (reqData)
                     headers['Content-Type'] = 'application/json';
 
-                const response = await fetch(url, {
+                const response = await fetch(parameterizedUrl, {
                     method,
                     headers,
                     body: reqData ? JSON.stringify(reqData) : undefined,
@@ -58,7 +68,12 @@ export function useApi(
                 if (response.ok) {
                     setSuccess(true);
                     if (setData)
-                        setData(data => res(data, reqData, resData));
+                        setData(cur => setFunc({
+                            cur, 
+                            params: reqParams,
+                            req: reqData, 
+                            res: resData,
+                        }));
                     if (successCallback)
                         successCallback();
                 } else {
@@ -76,22 +91,22 @@ export function useApi(
             }
         };
 
-        const task = doFetch(reqData);
+        const task = doFetch();
         task.cancel = () => cancelled = true;
         lastCallRef.current = task;
         return task.cancel;
     }, [
+        logout, // changes when user.userId changes
         method,
-        res,
         setData,
+        setFunc,
         url,
         userToken,
-        logout, // changes when user.userId changes
     ]);
 
     useEffect(() => {
         if (autoFetch && !lastCallRef.current)
-            return call();
+            return call(autoFetch?.reqParams, autoFetch?.reqData);
     }, [autoFetch, call])
 
     useEffect(() => {

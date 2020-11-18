@@ -1,7 +1,6 @@
 import { Link, useHistory } from 'react-router-dom';
 import React, { useCallback, useContext } from 'react';
 
-import { ErrorResult } from '../ErrorResult';
 import { RegisterForm } from './RegisterForm';
 import { authContext } from '../AuthContext';
 import { postRegisterApi } from '../api';
@@ -15,7 +14,7 @@ export function RegisterPage() {
     const history = useHistory();
 
     const handleFinishUser = useCallback(({ name, mail, password }) => {
-        register({
+        register(null, {
             name,
             mail,
             password,

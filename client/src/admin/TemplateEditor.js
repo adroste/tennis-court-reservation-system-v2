@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react';
 
 import { BaseTemplateEditor } from './BaseTemplateEditor';
 import { appContext } from '../AppContext';
-import { putTemplatesApi } from '../api';
+import { putTemplateApi } from '../api';
 import { useApi } from '../useApi';
 
 export function TemplateEditor({
@@ -14,13 +14,12 @@ export function TemplateEditor({
     const { templates, setTemplates } = useContext(appContext);
     const { body } = templates[id];
 
-    const [state, putTemplate] = useApi(putTemplatesApi, setTemplates);
+    const [state, putTemplate] = useApi(putTemplateApi, setTemplates);
 
     const save = useCallback(({ cleanBody }) => {
-        putTemplate({
-            [id]: {
-                body: cleanBody,
-            },
+        putTemplate({ path: { id } }, {
+            id,
+            body: cleanBody,
         });
     }, [id, putTemplate]);
 

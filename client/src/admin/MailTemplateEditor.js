@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { BaseTemplateEditor } from './BaseTemplateEditor';
-import { putMailTemplatesApi } from '../api';
+import { putMailTemplateApi } from '../api';
 import { useApi } from '../useApi';
 
 export function MailTemplateEditor({
@@ -13,14 +13,13 @@ export function MailTemplateEditor({
 }) {
     const { body, subject } = mailTemplates[id];
 
-    const [state, putMailTemplate] = useApi(putMailTemplatesApi, setMailTemplates);
+    const [state, putMailTemplate] = useApi(putMailTemplateApi, setMailTemplates);
 
     const save = useCallback(({ cleanBody, subject }) => {
-        putMailTemplate({ 
-            [id]: {
-                body: cleanBody,
-                subject,
-            },
+        putMailTemplate({ path: { id } }, {
+            id,
+            body: cleanBody,
+            subject,
         });
     }, [id, putMailTemplate]);
 

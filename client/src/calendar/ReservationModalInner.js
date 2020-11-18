@@ -5,6 +5,7 @@ import { DoReservationModal } from './DoReservationModal';
 import { GroupDatesForm } from './GroupDatesForm';
 import { ReservationDetails } from './ReservationDetails';
 import { appContext } from '../AppContext';
+import { authContext } from '../AuthContext';
 import styles from './ReservationModalInner.module.css';
 import { useGroupReservations } from './useReservations';
 
@@ -16,6 +17,7 @@ export function ReservationModalInner({
     onFinish,
 }) {
     const { courts, templates: { reservationPrice, reservationTos } } = useContext(appContext);
+    const { user } = useContext(authContext);
 
     const courtName = courts.find(c => c.courtId === courtId)?.name;
 
@@ -25,12 +27,7 @@ export function ReservationModalInner({
     // const [cancelConfirm, setCancelConfirm] = useState(false);
     // const [changeConfirm, setChangeConfirm] = useState(false);
 
-    // todo user context
-    const name = reservation?.name || "Günther Jacob";
-    const customName = reservation?.customName;
-    const admin = true;
-    // const myReservation = false;
-    const canEdit = true;
+    const canEdit = !reservation || reservation.userId === user.userId;
 
     const groupReservations = useGroupReservations(reservation?.groupId);
 
@@ -57,6 +54,31 @@ export function ReservationModalInner({
         setNewCustomName(name);
     }, []);
 
+    const handleDoReservation = useCallback(() => {
+        /*
+        courtId,
+        customName,
+        delete: [id],
+        put: [{ id, prop, ... }]
+        post: {
+            courtId,
+            customName,
+            dates: [],
+            groupId
+        }
+        addGroup:
+        
+        neu (!reservation)
+            post 
+                newGroupDates || date
+                newCustomName
+                courtId
+        ändern 
+            post
+        */
+
+    }, []);
+
     return (
         <Modal
             title="Reservierung"
@@ -78,7 +100,7 @@ export function ReservationModalInner({
                                 >
                                     {groupReservations?.length ? 'Alle stornieren' : 'Stornieren'}
                                 </Button>
-                                {(!!groupReservations?.length || admin) &&
+                                {(!!groupReservations?.length || user.admin) &&
                                     <Button
                                         type="primary"
                                     >
@@ -90,6 +112,7 @@ export function ReservationModalInner({
                             <Button
                                 disabled={reservationTos.body && !tosAccepted}
                                 type="primary"
+                                onClick={handleDoReservation}
                             >
                                 Reservieren
                             </Button>
@@ -101,11 +124,11 @@ export function ReservationModalInner({
             <div className={styles.wrapper}>
                 <div>
                     <ReservationDetails
-                        allowEditName={admin}
+                        allowEditName={user.admin}
                         courtName={courtName}
                         date={date}
                         groupDates={newGroupDates || groupDates}
-                        name={typeof newCustomName === 'string' ? newCustomName : (customName || name)}
+                        name={typeof newCustomName === 'string' ? newCustomName : (reservation?.customName || reservation?.name || user.name)}
                         onNameChange={handleNewCustomNameChange}
                         showAllDates={!canEdit}
                     />

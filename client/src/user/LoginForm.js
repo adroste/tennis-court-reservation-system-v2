@@ -19,7 +19,7 @@ export function LoginForm() {
 
     const onFinish = useCallback(({ mail, password, rememberLogin }) => {
         setRememberLogin(rememberLogin);
-        login({
+        login(null, {
             type: 'plain',
             mail,
             password,

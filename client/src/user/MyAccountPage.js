@@ -4,14 +4,14 @@ import React, { useCallback, useContext } from 'react';
 
 import { RegisterForm } from './RegisterForm';
 import { authContext } from '../AuthContext';
-import { putUserApi } from '../api';
+import { patchUserApi } from '../api';
 import styles from './MyAccountPage.module.css';
 import { useApi } from '../useApi';
 
 export function MyAccountPage() {
 
     const { user, setUser } = useContext(authContext);
-    const [putState, putUser] = useApi(putUserApi, setUser);
+    const [putState, patchUser] = useApi(patchUserApi, setUser);
     const history = useHistory();
 
     const handleFinishUser = useCallback(({ name, mail, password }) => {
@@ -22,12 +22,12 @@ export function MyAccountPage() {
             update.mail = mail;
         if (password)
             update.password = password;
-        
-        putUser(update, () => {
+
+        patchUser({ path: { userId: user.userId } }, update, () => {
             if (mail !== user.mail)
                 history.push('/verifymail/send');
         });
-    }, [putUser, user, history]);
+    }, [patchUser, user, history]);
 
     return (
         <div className={styles.wrapper}>

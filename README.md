@@ -130,6 +130,7 @@
 * [x] verified email state
 * [x] set verified=false when changing email via myaccount
 * [x] register: check for unique mail
+* [x] make delete, put id based param
 
 
 #### auth mechanism

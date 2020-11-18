@@ -31,7 +31,7 @@ export function AuthContextProvider({ children }) {
     useEffect(() => {
         const token = sessionStorage.getItem(TOKEN_NAME) || localStorage.getItem(TOKEN_NAME);
         if (token && !user)
-            postLogin({
+            postLogin(null, {
                 type: 'token',
                 token,
             });
@@ -49,7 +49,7 @@ export function AuthContextProvider({ children }) {
     }, []);
 
     const logout = useCallback(() => {
-        postLogout({
+        postLogout(null, {
             userId: user?.userId,
         });
         _setUser(null);

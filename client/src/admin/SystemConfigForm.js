@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
-import { putConfigApi } from '../api';
+import { patchConfigApi } from '../api';
 import { useApi } from '../useApi';
 
 const sliderMarks = Array.from(Array(24)).reduce((marks, _, i) => {
@@ -15,7 +15,7 @@ export function SystemConfigForm() {
 
     const { config, setConfig } = useContext(appContext);
     const [disableReset, setDisableReset] = useState(true);
-    const [state, putConfig] = useApi(putConfigApi, setConfig);
+    const [state, patchConfig] = useApi(patchConfigApi, setConfig);
 
     const [form] = Form.useForm();
 
@@ -34,8 +34,8 @@ export function SystemConfigForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(values => {
-        putConfig(values, resetForm);
-    }, [putConfig, resetForm]);
+        patchConfig(null, values, resetForm);
+    }, [patchConfig, resetForm]);
 
     return (
         <Form
