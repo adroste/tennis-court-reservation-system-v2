@@ -42,11 +42,11 @@ export function useApi(
                 let parameterizedUrl = Object.keys(reqParams?.path || {})
                     .reduce((acc, param) => acc.replace(`:${param}`, reqParams.path[param]), url);
                 const queryString = Object.keys(reqParams?.query || {})
-                    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(reqParams[key])}`)
+                    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(reqParams.query[key])}`)
                     .join('&');
                 if (queryString)
                     parameterizedUrl += `?${queryString}`;
-
+                
                 const headers = {};
                 if (userToken)
                     headers['Authorization'] = `Bearer ${userToken}`;
