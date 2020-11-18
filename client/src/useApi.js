@@ -106,7 +106,7 @@ export function useApi(
 
     useEffect(() => {
         if (autoFetch && !lastCallRef.current)
-            return call(autoFetch?.reqParams, autoFetch?.reqData);
+            call(autoFetch?.reqParams, autoFetch?.reqData);
     }, [autoFetch, call])
 
     useEffect(() => {
