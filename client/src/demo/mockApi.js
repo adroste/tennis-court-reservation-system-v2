@@ -6,10 +6,6 @@ import { demoControl } from './DemoControls';
 
 const fakeDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const R_401 = '__401__RESULT__FETCH__';
-const R_404 = '__404__RESULT__FETCH__';
-const R_500 = '__500__RESULT__FETCH__';
-
 const cn = apiDesc => `${apiDesc.url}${apiDesc.method || 'GET'}`;
 
 async function handleRequests(url, options) {
@@ -68,6 +64,11 @@ async function handleRequests(url, options) {
             return { success: true };
 
         case cn(postRegisterApi):
+            if (db.users.some(u => u.mail === body.mail))
+                return { 
+                    __status: 400,
+                    json: { message: 'mail already registered' }
+                };
             const newUser = {
                 name: body.name,
                 mail: body.mail,
@@ -98,7 +99,10 @@ async function handleRequests(url, options) {
                 user = db.users.find(u => u.mail === mail);
             }
             if (!user)
-                return R_401;
+                return { 
+                    __status: 401,
+                    json: { message: 'wrong login' }
+                };
             return {
                 token: `demo-token.${user.userId}`,
                 userId: user.userId,
@@ -126,7 +130,10 @@ async function handleRequests(url, options) {
                 description: (
                     <div>
                         <p>Dies simuliert den Verifikationsprozess für <strong>{body.mail}</strong>.</p>
-                        <Button onClick={() => demoControl.history?.push(`/verifymail/${verifyToken}`)}>
+                        <Button onClick={() => {
+                            demoControl.history?.push(`/verifymail/${verifyToken}`);
+                            notification.close('fake-verification');
+                        }}>
                             E-Mail Verifizieren (Demo)
                         </Button>
                     </div>
@@ -139,7 +146,10 @@ async function handleRequests(url, options) {
             const mail = atob(body.token);
             const user = db.users.find(u => u.mail === mail);
             if (!user)
-                return R_404;
+                return { 
+                    __status: 404,
+                    json: { message: 'user not found' }
+                };
             user.verified = true;
             return { success: true };
         }
@@ -161,7 +171,10 @@ export function patchFetch() {
         try {
             res = await handleRequests(url, options);
         } catch (err) {
-            res = R_500;
+            res = { 
+                __status: 500,
+                json: { error: true },
+            };
         }
 
         console.log("Fake API:", {
@@ -170,23 +183,11 @@ export function patchFetch() {
             db,
         });
 
-        if (res === R_401) {
+        if (res.__status) {
             return Promise.resolve({
                 ok: false,
-                status: 401,
-                json: async () => Promise.resolve({ error: true }),
-            });
-        } else if (res === R_404) {
-            return Promise.resolve({
-                ok: false,
-                status: 404,
-                json: async () => Promise.resolve({ error: true }),
-            });
-        } else if (res === R_500) {
-            return Promise.resolve({
-                ok: false,
-                status: 500,
-                json: async () => Promise.resolve({ error: true }),
+                status: res.__status,
+                json: async () => Promise.resolve(res.json),
             });
         } else if (res) {
             return Promise.resolve({

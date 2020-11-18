@@ -20,6 +20,7 @@ export function useApi(
     const { user, logout } = useContext(authContext) || {};
     const userToken = user?.token;
     const [success, setSuccess] = useState(false);
+    const [status, setStatus] = useState(null);
     const [loading, setLoading] = useState(autoFetch);
     const [error, setError] = useState(null);
     const lastCallRef = useRef(null);
@@ -32,6 +33,7 @@ export function useApi(
 
         const doFetch = async (reqData) => {
             setSuccess(false);
+            setStatus(null);
             setLoading(true);
             let is401 = false;
             try {
@@ -47,6 +49,8 @@ export function useApi(
                     body: reqData ? JSON.stringify(reqData) : undefined,
                 });
                 if (cancelled) return;
+
+                setStatus(response.status);
 
                 const resData = await response.json();
                 if (cancelled) return;
@@ -99,12 +103,14 @@ export function useApi(
             success,
             loading,
             error,
+            status,
         },
         call, // see hint at top of file
     ]), [
         success,
         loading,
         error,
+        status,
         call,
     ]);
 }

@@ -129,7 +129,7 @@
 * [ ] activity table backend
 * [x] verified email state
 * [x] set verified=false when changing email via myaccount
-* [ ] register: check for unique mail
+* [x] register: check for unique mail
 
 
 #### auth mechanism

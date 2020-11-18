@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input } from 'antd';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Alert, Button, Checkbox, Form, Input } from 'antd';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import { StatusText } from '../admin/StatusText';
 import { SubmitButtons } from '../admin/SubmitButtons';
@@ -16,6 +16,7 @@ export function RegisterForm({
     const [form] = Form.useForm();
     const [disableReset, setDisableReset] = useState(true);
     const loading = apiState.loading;
+    const errorMailValueRef = useRef(null);
 
     const resetForm = useCallback(() => {
         form.resetFields();
@@ -29,7 +30,11 @@ export function RegisterForm({
     useEffect(() => {
         if (apiState.success)
             resetForm();
-    }, [apiState.success, resetForm]);
+        if (apiState.error) {
+            errorMailValueRef.current = form.getFieldValue('mail');
+            form.validateFields();
+        }
+    }, [form, apiState, resetForm]);
 
     const handleFieldsChange = useCallback(() => {
         if (disableReset)
@@ -44,6 +49,15 @@ export function RegisterForm({
             onFinish={onFinish}
             onFieldsChange={handleFieldsChange}
         >
+            {apiState.error &&
+                <Form.Item>
+                    <Alert
+                        type="error"
+                        message="Registrierung fehlgeschlagen."
+                    />
+                </Form.Item>
+            }
+
             <Form.Item
                 label="Anzeigename"
                 name="name"
@@ -55,7 +69,7 @@ export function RegisterForm({
                     {
                         pattern: /^[\u00c0-\u017eA-Za-z0-9.]{1}[\u00c0-\u017eA-Za-z0-9\s.]{3,18}[\u00c0-\u017eA-Za-z0-9.]{1}$/,
                         message: 'Zwischen 5 und 20 Zeichen bestehend aus: Buchstaben, Zahlen, Punkten sowie Leerzeichen (außer am Anfang / Ende)'
-                    }
+                    },
                 ]}
             >
                 <Input 
@@ -71,6 +85,16 @@ export function RegisterForm({
                 rules={[
                     { type: 'email', message: 'Beispiel: mustermann@web.de' },
                     { required: true, message: 'E-Mail Adresse ist erforderlich' },
+                    {
+                        required: true,
+                        validator(_, value) {
+                            if (apiState.status === 400 
+                                && apiState.error?.message === 'mail already registered'
+                                && value === errorMailValueRef.current)
+                                return Promise.reject('E-Mail ist bereits registriert');
+                            return Promise.resolve();
+                        },
+                    }
                 ]}
             >
                 <Input 

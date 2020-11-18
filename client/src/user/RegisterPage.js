@@ -24,9 +24,6 @@ export function RegisterPage() {
         });
     }, [register, history]);
 
-    if (state.error)
-        return <ErrorResult />;
-
     return (
         <div className={styles.wrapper}>
 
@@ -39,6 +36,7 @@ export function RegisterPage() {
             </h1>
 
             <RegisterForm
+                apiState={state}
                 onFinish={handleFinishUser}
             />
         </div>
