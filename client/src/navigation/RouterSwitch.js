@@ -55,31 +55,31 @@ export function RouterSwitch() {
                     }
                 />
 
-                <ProtectedRoute condition={user} path="/verify-mail/:verifyToken">
+                <ProtectedRoute path="/verify-mail/:verifyToken">
                     <VerifyMailPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user?.admin} exact path="/admin/general">
+                <ProtectedRoute admin exact path="/admin/general">
                     <GeneralSettingsPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user?.admin} exact path="/admin/stats">
+                <ProtectedRoute admin exact path="/admin/stats">
                     <StatsPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user?.admin} exact path="/admin/users">
+                <ProtectedRoute admin exact path="/admin/users">
                     <UserManagementPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user?.admin} exact path="/admin/templates">
+                <ProtectedRoute admin exact path="/admin/templates">
                     <EditTemplatesPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user} exact path="/my-reservations">
+                <ProtectedRoute admin exact path="/my-reservations">
                     <MyReservationsPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user} exact path="/profile">
+                <ProtectedRoute exact path="/profile">
                     <MyAccountPage />
                 </ProtectedRoute>
 

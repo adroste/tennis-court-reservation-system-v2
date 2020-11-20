@@ -144,7 +144,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich fÃ
 * [x] reservation error handling
 * [ ] week in url
 * [x] max reservation count user
-* [ ] admin/general loop bug
+* [x] admin/general loop bug
 
 
 ### tables
