@@ -1,6 +1,6 @@
 {
   "name": "reservierungssystem-tennis",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
