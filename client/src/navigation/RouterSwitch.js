@@ -1,9 +1,8 @@
-import React, { Suspense, lazy, useContext } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { Ball } from '../Ball';
 import { ProtectedRoute } from './ProtectedRoute';
-import { authContext } from '../AuthContext';
 
 const CalendarPage = lazy(() => import('../calendar/CalendarPage').then(m => ({ default: m.CalendarPage })));
 const GeneralSettingsPage = lazy(() => import('../admin/GeneralSettingsPage').then(m => ({ default: m.GeneralSettingsPage })));
@@ -20,8 +19,6 @@ const EditTemplatesPage = lazy(() => import('../admin/EditTemplatesPage').then(m
 const UserManagementPage = lazy(() => import('../admin/UserManagementPage').then(m => ({ default: m.UserManagementPage })));
 
 export function RouterSwitch() {
-
-    const { user } = useContext(authContext);
 
     return (
         <Suspense fallback={<Ball visible large centered spin />}>
@@ -51,10 +48,6 @@ export function RouterSwitch() {
                     <RegisterPage />
                 </Route>
 
-                <ProtectedRoute path="/verify-mail/:verifyToken">
-                    <VerifyMailPage />
-                </ProtectedRoute>
-
                 <ProtectedRoute admin exact path="/admin/general">
                     <GeneralSettingsPage />
                 </ProtectedRoute>
@@ -71,12 +64,16 @@ export function RouterSwitch() {
                     <EditTemplatesPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute admin exact path="/my-reservations">
+                <ProtectedRoute exact path="/my-reservations">
                     <MyReservationsPage />
                 </ProtectedRoute>
 
                 <ProtectedRoute exact path="/profile">
                     <MyAccountPage />
+                </ProtectedRoute>
+
+                <ProtectedRoute path="/verify-mail/:verifyToken">
+                    <VerifyMailPage />
                 </ProtectedRoute>
 
                 <Route path="*">
