@@ -16,8 +16,8 @@ export function AppContextProvider({ children }) {
     const setBaseData = useCallback(getResult => {
         const { config, courts, templates } = getResult(null);
         setConfig(config);
-        setCourts(courts);
         setTemplates(templates);
+        setCourts(courts);
     }, []);
 
     const [getBaseDataState, getBaseData] = useApi(getBaseDataApi, setBaseData, true); 

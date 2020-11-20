@@ -1,7 +1,16 @@
+import dayjs from 'dayjs';
+
 const BASE_PATH = '/api';
 
 export const getBaseDataApi = {
     url: `${BASE_PATH}/base-data`,
+    setFunc: ({ res }) => ({
+        ...res,
+        courts: res.courts?.map(c => ({
+            ...c,
+            disabledFromTil: c.disabledFromTil?.map(t => dayjs(t)),
+        })),
+    }),
 };
 
 export const patchConfigApi = {
@@ -50,6 +59,10 @@ export const postRegisterApi = {
 export const getReservationsApi = {
     url: `${BASE_PATH}/reservations`,
     method: 'POST',
+    setFunc: ({ res }) => res.map(r => ({
+        ...r,
+        date: dayjs(r.date),
+    })),
 };
 
 export const postReservationGroupApi = {
@@ -57,7 +70,10 @@ export const postReservationGroupApi = {
     method: 'POST',
     setFunc: ({ cur, res }) => ([
         ...cur,
-        ...res,
+        ...res.map(r => ({
+            ...r,
+            date: dayjs(r.date),
+        })),
     ]),
 };
 
@@ -102,6 +118,10 @@ export const putTemplateApi = {
 
 export const getUsersApi = {
     url: `${BASE_PATH}/users`,
+    setFunc: ({ res }) => res.map(user => ({
+        ...user,
+        lastActivity: user.lastActivity && dayjs(user.lastActivity)
+    })),
 };
 
 export const patchUserApi = {

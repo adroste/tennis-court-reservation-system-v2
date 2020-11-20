@@ -68,7 +68,12 @@ async function handleRequests(url, options) {
                 return { success: true };
 
             case cn(getUsersApi):
-                return db.users;
+                return db.users.map(user => ({
+                    ...user,
+                    upcomingReservationCount: 123,
+                    totalReservationCount: 1234,
+                    lastActivity: dayjs(),
+                }));
 
             case cn(patchUserApi):
                 db.users = db.users.map(u => {
@@ -235,7 +240,7 @@ async function handleRequests(url, options) {
                     return Math.max(nextId, g.groupId);
                 }, 0) + 1;
                 const customName = body?.customName;
-                const dates = body?.dates?.map(d => dayjs(d));
+                const dates = body?.dates?.map(d => dayjs(d).startOf('hour'));
 
                 if (!dates?.length) {
                     // same as delete all
@@ -262,7 +267,7 @@ async function handleRequests(url, options) {
                         };
 
                     const { keepReservations, newReservations } = dates.reduce((acc, date) => {
-                        const found = groupReservations.find(r => r.date.isSame(date));
+                        const found = groupReservations.find(r => r.date.isSame(date, 'hour'));
                         if (found)
                             acc.keepReservations.push(found);
                         else
@@ -374,7 +379,7 @@ export function patchFetch() {
 
         let res;
         try {
-            res = await handleRequests(url, options);
+            res = await handleRequests(url, options || {});
         } catch (err) {
             console.log(err);
             res = {
@@ -394,12 +399,12 @@ export function patchFetch() {
             return Promise.resolve({
                 ok: false,
                 status: res.__status,
-                json: async () => Promise.resolve(res.json),
+                json: async () => Promise.resolve(JSON.parse(JSON.stringify(res.json))),
             });
         } else if (res) {
             return Promise.resolve({
                 ok: true,
-                json: async () => Promise.resolve(res),
+                json: async () => Promise.resolve(JSON.parse(JSON.stringify(res))),
             });
         }
 

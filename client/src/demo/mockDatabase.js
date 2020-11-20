@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+const today = dayjs().startOf('day');
+
 export const db = {
 
     config: {
@@ -96,9 +98,9 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             name: 'Platz 2',
             disabled: true,
             disabledFromTil: [
-                dayjs().add(-2, 'week'),
-                dayjs().add(4, 'week'),
-                // dayjs().add(8, 'week'),
+                today.add(-2, 'week'),
+                today.add(4, 'week'),
+                // today.add(8, 'week'),
             ],
             disabledReason: 'beliebiger Grund',
         },
@@ -157,64 +159,64 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
     // foreign key: groupId
     reservations: [
         {
-            date: dayjs().add(-1, 'day').hour(11),
+            date: today.add(-1, 'day').hour(11),
             courtId: 1,
             groupId: 1,
-            created: dayjs().add(-2, 'day').hour(11),
+            created: today.add(-2, 'day').hour(11),
         },
         {
-            date: dayjs().add(3, 'day').hour(20),
+            date: today.add(3, 'day').hour(20),
             courtId: 1,
             groupId: 3,
-            created: dayjs().add(-2, 'day').hour(11),
+            created: today.add(-2, 'day').hour(11),
         },
         {
-            date: dayjs().add(-2, 'day').hour(15),
+            date: today.add(-2, 'day').hour(15),
             courtId: 1,
             groupId: 2,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(-1, 'day').hour(15),
+            date: today.add(-1, 'day').hour(15),
             courtId: 1,
             groupId: 2,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(-0, 'day').hour(15),
+            date: today.add(-0, 'day').hour(15),
             courtId: 1,
             groupId: 2,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(1, 'day').hour(15),
+            date: today.add(1, 'day').hour(15),
             courtId: 1,
             groupId: 2,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(0, 'day').hour(17),
+            date: today.add(0, 'day').hour(17),
             courtId: 1,
             groupId: 4,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(7, 'day').hour(17),
+            date: today.add(7, 'day').hour(17),
             courtId: 1,
             groupId: 4,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(14, 'day').hour(17),
+            date: today.add(14, 'day').hour(17),
             courtId: 1,
             groupId: 4,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
         {
-            date: dayjs().add(21, 'day').hour(17),
+            date: today.add(21, 'day').hour(17),
             courtId: 1,
             groupId: 4,
-            created: dayjs().add(-4, 'day').hour(11),
+            created: today.add(-4, 'day').hour(11),
         },
     ],
 
@@ -255,9 +257,9 @@ window.addFakeReservation = () => {
     });
 
     db.reservations.push({
-        date: dayjs().hour(8),
+        date: today.hour(8),
         courtId: 1,
         groupId: 999,
-        created: dayjs(),
+        created: today,
     });
 }

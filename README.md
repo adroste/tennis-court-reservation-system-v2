@@ -120,7 +120,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] calendar item click: login required modal
 * [x] demo mode
 * [x] antd message for reservation successful, change, cancel, ...
-* [ ] admin cancel reservation => reason 
+* [x] admin cancel reservation => reason 
 * [x] reset button for forms
 * [x] groupdatesform check tooFarAhead and disabledDates
 * [x] fix disabled announcement not showing
@@ -146,6 +146,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [ ] week in url
 * [x] max reservation count user
 * [x] admin/general loop bug
+* [ ] court config better reason input
 
 
 ### tables
