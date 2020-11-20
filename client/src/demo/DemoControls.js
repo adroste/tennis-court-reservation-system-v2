@@ -45,22 +45,22 @@ export function DemoControls() {
                                     <Button size="middle" onClick={() => history.push('/kiosk')}>
                                         Kiosk Modus
                                     </Button>
-                                    {(!user || !user.admin) &&
+                                    {user?.userId !== 2 &&
                                         <Button size="middle" onClick={() => login(null, {
                                             type: 'plain',
                                             mail: 'otto@example.com',
                                             password: 'demo',
                                         })}>
-                                            Als Admin anmelden
+                                            Als Admin (Otto) anmelden
                                         </Button>
                                     }
-                                    {(!user || user.admin) &&
+                                    {user?.userId !== 9 &&
                                         <Button size="middle" onClick={() => login(null, {
                                             type: 'plain',
                                             mail: 'max@example.com',
                                             password: 'demo',
                                         })}>
-                                            Als Nutzer anmelden
+                                            Als Nutzer (Max) anmelden
                                         </Button>
                                     }
                                 </>
