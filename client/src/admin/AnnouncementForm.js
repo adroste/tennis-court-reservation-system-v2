@@ -15,14 +15,14 @@ export function AnnouncementForm() {
 
     const [form] = Form.useForm();
 
-    const resetForm = useCallback(() => {
+    const resetForm = useCallback(announcement => {
         form.resetFields()
         setEnabled(!!announcement);
         setDisableReset(true);
-    }, [form, announcement]);
+    }, [form]);
 
     useEffect(() => {
-        resetForm();
+        resetForm(announcement);
     }, [resetForm, announcement]);
 
     const handleEnabledChange = useCallback(e => {
@@ -37,7 +37,7 @@ export function AnnouncementForm() {
     const handleSave = useCallback(({ announcement }) => {
         patchConfig(null, {
             announcement: enabled ? announcement : '',
-        }, resetForm);
+        }, () => resetForm(enabled && announcement));
     }, [enabled, patchConfig, resetForm]);
 
     return (
