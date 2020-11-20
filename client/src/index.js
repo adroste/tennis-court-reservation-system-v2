@@ -15,6 +15,7 @@ import ReactDOM from 'react-dom';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import locale from 'antd/lib/locale/de_DE';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
@@ -26,6 +27,7 @@ dayjs.extend(weekYear);
 dayjs.extend(localizedFormat);
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 function renderApp() {
     ReactDOM.render((
