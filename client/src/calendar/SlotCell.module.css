@@ -1,6 +1,7 @@
 .cell {
     cursor: default;
     padding: 3px 3px;
+    transition: all 1s ease;
 }
 
 .cell.enabled {
@@ -8,6 +9,8 @@
 }
 
 .slot {
+    transition: background-color .3s ease;
+    position: relative;
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -45,4 +48,34 @@
     opacity: 1;
     color: #fff;
     background: #FF4136;
+}
+
+.slot::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.000001;
+    transition: all .3s ease;
+    background: #ddd;
+}
+
+.slot.loading::before {
+    opacity: 1;
+    animation: load 2s ease-in-out infinite;
+}
+
+@keyframes load {
+    0% {
+        background: #ddd;
+    }
+    50% {
+        background: #bbb;
+    }
+    100% {
+        background: #ddd;
+    }
 }

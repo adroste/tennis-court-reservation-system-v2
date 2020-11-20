@@ -1,17 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { SlotCell } from './SlotCell';
-import { findReservation } from './helper';
+import { findReservation } from '../helper';
 import styles from './DayTable.module.css';
 
 export function DayTable({
     courts,
     date,
+    hours,
+    loading,
     onSlotClick,
+    reservationDaysInAdvance,
     reservations,
     today,
-    hours,
-    reservationDaysInAdvance,
 }) {
     const isToday = useMemo(() => today.isSame(date, 'day'), [date, today]);
     const inPast = useMemo(() => date.isBefore(today, 'day'), [date, today]);
@@ -61,12 +62,13 @@ export function DayTable({
                         <tr key={hour}>
                             {courtsToday.map(({ courtId, name, disabled, disabledText }) => (
                                 <SlotCell
-                                    key={courtId}
                                     courtId={courtId}
                                     courtName={name}
-                                    hour={hour}
                                     disabled={disabled}
                                     disabledText={disabledText}
+                                    hour={hour}
+                                    key={courtId}
+                                    loading={loading}
                                     onClick={handleClick}
                                     reservation={findReservation(reservations, date.hour(hour), courtId)}
                                 />

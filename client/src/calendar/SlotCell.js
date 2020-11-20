@@ -11,6 +11,7 @@ export function SlotCell({
     disabled = false,
     disabledText,
     hour,
+    loading = false,
     onClick,
     reservation,
 }) {
@@ -30,6 +31,7 @@ export function SlotCell({
             <div
                 className={cn({
                     slot: true,
+                    loading,
                     reserved: reservation,
                     disabled,
                     disabledText,
