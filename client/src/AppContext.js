@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
+import { UPDATE_INTERVALS_SEC } from './updateIntervals';
 import { getBaseDataApi } from './api';
 import { useApi } from './useApi';
+import { useUpdateEffect } from './useUpdateEffect';
 
 export const appContext = React.createContext();
 
@@ -19,6 +21,7 @@ export function AppContextProvider({ children }) {
     }, []);
 
     const [getBaseDataState, getBaseData] = useApi(getBaseDataApi, setBaseData, true); 
+    useUpdateEffect(getBaseData, UPDATE_INTERVALS_SEC.BASE_DATA);
 
     const value = useMemo(() => ({
         config,
