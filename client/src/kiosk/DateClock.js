@@ -12,7 +12,7 @@ export function DateClock() {
     useEffect(() => {
         const int = setInterval(() => {
             setDateTime(dayjs());
-        }, UPDATE_INTERVAL_MS)
+        }, UPDATE_INTERVAL_MS);
         return () => clearInterval(int);
     }, []);
 
