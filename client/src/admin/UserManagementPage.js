@@ -132,6 +132,7 @@ export function UserManagementPage() {
                         <Button
                             type="link"
                             icon={<MailOutlined />}
+                            disabled={record.userId === userId}
                             onClick={() => {
                                 window.location.href = `mailto:${record.mail}`;
                             }}
@@ -142,6 +143,7 @@ export function UserManagementPage() {
                             type="link"
                             danger
                             icon={<DeleteOutlined />}
+                            disabled={record.userId === userId}
                             onClick={() => {
                                 Modal.confirm({
                                     title: 'Nutzer löschen?',
