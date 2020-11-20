@@ -119,7 +119,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] redirect to login on calendar item click
 * [x] calendar item click: login required modal
 * [x] demo mode
-* [ ] antd message for reservation successful, change, cancel, ...
+* [x] antd message for reservation successful, change, cancel, ...
 * [ ] admin cancel reservation => reason 
 * [x] reset button for forms
 * [x] groupdatesform check tooFarAhead and disabledDates
@@ -139,11 +139,12 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] set verified=false when changing email via myaccount
 * [x] register: check for unique mail
 * [x] make delete, put id based param
-* [ ] daytable loading state
+* [x] daytable loading state
 * [x] consistent paths
-* [ ] reservation error handling
+* [x] reservation error handling
 * [ ] week in url
-* [ ] max reservation count user
+* [x] max reservation count user
+* [ ] admin/general loop bug
 
 
 ### tables

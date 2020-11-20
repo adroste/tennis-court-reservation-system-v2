@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Modal } from 'antd';
+import { Button, Checkbox, Input, Modal, message } from 'antd';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { deleteReservationGroupApi, getReservationsApi, patchReservationGroupApi, postReservationGroupApi } from '../api';
 
@@ -84,7 +84,10 @@ export function ReservationModalInner({
             dates: newDates,
             userId: user.userId,
             customName: newCustomName,
-        }, onFinish);
+        }, () => {
+            message.success("Reservierung erfolgreich");
+            onFinish();
+        });
     }, [
         courtId,
         newCustomName,
@@ -104,7 +107,10 @@ export function ReservationModalInner({
                 groupId: reservation.groupId,
                 dates: newGroupDates,
                 customName: newCustomName,
-            }, onFinish);
+            }, () => {
+                message.success("Speichern erfolgreich");
+                onFinish();
+            });
         };
 
         Modal.confirm({
@@ -166,7 +172,10 @@ export function ReservationModalInner({
                 path: {
                     groupId: reservation.groupId
                 }
-            }, null, onFinish);
+            }, null, () => {
+                message.success("Stornierung erfolgreich");
+                onFinish();
+            });
         };
 
         if (groupDates.length <= 1) {
