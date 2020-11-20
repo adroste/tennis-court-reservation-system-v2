@@ -55,7 +55,7 @@ export function RouterSwitch() {
                     }
                 />
 
-                <ProtectedRoute condition={user} path="/verifymail/:verifyToken">
+                <ProtectedRoute condition={user} path="/verify-mail/:verifyToken">
                     <VerifyMailPage />
                 </ProtectedRoute>
 
@@ -75,11 +75,11 @@ export function RouterSwitch() {
                     <EditTemplatesPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user} exact path="/myreservations">
+                <ProtectedRoute condition={user} exact path="/my-reservations">
                     <MyReservationsPage />
                 </ProtectedRoute>
 
-                <ProtectedRoute condition={user} exact path="/myaccount">
+                <ProtectedRoute condition={user} exact path="/profile">
                     <MyAccountPage />
                 </ProtectedRoute>
 

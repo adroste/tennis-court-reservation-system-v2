@@ -25,7 +25,7 @@ export function MyAccountPage() {
 
         patchUser({ path: { userId: user.userId } }, update, () => {
             if (mail !== user.mail)
-                history.push('/verifymail/send');
+                history.push('/verify-mail/send');
         });
     }, [patchUser, user, history]);
 
@@ -40,7 +40,7 @@ export function MyAccountPage() {
                     showIcon
                     message={
                         <div>
-                            E-Mail Adresse nicht verifziert! <Link to="/verifymail/send">Erneut senden</Link>
+                            E-Mail Adresse nicht verifziert! <Link to="/verify-mail/send">Erneut senden</Link>
                         </div>
                     }
                 />

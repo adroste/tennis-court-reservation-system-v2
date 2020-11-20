@@ -25,7 +25,7 @@ export function VerifyMailPage() {
     }, [history]);
 
     const handleChangeMailClick = useCallback(() => {
-        history.replace('/myaccount');
+        history.replace('/profile');
     }, [history]);
 
     const handleResendMail = useCallback(() => {

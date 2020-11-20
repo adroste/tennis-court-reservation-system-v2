@@ -59,7 +59,7 @@ export function MainMenu({
                 </Menu.Item>
 
                 {user &&
-                    <Menu.Item key="/myreservations" icon={<CarryOutOutlined />}>
+                    <Menu.Item key="/my-reservations" icon={<CarryOutOutlined />}>
                         Meine Reservierungen
                     </Menu.Item>
                 }
@@ -92,7 +92,7 @@ export function MainMenu({
                 <span key="stretch" className={styles.stretch} />
 
                 {user &&
-                    <Menu.Item key="/myaccount" icon={<UserOutlined />}>
+                    <Menu.Item key="/profile" icon={<UserOutlined />}>
                         Mein Benutzerkonto
                     </Menu.Item>
                 }

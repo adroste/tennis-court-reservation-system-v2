@@ -12,11 +12,11 @@ export function VerifyMailModal({
     const history = useHistory();
 
     const handleChangeMailClick = useCallback(() => {
-        history.push('/myaccount');
+        history.push('/profile');
     }, [history]);
     
     const handleResendMail = useCallback(() => {
-        history.push('/verifymail/send');
+        history.push('/verify-mail/send');
     }, [history]);
 
     return (
