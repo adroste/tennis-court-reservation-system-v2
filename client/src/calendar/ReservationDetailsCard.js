@@ -4,6 +4,7 @@ import React, { useCallback, useContext } from 'react';
 import { Button } from 'antd';
 import { ReservationDetails } from './ReservationDetails';
 import { appContext } from '../AppContext';
+import { authContext } from '../AuthContext';
 import styles from './ReservationDetailsCard.module.css';
 
 export function ReservationDetailsCard({
@@ -11,6 +12,7 @@ export function ReservationDetailsCard({
     reservation,
     onEditClick,
 }) {
+    const { user } = useContext(authContext);
     const { courts } = useContext(appContext);
 
     const { date, courtId, name, customName } = reservation;
@@ -25,19 +27,19 @@ export function ReservationDetailsCard({
         <div className={styles.card}>
             <Button
                 className={styles.editButton}
-                type="primary"
+                type="link"
                 onClick={handleEditClick}
             >
                 <EditOutlined /> | <DeleteOutlined />
             </Button>
 
             <ReservationDetails
-                small
+                autoHideName
                 date={date}
                 courtName={courtName}
                 groupDates={groupDates}
-                name={customName || name}
-                showAllDates
+                name={customName || (user?.name !== name && name)}
+                showFollowUpDate
             />
         </div>
     );

@@ -6,6 +6,16 @@
     margin-bottom: 0;
 }
 
+.nameInput {
+    width: 200px;
+}
+
 .footer button {
     margin-top: 5px;
+}
+
+.heading {
+    margin-top: 5px;
+    margin: 0;
+    font-weight: 600;
 }

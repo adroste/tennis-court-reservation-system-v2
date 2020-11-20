@@ -36,7 +36,7 @@ export const getMailTemplatesApi = {
 export const putMailTemplateApi = {
     url: `${BASE_PATH}/mail-template/:id`,
     method: 'PUT',
-    setFunc: ({ cur, req }) => ({ 
+    setFunc: ({ cur, req }) => ({
         ...cur,
         [req.id]: req,
     }),
@@ -52,36 +52,37 @@ export const getReservationsApi = {
     method: 'POST',
 };
 
-export const postReservationsApi = {
-    url: `${BASE_PATH}/reservations`,
+export const postReservationGroupApi = {
+    url: `${BASE_PATH}/reservation-group`,
     method: 'POST',
-    res: (curReservations, _, newReservations) => ([
-            ...curReservations,
-            ...newReservations,
+    setFunc: ({ cur, res }) => ([
+        ...cur,
+        ...res,
     ]),
 };
 
-export const putReservationsApi = {
-    url: `${BASE_PATH}/reservations`,
-    method: 'PUT',
-    res: (curReservations, updatedReservations, _) => (
-        curReservations.map(r => {
-            const update = updatedReservations.find(u => u.id === r.id);
-            if (update)
-                return {
-                    ...r,
-                    ...update,
-                };
-            return r;
-        })
-    ),
+export const patchReservationGroupApi = {
+    url: `${BASE_PATH}/reservation-group/:groupId`,
+    method: 'PATCH',
+    setFunc: ({ cur, req, params }) => {
+        const groupId = params.path.groupId;
+        const reference = cur.find(r => r.groupId === groupId);
+        return [
+            ...cur.filter(r => r.groupId !== groupId),
+            ...req.dates.map(date => ({
+                ...reference,
+                date,
+                customName: req.customName || reference.customName,
+            }))
+        ];
+    },
 };
 
-export const deleteReservationsApi = {
-    url: `${BASE_PATH}/reservations`,
+export const deleteReservationGroupApi = {
+    url: `${BASE_PATH}/reservation-group/:groupId`,
     method: 'DELETE',
-    res: (curReservations, deletedIds, _) => (
-        curReservations.filter(r => !deletedIds.includes(r.id))
+    setFunc: ({ cur, params }) => (
+        cur.filter(r => r.groupId !== params.path.groupId)
     ),
 };
 
@@ -93,7 +94,7 @@ export const postSendVerifyMailApi = {
 export const putTemplateApi = {
     url: `${BASE_PATH}/template/:id`,
     method: 'PUT',
-    setFunc: ({ cur, req }) => ({ 
+    setFunc: ({ cur, req }) => ({
         ...cur,
         [req.id]: req,
     }),
@@ -110,7 +111,7 @@ export const patchUserApi = {
         if (Array.isArray(cur)) {
             return cur.map(u => {
                 if (u.userId === req.userId)
-                    return { 
+                    return {
                         ...u,
                         ...req,
                         verified: (!req.mail || u.mail === req.mail)
@@ -141,7 +142,7 @@ export const postVerifyMailApi = {
     url: `${BASE_PATH}/verify-mail`,
     method: 'POST',
     setFunc: ({ cur }) => ({
-            ...cur,
-            verified: true,
+        ...cur,
+        verified: true,
     }),
 };

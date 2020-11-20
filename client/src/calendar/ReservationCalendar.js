@@ -1,13 +1,17 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { DayTable } from './DayTable';
+import { ErrorResult } from '../ErrorResult';
 import { HoursTable } from './HoursTable';
 import { ReservationModal } from './ReservationModal';
+import { UPDATE_INTERVALS_SEC } from '../updateIntervals';
 import { appContext } from '../AppContext';
+import { getReservationsApi } from '../api';
 import styles from './ReservationCalendar.module.css';
-import { useWeekReservations } from './useReservations';
+import { useApi } from '../useApi';
+import { useUpdateEffect } from '../useUpdateEffect';
 
-const visibleDatesCount = 7; // week
+const VISIBLE_DATES_COUNT = 7; // week
 
 export function ReservationCalendar({
     highlightHour,
@@ -18,9 +22,25 @@ export function ReservationCalendar({
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
     const [selectedSlot, setSelectedSlot] = useState();
+    const initialScrollDoneRef = useRef(false);
     const scrollerRef = useRef();
 
-    const reservations = useWeekReservations(selectedDate);
+    const [reservations, setReservations] = useState(null);
+    const [state, getReservations] = useApi(getReservationsApi, setReservations); 
+
+    const updateReservations = useCallback(() => getReservations({
+        query: {
+            start: selectedDate.startOf('week').toISOString(),
+            end: selectedDate.endOf('week').toISOString(),
+        }
+    }), [selectedDate, getReservations]);
+
+    useUpdateEffect(updateReservations, UPDATE_INTERVALS_SEC.RESERVATIONS);
+
+    useEffect(() => {
+        setReservations(null);
+        updateReservations();
+    }, [updateReservations]);
 
     const hours = useMemo(() => {
         const hours = [];
@@ -29,20 +49,23 @@ export function ReservationCalendar({
         return hours;
     }, [visibleHours]);
 
-    const visibleDates = useMemo(() => Array.from(Array(visibleDatesCount)).map((_, i) =>
-        selectedDate.startOf('week').add(i, 'day')
+    const visibleDates = useMemo(() => Array.from(Array(VISIBLE_DATES_COUNT)).map((_, i) =>
+        selectedDate.startOf('week').add(i, 'day') // startOf also sets hours, mins, secs to zero
     ), [selectedDate]);
 
     // scroll automatically to today's date
     useEffect(() => {
+        if (initialScrollDoneRef.current || !scrollerRef.current)
+            return;
         if (selectedDate.isSame(today, 'week')) {
+            initialScrollDoneRef.current = true;
             const index = Math.abs(today.startOf('week').diff(today, 'day'));
             requestAnimationFrame(() => {
                 scrollerRef.current.scrollLeft
-                    = ((scrollerRef.current.scrollWidth) / visibleDatesCount) * index;
+                    = ((scrollerRef.current.scrollWidth) / VISIBLE_DATES_COUNT) * index;
             });
         }
-    }, [selectedDate, today]);
+    }, [selectedDate, today, reservations]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
         if (!kiosk)
@@ -52,6 +75,13 @@ export function ReservationCalendar({
     const handleReservationFinish = useCallback(() => {
         setSelectedSlot(null);
     }, []);
+
+    if (state.error)
+        return (
+            <div className={styles.tableWrapper}>
+                <ErrorResult />
+            </div>
+        );
 
     return (
         <>
@@ -64,14 +94,15 @@ export function ReservationCalendar({
                 <div className={styles.tableScroller} ref={scrollerRef}>
                     {visibleDates.map(date => (
                         <DayTable
-                            key={date}
-                            date={date}
-                            today={today}
                             courts={courts}
+                            date={date}
                             hours={hours}
-                            reservations={reservations}
+                            key={date}
+                            loading={!reservations}
                             onSlotClick={handleSlotClicked}
                             reservationDaysInAdvance={reservationDaysInAdvance}
+                            reservations={reservations}
+                            today={today}
                         />
                     ))}
                 </div>
@@ -84,6 +115,7 @@ export function ReservationCalendar({
                     reservation={selectedSlot?.reservation}
                     today={today}
                     onFinish={handleReservationFinish}
+                    setReservations={setReservations}
                 />
             }
         </>

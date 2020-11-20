@@ -1,28 +1,34 @@
-.details > div {
-    display: block;
-    font-size: 18px;
-    font-weight: 600;
+.wrapper > div+div {
+    margin-top: 5px;
 }
 
-.details.small > div {
+.item {
+    display: flex;
     font-size: 16px;
+    font-weight: 600;
+    line-height: 28px;
+    /* justify-content: center; */
+    /* align-items: center; */
 }
 
-.userInput {
-    width: 200px;
+.item > div:first-child {
+    border-right: 1px solid #eee;
+    margin-right: 7px;
+    padding-right: 6px;
+    color: #555;
 }
 
-.details > div.allDates {
-    font-size: inherit;
-    margin-top: 10px;
-    /* margin-left: 24px; */
+.allDates {
+    /* font-weight: 400; */
 }
 
 .dateList {
+    margin-right: 10px;
     font-weight: 400;
+    font-size: 14px;
     margin-left: 24px
 }
-
+    
 .dateList > span {
     display: block;
 }

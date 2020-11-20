@@ -1,18 +1,18 @@
 .wrapper {
-    margin: 5px 0;
+    font-weight: 400;
 }
 
-.enableCheckbox {
-    margin: 16px 0;
+.repeatTypes {
+    line-height: normal;
 }
 
-.repeatSettings {
-    padding-left: 16px;
+.repeatTypes label {
+    margin-top: 2px;
+    margin-right: 4px;
 }
 
-.repeatTypes > * {
-    /* display: block; */
-    padding: 5px 0;
+.dates {
+    margin-top: 10px;
 }
 
 .dates > * {
@@ -27,7 +27,9 @@
     font-style: italic;
 }
 
-.dates .danger {
+.dates .danger,
+.dates .danger .date,
+.dates .danger .extra {
     color: #ff4d4f;
 }
 

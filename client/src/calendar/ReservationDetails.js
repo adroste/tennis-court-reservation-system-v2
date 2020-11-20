@@ -1,29 +1,23 @@
-import { Button, Input } from 'antd';
-import { CalendarOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons';
-import React, { useCallback, useMemo, useState } from 'react';
+import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined, RedoOutlined, UserOutlined } from '@ant-design/icons';
+import React, { useMemo } from 'react';
 
-import classNames from 'classnames/bind';
 import dayjs from 'dayjs';
 import styles from './ReservationDetails.module.css';
 
-const cn = classNames.bind(styles);
-
-const formatVal = 'dd L';
+const formatVal = 'dd[\xa0]L';
 
 export function ReservationDetails({
-    allowEditName = false,
     courtName,
     date,
     groupDates,
     name,
-    onNameChange,
+    repeat,
     showAllDates = false,
-    small,
+    showDateRange = false,
+    showFollowUpDate = false,
 }) {
-    const [editName, setEditName] = useState(false);
-
     let dateStr = date.format(formatVal);
-    if (!showAllDates && groupDates) {
+    if (showDateRange && groupDates) {
         dateStr = groupDates.length ? groupDates[0].format(formatVal) : '-';
         if (groupDates.length > 1)
             dateStr += ` bis ${groupDates[groupDates.length - 1].format(formatVal)}`;
@@ -43,56 +37,65 @@ export function ReservationDetails({
         return groupDates?.filter(date => !date.isBefore(today, 'day'));
     }, [groupDates]);
 
-    const handleNameChange = useCallback(e => {
-        onNameChange(e.target.value);
-    }, [onNameChange]);
-
-    const handleEditName = useCallback(() => {
-        setEditName(true);
-        onNameChange('');
-    }, [onNameChange]);
-
-    const handleCancelEditName = useCallback(() => {
-        setEditName(false);
-        onNameChange(null);
-    }, [onNameChange]);
+    const followUpReservation = useMemo(() => {
+        const sorted = [...groupDates];
+        sorted.sort((a, b) => a - b);
+        return sorted?.find(gd => gd.isAfter(date, 'day'));
+    }, [groupDates, date]);
 
     return (
-        <div className={cn({
-            details: true,
-            small,
-        })}>
-            <div><CalendarOutlined />&nbsp;&nbsp;{dateStr}</div>
-            <div><ClockCircleOutlined />&nbsp;&nbsp;{`${date.format('H')} bis ${date.add(1, 'h').format('H')} Uhr, ${courtName}`}</div>
-            <div>
-                <UserOutlined />&nbsp;&nbsp;
-                {editName ?
-                    (
-                        <>
-                            <Input
-                                className={styles.userInput}
-                                value={name}
-                                onChange={handleNameChange}
-                                placeholder="z.B. Training, ..."
-                            />
-                            <Button type='link' onClick={handleCancelEditName}>abbrechen</Button>
-                        </>
-                    ) : (
-                        <>
-                            {name}
-                            {allowEditName &&
-                                <Button type='link' onClick={handleEditName}>ändern</Button>
-                            }
-                        </>
-                    )
-                }
+        <div className={styles.wrapper}>
+            <div className={styles.item}>
+                <div><CalendarOutlined /></div>
+                <div>{dateStr}</div>
             </div>
+
+            <div className={styles.item}>
+                <div><ClockCircleOutlined /></div>
+                <div>{`${date.format('H')} bis ${date.add(1, 'h').format('H')} Uhr`}</div>
+            </div>
+
+            <div className={styles.item}>
+                <div><EnvironmentOutlined /></div>
+                <div>{courtName}</div>
+            </div>
+
+            {name &&
+                <div className={styles.item}>
+                    <div><UserOutlined /></div>
+                    <div>{name}</div>
+                </div>
+            }
+            
+            {repeat &&
+                <div className={styles.item}>
+                    <div><RedoOutlined /></div>
+                    <div>{repeat}</div>
+                </div>
+            }
+
             {showAllDates && groupDates?.length &&
-                <div className={styles.allDates}>
-                    <span>Wiederkehrender Termin:</span>
-                    <div className={styles.dateList}>
-                        {pastGroupEventsCount > 0 && <span>{pastGroupEventsCount} vergangene Termine</span>}
-                        {futureGroupEvents?.map(d => <span key={d}>{d.format(formatVal)}</span>)}
+                <div className={styles.item}>
+                    <div><RedoOutlined /></div>
+                    <div className={styles.allDates}>
+                        <span>Wiederkehrender Termin</span>
+                        <div className={styles.dateList}>
+                            {pastGroupEventsCount === 1 && <span>Ein vergangener Termin</span>}
+                            {pastGroupEventsCount > 1 && <span>{pastGroupEventsCount} vergangene Termine</span>}
+                            {futureGroupEvents?.map(d => <span key={d}>{d.format(formatVal)}</span>)}
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {showFollowUpDate && followUpReservation &&
+                <div className={styles.item}>
+                    <div><RedoOutlined /></div>
+                    <div className={styles.allDates}>
+                        <span>Folgetermin</span>
+                        <div className={styles.dateList}>
+                            <span>{followUpReservation.format(formatVal)}</span>
+                        </div>
                     </div>
                 </div>
             }

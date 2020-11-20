@@ -10,8 +10,8 @@ export function StatsPage() {
     const [stats, setStats] = useState({
         perPage: [
             ['/', 62],
-            ['/myreservations', 42],
-            ['/myaccount', 6],
+            ['/my-reservations', 42],
+            ['/profile', 6],
         ],
         browser: [
             ['Chrome', 62],

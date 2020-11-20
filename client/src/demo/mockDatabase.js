@@ -96,7 +96,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             name: 'Platz 2',
             disabled: true,
             disabledFromTil: [
-                dayjs().subtract(2, 'week'),
+                dayjs().add(-2, 'week'),
                 dayjs().add(4, 'week'),
                 // dayjs().add(8, 'week'),
             ],
@@ -113,7 +113,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             userId: 9,
             name: 'Max Mustermann',
             mail: 'max@example.com',
-            verified: false,
+            verified: true,
             admin: false,
         },
         {
@@ -153,18 +153,111 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
         }
     ],
 
+    // primary key: courtId x Date
+    // foreign key: groupId
     reservations: [
         {
-            id: 1,
-            date: dayjs().subtract(3, 'day').hour(11),
-            userId: 3,
-            customName: undefined,
+            date: dayjs().add(-1, 'day').hour(11),
             courtId: 1,
-            groupId: undefined,
-        }
+            groupId: 1,
+            created: dayjs().add(-2, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(3, 'day').hour(20),
+            courtId: 1,
+            groupId: 3,
+            created: dayjs().add(-2, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(-2, 'day').hour(15),
+            courtId: 1,
+            groupId: 2,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(-1, 'day').hour(15),
+            courtId: 1,
+            groupId: 2,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(-0, 'day').hour(15),
+            courtId: 1,
+            groupId: 2,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(1, 'day').hour(15),
+            courtId: 1,
+            groupId: 2,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(0, 'day').hour(17),
+            courtId: 1,
+            groupId: 4,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(7, 'day').hour(17),
+            courtId: 1,
+            groupId: 4,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(14, 'day').hour(17),
+            courtId: 1,
+            groupId: 4,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+        {
+            date: dayjs().add(21, 'day').hour(17),
+            courtId: 1,
+            groupId: 4,
+            created: dayjs().add(-4, 'day').hour(11),
+        },
+    ],
+
+    // primary key: groupId auto_inc
+    reservationGroups: [
+        {
+            groupId: 1,
+            userId: 9,
+            customName: null,
+        },
+        {
+            groupId: 3,
+            userId: 9,
+            customName: null,
+        },
+        {
+            groupId: 2,
+            userId: 3,
+            customName: null,
+        },
+        {
+            groupId: 4,
+            userId: 2,
+            customName: null,
+        },
     ]
 };
 
 window.getFakeDb = () => {
     return db;
 };
+
+window.addFakeReservation = () => {
+    db.reservationGroups.push({
+        groupId: 999,
+        userId: 2,
+        customName: 'Fake',
+    });
+
+    db.reservations.push({
+        date: dayjs().hour(8),
+        courtId: 1,
+        groupId: 999,
+        created: dayjs(),
+    });
+}

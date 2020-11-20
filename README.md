@@ -34,6 +34,14 @@
 * PHP 7
 * MySQL Datenbank
 
+## Datenverbrauch im Kioskmodus
+
+Im Kioskmodus wird die Tabelle mit den Reservierungen automatisch aktualisiert.
+Im Regelfall ist eine solche Anfrage < 10kB. 
+Das Zeitintervall für die Aktualisierungen kann manuell angegeben werden, indem der Kioskmodus mittels `/kiosk?update=x` aufgerufen wird. `x` gibt hierbei die Anzahl der Sekunden an. Der Standardwert ist eine Minute.
+
+Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich für ein Aktualisierungsintervall von `x=300` (5 Minuten) ein Datenverbrauch von ca. 3MB pro Tag.
+
 &nbsp;
 
 # 🇺🇸
@@ -88,7 +96,7 @@
     * [x] os
     * [x] device
 * [ ] .htaccess for client side routing
-* [ ] Auto refresh reservation data (interval in useWeekReservations, ... hooks)
+* [x] Auto refresh reservation data (interval in useWeekReservations, ... hooks)
 * [x] disabled dates for reservation < today
 * [x] reservations days in advance (implement)
 * [x] html editor switch
@@ -121,8 +129,8 @@
 * [ ] test mail template button
 * [x] user management sorting
 * [x] show npm version
-* [ ] implement fetch/api routines
-* [ ] fix demo login button
+* [x] implement fetch/api routines
+* [x] fix demo login button
 * [x] fix demo notification overlapping cookie notice on mobile
 * [ ] bestehende reservierungen bei platzsperre stornieren
 * [ ] datenschutz buttons unter mein benutzerkonto implementieren
@@ -131,9 +139,27 @@
 * [x] set verified=false when changing email via myaccount
 * [x] register: check for unique mail
 * [x] make delete, put id based param
+* [ ] daytable loading state
+* [x] consistent paths
+* [ ] reservation error handling
+* [ ] week in url
+* [ ] max reservation count user
 
 
-#### auth mechanism
+### tables
 
-* spa holds token
-  * token contains userId
+reservations
+{
+  date,
+  courtId,
+  groupId foreign_key(reservation_group.groupId),
+  created,
+  primary_key(date,courtId)
+}
+
+reservation_group
+{
+  groupId auto_inc unique primary,
+  userId,
+  customName,
+}
