@@ -7,7 +7,7 @@ export function StatsPage() {
 
     const [timePeriod, setTimePeriod] = useState(30);
 
-    const [stats, setStats] = useState({
+    const [stats, ] = useState({
         perPage: [
             ['/', 62],
             ['/my-reservations', 42],

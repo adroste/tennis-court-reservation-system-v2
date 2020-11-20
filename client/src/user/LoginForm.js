@@ -75,9 +75,10 @@ export function LoginForm() {
                     </Checkbox>
                 </Form.Item>
 
-                <a className={styles.forgotLink} href="">
+                {/* TODO */}
+                <Link className={styles.forgotLink} to="/reset-password">
                     Password vergessen
-                </a>
+                </Link>
             </Form.Item>
 
             <Form.Item>
