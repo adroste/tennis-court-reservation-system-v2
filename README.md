@@ -132,7 +132,8 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] implement fetch/api routines
 * [x] fix demo login button
 * [x] fix demo notification overlapping cookie notice on mobile
-* [ ] bestehende reservierungen bei platzsperre stornieren
+* [x] bestehende reservierungen bei platzsperre stornieren (hinweis)
+  * [ ] implementation
 * [ ] datenschutz buttons unter mein benutzerkonto implementieren
 * [ ] activity table backend
 * [x] verified email state

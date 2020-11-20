@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input, Space } from 'antd';
-import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
+import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { DatePicker } from '../calendar/DatePicker';
@@ -43,7 +43,25 @@ export function CourtConfigForm() {
     }, [disableReset]);
 
     const handleSave = useCallback(({ courts }) => {
-        putCourts(null, courts, resetForm);
+        Modal.confirm({
+            title: 'Achtung!',
+            icon: <ExclamationCircleOutlined />,
+            centered: true,
+            content: (
+                <div>
+                    <p>Durch das Ändern von Plätzen können bestehende Reservierungen verloren gehen.</p>
+                    <p>Alle Reservierungen, die im Zeitraum einer Sperrung liegen, werden automatisch storniert.</p>
+                    <p>Dies gilt auch für das Entfernen eines Platzes.</p>
+                    <p>Alle Nutzer, die von einer Stornierung betroffen sind, werden per E-Mail informiert.</p>
+                </div>
+            ),
+            okText: 'Bestätigen',
+            okType: 'danger',
+            cancelText: 'Abbrechen',
+            onOk() {
+                putCourts(null, courts, resetForm);
+            },
+        });
     }, [putCourts, resetForm]);
 
     return (
