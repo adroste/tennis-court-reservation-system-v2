@@ -19,3 +19,8 @@
     margin: 0;
     font-weight: 600;
 }
+
+.changeReasonHint {
+    margin-top: 5px;
+    font-style: italic;
+}

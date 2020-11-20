@@ -25,6 +25,7 @@ export function ReservationModalInner({
 
     const courtName = courts.find(c => c.courtId === courtId)?.name;
 
+    const [changeReason, setChangeReason] = useState('');
     const [tosAccepted, setTosAccepted] = useState(false);
     const [newCustomName, setNewCustomName] = useState(null);
     const [newGroupDates, setNewGroupDates] = useState(null);
@@ -40,6 +41,7 @@ export function ReservationModalInner({
 
     const loading = state.loading || postState.loading || patchState.loading || deleteState.loading;
 
+    const adminEdit = reservation && user.admin && reservation?.userId !== user.userId;
     const canEdit = user.admin || !reservation || reservation.userId === user.userId;
 
     const groupDates = useMemo(() => groupReservations.map(r => r.date), [groupReservations]);
@@ -78,6 +80,10 @@ export function ReservationModalInner({
         setNewCustomName(e.target.value);
     }, []);
 
+    const handleChangeChangeReason = useCallback(e => {
+        setChangeReason(e.target.value);
+    }, []);
+
     const handlePostReservation = useCallback(() => {
         postReservationGroup(null, {
             courtId,
@@ -107,6 +113,7 @@ export function ReservationModalInner({
                 groupId: reservation.groupId,
                 dates: newGroupDates,
                 customName: newCustomName,
+                reason: adminEdit ? changeReason : undefined,
             }, () => {
                 message.success("Speichern erfolgreich");
                 onFinish();
@@ -155,8 +162,10 @@ export function ReservationModalInner({
             onOk: doChange
         });
     }, [
+        adminEdit,
         cancelDates,
         changeCustomName,
+        changeReason,
         newCustomName,
         newDates,
         newGroupDates,
@@ -168,14 +177,27 @@ export function ReservationModalInner({
 
     const handleCancelReservation = useCallback(() => {
         const doDelete = () => {
-            deleteReservationGroup({
+            const reqParams = {
                 path: {
                     groupId: reservation.groupId
                 }
-            }, null, () => {
+            };
+            const cb = () => {
                 message.success("Stornierung erfolgreich");
                 onFinish();
-            });
+            }
+
+            if (adminEdit) {
+                // same as delete but with body
+                // to submit reason
+                patchReservationGroup(reqParams, {
+                    groupId: reservation.groupId,
+                    dates: [],
+                    reason: changeReason,
+                }, cb);
+            } else {
+                deleteReservationGroup(reqParams, null, cb);
+            }
         };
 
         if (groupDates.length <= 1) {
@@ -199,9 +221,12 @@ export function ReservationModalInner({
             });
         }
     }, [
+        adminEdit,
+        changeReason,
         deleteReservationGroup,
         groupDates,
         onFinish,
+        patchReservationGroup,
         reservation,
     ]);
 
@@ -314,16 +339,17 @@ export function ReservationModalInner({
                                     <Button
                                         type="danger"
                                         onClick={handleCancelReservation}
+                                        disabled={adminEdit && !changeReason}
                                     >
                                         {groupDates.length > 1 ? 'Alle stornieren' : 'Stornieren'}
                                     </Button>
                                     <Button
                                         type="primary"
                                         onClick={handleChangeReservation}
-                                        disabled={!(newDates?.length || cancelDates?.length || changeCustomName)}
+                                        disabled={!(newDates?.length || cancelDates?.length || changeCustomName) || (adminEdit && !changeReason)}
                                     >
                                         Speichern
-                                        </Button>
+                                    </Button>
                                 </>
                             ) : (
                                 <Button
@@ -421,6 +447,22 @@ export function ReservationModalInner({
                             </div>
                         }
                     </>
+                }
+
+                {adminEdit &&
+                    <div className={styles.changeReason}>
+                        <Input.TextArea
+                            autoSize
+                            disabled={loading}
+                            onChange={handleChangeChangeReason}
+                            placeholder="Grund der Änderung"
+                            required
+                            value={changeReason}
+                        />
+                        <div className={styles.changeReasonHint}>
+                            *Erforderlich. Der Inhaber der Reservierung wird über die Änderungen sowie dessen Grund per E-Mail informiert.
+                        </div>
+                    </div>
                 }
             </div>
         </Modal>
