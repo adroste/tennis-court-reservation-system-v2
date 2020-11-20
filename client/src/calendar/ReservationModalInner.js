@@ -253,8 +253,8 @@ export function ReservationModalInner({
 
     if (
         state.error
-        || (postState.error && !postState.error.unavailableDates && !postState.error.message === 'too many active reservations')
-        || (patchState.error && !patchState.error.unavailableDates && !patchState.error.message === 'too many active reservations')
+        || (postState.error && !postState.error.unavailableDates && postState.error.message !== 'too many active reservations')
+        || (patchState.error && !patchState.error.unavailableDates && patchState.error.message !== 'too many active reservations')
         || deleteState.error
     ) {
         return (
