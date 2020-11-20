@@ -1,12 +1,15 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
+import { Ball } from '../Ball';
 import { Empty } from 'antd';
+import { ErrorResult } from '../ErrorResult';
 import { ReservationDetailsCard } from './ReservationDetailsCard';
 import { ReservationModal } from './ReservationModal';
 import { authContext } from '../AuthContext';
+import { getReservationsApi } from '../api';
 import styles from './MyReservationsPage.module.css';
+import { useApi } from '../useApi';
 import { useTime } from './useTime';
-import { useUserReservations } from './useReservations';
 
 function getGroupDates(myReservations, reservation) {
     if (!reservation?.groupId)
@@ -20,10 +23,26 @@ export function MyReservationsPage() {
 
     const { user: { userId } } = useContext(authContext);
 
-    const today = useTime('day');
+    const time = useTime('hour');
     const [selectedReservation, setSelectedReservation] = useState();
 
-    const myReservations = useUserReservations(today, userId);
+    const autoFetch = useMemo(() => ({
+        reqParams: {
+            query: {
+                'user-id': userId,
+                start: time.startOf('hour').toISOString(),
+            }
+        }
+    }), [time, userId]);
+
+    const [reservations, setReservations] = useState([]);
+    const [state,] = useApi(getReservationsApi, setReservations, autoFetch); 
+
+    const sortedReservations = useMemo(() => {
+        const s = [...reservations];
+        s.sort((a, b) => a.date - b.date);
+        return s;
+    }, [reservations]);
 
     const handleEditClick = useCallback(reservation => {
         setSelectedReservation(reservation);
@@ -33,9 +52,24 @@ export function MyReservationsPage() {
         setSelectedReservation(null);
     }, []);
 
+    if (state.error)
+        return (
+            <div className={styles.wrapper}>
+                <ErrorResult />
+            </div>
+        );
+    
+    // length check prevents flickering when refetch
+    if (state.loading && !sortedReservations?.length)
+        return (
+            <div className={styles.wrapper}>
+                <Ball visible spin large centered />
+            </div>
+        );
+
     return (
         <div className={styles.wrapper}>
-            {!myReservations?.length &&
+            {!sortedReservations?.length &&
                 <div className={styles.content}>
                     <Empty
                         className={styles.empty}
@@ -44,32 +78,31 @@ export function MyReservationsPage() {
                 </div>
             }
 
-            {myReservations?.length > 0 &&
+            {sortedReservations?.length > 0 &&
                 <>
                     <h1>Nächster Termin</h1>
                     <div className={styles.content}>
                         <ReservationDetailsCard
-                            key={myReservations[0].id}
-                            reservation={myReservations[0]}
-                            groupDates={getGroupDates(myReservations, myReservations[0])}
+                            reservation={sortedReservations[0]}
+                            groupDates={getGroupDates(sortedReservations, sortedReservations[0])}
                             onEditClick={handleEditClick}
                         />
                     </div>
                 </>
             }
 
-            {myReservations?.length > 1 &&
+            {sortedReservations?.length > 1 &&
                 <>
                     <h1>Weitere Termine</h1>
                     <div className={styles.content}>
-                        {myReservations.map((reservation, i) => {
+                        {sortedReservations.map((reservation, i) => {
                             if (i === 0)
                                 return null;
                             return (
                                 <ReservationDetailsCard
-                                    key={reservation.id}
+                                    key={`${reservation.courtId}${reservation.date}`}
                                     reservation={reservation}
-                                    groupDates={getGroupDates(myReservations, reservation)}
+                                    groupDates={getGroupDates(sortedReservations, reservation)}
                                     onEditClick={handleEditClick}
                                 />
                             );
@@ -84,6 +117,7 @@ export function MyReservationsPage() {
                     courtId={selectedReservation?.courtId}
                     reservation={selectedReservation}
                     onFinish={handleReservationEditFinish}
+                    today={time}
                 />
             }
         </div>
