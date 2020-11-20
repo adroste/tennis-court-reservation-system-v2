@@ -1,0 +1,10 @@
+const DEFAULT_UPDATE_INTERVALS_SEC = { 
+    BASE_DATA: 120,
+    RESERVATIONS: 30,
+};
+
+export const UPDATE_INTERVALS_SEC = DEFAULT_UPDATE_INTERVALS_SEC;
+
+export function setDefaultUpdateIntervals() {
+    Object.assign(UPDATE_INTERVALS_SEC, DEFAULT_UPDATE_INTERVALS_SEC);
+}
