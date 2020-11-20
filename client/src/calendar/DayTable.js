@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
 import { SlotCell } from './SlotCell';
+import { authContext } from '../AuthContext';
 import { findReservation } from '../helper';
 import styles from './DayTable.module.css';
 
@@ -14,6 +15,7 @@ export function DayTable({
     reservations,
     today,
 }) {
+    const { user } = useContext(authContext);
     const isToday = useMemo(() => today.isSame(date, 'day'), [date, today]);
     const inPast = useMemo(() => date.isBefore(today, 'day'), [date, today]);
     const tooFarAhead = useMemo(() => 
@@ -24,10 +26,10 @@ export function DayTable({
         return {
             courtId,
             name,
-            disabled: inPast || tooFarAhead || manuallyDisabled,
+            disabled: manuallyDisabled || (!user?.admin && (inPast || tooFarAhead)),
             disabledText: manuallyDisabled ? 'Gesperrt' : null,
         };
-    }), [courts, date, inPast, tooFarAhead]);
+    }), [user?.admin, courts, date, inPast, tooFarAhead]);
 
     const handleClick = useCallback(({ courtId, hour, reservation }) => {
         onSlotClick({

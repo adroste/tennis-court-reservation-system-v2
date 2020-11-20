@@ -9,7 +9,7 @@ export const db = {
         serverMail: 'abc@def.de',
         url: 'https://reservierung.xyz.de',
         reservationDaysInAdvance: 90,
-        reservationMaxActiveCount: 15,
+        reservationMaxActiveCount: 10,
     },
 
     mailTemplates: {

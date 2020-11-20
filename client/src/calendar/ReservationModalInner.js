@@ -1,5 +1,5 @@
 import { Button, Checkbox, Input, Modal } from 'antd';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { deleteReservationGroupApi, getReservationsApi, patchReservationGroupApi, postReservationGroupApi } from '../api';
 
 import { ErrorResult } from '../ErrorResult';
@@ -29,6 +29,7 @@ export function ReservationModalInner({
     const [newCustomName, setNewCustomName] = useState(null);
     const [newGroupDates, setNewGroupDates] = useState(null);
     const [editName, setEditName] = useState(false);
+    const prevErrorRef = useRef({});
 
     const [groupReservations, setGroupReservations] = useState([]);
     const [state, getGroupReservations] = useApi(getReservationsApi, setGroupReservations);
@@ -36,7 +37,7 @@ export function ReservationModalInner({
     const [postState, postReservationGroup] = useApi(postReservationGroupApi, setReservations);
     const [deleteState, deleteReservationGroup] = useApi(deleteReservationGroupApi, setReservations);
     const [patchState, patchReservationGroup] = useApi(patchReservationGroupApi, setReservations);
-    
+
     const loading = state.loading || postState.loading || patchState.loading || deleteState.loading;
 
     const canEdit = user.admin || !reservation || reservation.userId === user.userId;
@@ -196,8 +197,15 @@ export function ReservationModalInner({
     ]);
 
     useEffect(() => {
+        if (prevErrorRef.current.post === postState.error 
+            && prevErrorRef.current.patch === patchState.error)
+            return;
+        prevErrorRef.current.post = postState.error;
+        prevErrorRef.current.patch = patchState.error;
+
         const uaDates = postState.error?.unavailableDates || patchState.error?.unavailableDates;
-        if (uaDates)
+        const message = postState.error?.message || patchState.error?.message;
+        if (uaDates) {
             Modal.error({
                 centered: true,
                 title: 'Reservierung fehlgeschlagen',
@@ -214,12 +222,39 @@ export function ReservationModalInner({
                     </div>
                 )
             });
-    }, [postState.error, patchState.error])
+        } else if (message === 'too many active reservations') {
+            const value = postState.error?.value || patchState.error?.value;
+            const max = postState.error?.max || patchState.error?.max;
+            const diff = Math.abs(value - max);
+            Modal.error({
+                centered: true,
+                title: 'Reservierungslimit erreicht',
+                content: (
+                    <div>
+                        {newGroupDates?.length > diff ?
+                            (
+                                <p>
+                                    Bitte entfernen Sie mindestens <strong>{diff}</strong> Termine.
+                                </p>
+                            ) : (
+                                <p>
+                                    Sie können aktuell keine weiteren Termine reservieren.
+                                </p>
+                            )
+                        }
+                        <p>
+                            Es können maximal {max} Reservierungen im voraus getätigt werden. Bereits vergangene Termine werden dabei nicht angerechnet.
+                        </p>
+                    </div>
+                )
+            });
+        }
+    }, [newGroupDates?.length, postState.error, patchState.error])
 
     if (
         state.error
-        || (postState.error && !postState.error.unavailableDates)
-        || (patchState.error && !patchState.error.unavailableDates)
+        || (postState.error && !postState.error.unavailableDates && !postState.error.message === 'too many active reservations')
+        || (patchState.error && !patchState.error.unavailableDates && !patchState.error.message === 'too many active reservations')
         || deleteState.error
     ) {
         return (
@@ -254,45 +289,45 @@ export function ReservationModalInner({
             onCancel={onFinish}
             onOk={onFinish}
             footer={loading ?
-                    (
-                        <StatusText
-                            loading
-                            text="Bitte warten..."
-                        />
-                    ) : (
-                        <div className={styles.footer}>
-                            <Button onClick={onFinish}>
-                                {canEdit ? 'Abbrechen' : 'Schließen'}
-                            </Button>
-                            {canEdit && (reservation ?
-                                (
-                                    <>
-                                        <Button
-                                            type="danger"
-                                            onClick={handleCancelReservation}
-                                        >
-                                            {groupDates.length > 1 ? 'Alle stornieren' : 'Stornieren'}
-                                        </Button>
-                                        <Button
-                                            type="primary"
-                                            onClick={handleChangeReservation}
-                                            disabled={!(newDates?.length || cancelDates?.length || changeCustomName)}
-                                        >
-                                            Speichern
-                                        </Button>
-                                    </>
-                                ) : (
+                (
+                    <StatusText
+                        loading
+                        text="Bitte warten..."
+                    />
+                ) : (
+                    <div className={styles.footer}>
+                        <Button onClick={onFinish}>
+                            {canEdit ? 'Abbrechen' : 'Schließen'}
+                        </Button>
+                        {canEdit && (reservation ?
+                            (
+                                <>
                                     <Button
-                                        disabled={(reservationTos.body && !tosAccepted) || !newDates?.length}
-                                        type="primary"
-                                        onClick={handlePostReservation}
+                                        type="danger"
+                                        onClick={handleCancelReservation}
                                     >
-                                        Reservieren
+                                        {groupDates.length > 1 ? 'Alle stornieren' : 'Stornieren'}
                                     </Button>
-                                )
-                            )}
-                        </div>
-                    )
+                                    <Button
+                                        type="primary"
+                                        onClick={handleChangeReservation}
+                                        disabled={!(newDates?.length || cancelDates?.length || changeCustomName)}
+                                    >
+                                        Speichern
+                                        </Button>
+                                </>
+                            ) : (
+                                <Button
+                                    disabled={(reservationTos.body && !tosAccepted) || !newDates?.length}
+                                    type="primary"
+                                    onClick={handlePostReservation}
+                                >
+                                    Reservieren
+                                </Button>
+                            )
+                        )}
+                    </div>
+                )
             }
         >
             <div className={styles.wrapper}>
@@ -312,11 +347,11 @@ export function ReservationModalInner({
                                         size="small"
                                         value={newCustomName}
                                     />
-                                    <Button 
+                                    <Button
                                         disabled={loading}
-                                        onClick={handleCancelEditName} 
+                                        onClick={handleCancelEditName}
                                         size="small"
-                                        type='link' 
+                                        type='link'
                                     >
                                         abbrechen
                                     </Button>
@@ -325,11 +360,11 @@ export function ReservationModalInner({
                                 <>
                                     {reservation?.customName || reservation?.name || user.name}
                                     {user.admin &&
-                                        <Button 
+                                        <Button
                                             disabled={loading}
-                                            onClick={handleEditName} 
+                                            onClick={handleEditName}
                                             size="small"
-                                            type='link' 
+                                            type='link'
                                         >
                                             ändern
                                         </Button>

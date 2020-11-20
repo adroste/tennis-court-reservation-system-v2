@@ -3,6 +3,7 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { appContext } from '../AppContext';
+import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
 import styles from './GroupDatesForm.module.css';
 
@@ -25,6 +26,7 @@ export function GroupDatesForm({
     today,
     unavailableDates,
 }) {
+    const { user } = useContext(authContext);
     const { courts, config: { reservationDaysInAdvance } } = useContext(appContext);
 
     const [repeatValue, setRepeatValue] = useState(0);
@@ -34,11 +36,14 @@ export function GroupDatesForm({
     const courtDisabledFromTil = useMemo(() =>
         (courts.find(c => c.courtId === courtId))?.disabledFromTil, [courts, courtId]);
 
-    const checkIfNotAvailable = useCallback(date => (
+    const checkIfTooFarAhead = useCallback(date => (
         date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day')
-        || (courtDisabledFromTil && date.isBetween(courtDisabledFromTil[0], courtDisabledFromTil[1], 'day', '[]'))
+    ), [today, reservationDaysInAdvance]);
+
+    const checkIfNotAvailable = useCallback(date => (
+        (courtDisabledFromTil && date.isBetween(courtDisabledFromTil[0], courtDisabledFromTil[1], 'day', '[]'))
         || (unavailableDates && unavailableDates.some(d => date.isSame(d, 'day')))
-    ), [courtDisabledFromTil, today, reservationDaysInAdvance, unavailableDates]);
+    ), [courtDisabledFromTil, unavailableDates]);
 
     const dates = useMemo(() => {
         return visibleDates.map(d => ({
@@ -47,8 +52,9 @@ export function GroupDatesForm({
             reserved: currentGroupDates?.findIndex(gd => gd.isSame(d, 'day')) !== -1,
             past: d.isBefore(today, 'day'),
             notAvailable: checkIfNotAvailable(d),
+            tooFarAhead: checkIfTooFarAhead(d),
         }));
-    }, [checkIfNotAvailable, selectedDates, currentGroupDates, visibleDates, today]);
+    }, [checkIfNotAvailable, selectedDates, currentGroupDates, visibleDates, today, checkIfTooFarAhead]);
 
     const setSelectedDates = useCallback(selectedDates => {
         _setSelectedDates(_selectedDates => {
@@ -104,10 +110,11 @@ export function GroupDatesForm({
         setVisibleDates(visibleDates => {
             const last = visibleDates[visibleDates.length - 1];
             const add = last.add(repeatValue, 'day');
-            setSelectedDates(selectedDates => [...selectedDates, add]);
+            if (!checkIfTooFarAhead(add))
+                setSelectedDates(selectedDates => [...selectedDates, add]);
             return [...visibleDates, add];
         });
-    }, [repeatValue, setSelectedDates]);
+    }, [repeatValue, setSelectedDates, checkIfTooFarAhead]);
 
     const removeDate = useCallback(() => {
         setVisibleDates(visibleDates => {
@@ -131,8 +138,8 @@ export function GroupDatesForm({
         }
 
         setVisibleDates(newDates);
-        setSelectedDates(newDates);
-    }, [date, defaultAddCount, setSelectedDates]);
+        setSelectedDates(newDates.filter(d => !checkIfTooFarAhead(d)));
+    }, [date, defaultAddCount, setSelectedDates, checkIfTooFarAhead]);
 
     const handleCheckedChange = useCallback(e => {
         const index = e.target.value;
@@ -169,7 +176,7 @@ export function GroupDatesForm({
             {repeatValue > 0 &&
                 <>
                     <div className={styles.dates}>
-                        {dates.map(({ date, checked, reserved, past, notAvailable }, i) => (
+                        {dates.map(({ date, checked, reserved, past, notAvailable, tooFarAhead }, i) => (
                             <Checkbox
                                 className={cn({
                                     unchecked: !checked,
@@ -177,14 +184,15 @@ export function GroupDatesForm({
                                 })}
                                 key={date}
                                 value={i}
-                                disabled={past || notAvailable || disabled}
+                                disabled={(!user?.admin && (past || tooFarAhead)) || notAvailable || disabled}
                                 checked={checked}
                                 onChange={handleCheckedChange}
                             >
                                 <span className={styles.date}>{date.format('dd L')}</span>
-                                {!notAvailable && !past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
-                                {!notAvailable && !past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
+                                {!past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
+                                {!past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
                                 {!notAvailable && past && <span className={styles.extra}> Bereits vergangen</span>}
+                                {!notAvailable && tooFarAhead && <span className={styles.extra}> Zu weit in der Zukunft</span>}
                                 {notAvailable && <span className={styles.extra}> Nicht verfügbar</span>}
                             </Checkbox>
                         ))}

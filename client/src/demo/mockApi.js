@@ -8,7 +8,6 @@ import { parseQuery } from '../helper';
 
 const fakeDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// const cn = apiDesc => `${apiDesc.method || 'GET'}${apiDesc.url}`;
 const cn = ({ url, method }) => {
     let u = method || 'GET';
     const di = url.indexOf(':');
@@ -236,7 +235,6 @@ async function handleRequests(url, options) {
                     return Math.max(nextId, g.groupId);
                 }, 0) + 1;
                 const customName = body?.customName;
-                const userId = body?.userId;
                 const dates = body?.dates?.map(d => dayjs(d));
 
                 if (!dates?.length) {
@@ -244,10 +242,9 @@ async function handleRequests(url, options) {
                     db.reservationGroups = db.reservationGroups.filter(g => g.groupId !== groupId);
                     db.reservations = db.reservations.filter(r => r.groupId !== groupId);
                 } else {
-                    if (customName) {
-                        const group = db.reservationGroups.find(g => g.groupId === groupId);
-                        if (group)
-                            group.customName = customName;
+                    const group = db.reservationGroups.find(g => g.groupId === groupId);
+                    if (customName && group) {
+                        group.customName = customName;
                     }
 
                     const { groupReservations, rest } = db.reservations.reduce((acc, r) => {
@@ -278,13 +275,16 @@ async function handleRequests(url, options) {
                         return acc;
                     }, { keepReservations: [], newReservations: [] });
 
+                    const userId = group?.userId || body?.userId;
+                    const user = db.users.find(u => u.userId === userId);
+
                     const court = db.courts.find(c => c.courtId === courtId);
                     const today = dayjs();
                     const maxDate = today.add(db.config.reservationDaysInAdvance, 'day');
                     const conflicts = newReservations.reduce((conflicts, { date }) => {
                         if (
-                            date.isAfter(maxDate, 'day')
-                            || date.isBefore(today, 'day')
+                            (!user.admin && date.isAfter(maxDate, 'day'))
+                            || (!user.admin && date.isBefore(today, 'day'))
                             || db.reservations.some(r => r.date.isSame(date, 'hour'))
                             || (court.disabledFromTil && date.isBetween(court.disabledFromTil[0], court.disabledFromTil[1], 'day', '[]'))
                         ) {
@@ -299,11 +299,37 @@ async function handleRequests(url, options) {
                             json: { unavailableDates: conflicts }
                         };
 
-                    db.reservations = [
+                    const updatedReservations = [
                         ...rest,
                         ...keepReservations,
                         ...newReservations,
                     ];
+
+                    if (!user.admin) {
+                        const userGroupIds = [
+                            groupId,
+                            ...db.reservationGroups
+                                .filter(g => g.userId === userId)
+                                .map(g => g.groupId)
+                        ];
+                        const resCount = updatedReservations.reduce((acc, r) => {
+                            if (userGroupIds.includes(r.groupId) && r.date.isSameOrAfter(today, 'day'))
+                                return acc + 1;
+                            return acc;
+                        }, 0);
+
+                        if (resCount > db.config.reservationMaxActiveCount)
+                            return {
+                                __status: 403,
+                                json: {
+                                    message: 'too many active reservations',
+                                    value: resCount,
+                                    max: db.config.reservationMaxActiveCount,
+                                }
+                            };
+                    }
+
+                    db.reservations = updatedReservations;
 
                     // new reservation ~ post
                     if (!groupReservations.length) {
@@ -314,7 +340,6 @@ async function handleRequests(url, options) {
                         };
                         db.reservationGroups.push(group);
 
-                        const user = db.users.find(u => u.userId === group.userId);
                         return newReservations.map(r => ({
                             ...r,
                             ...group,
