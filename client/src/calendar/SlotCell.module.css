@@ -59,13 +59,16 @@
     right: 0;
     bottom: 0;
     opacity: 0.000001;
-    transition: all .3s ease;
     background: #ddd;
 }
 
 .slot.loading::before {
     opacity: 1;
     animation: load 2s ease-in-out infinite;
+}
+
+.slot:not(.loading)::before {
+    transition: all .2s ease;
 }
 
 @keyframes load {
