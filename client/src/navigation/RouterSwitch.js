@@ -47,13 +47,9 @@ export function RouterSwitch() {
                     <LoginPage />
                 </Route>
 
-                <Route exact path="/register"
-                    render={() =>
-                        user
-                            ? <Redirect to="/" />
-                            : <RegisterPage />
-                    }
-                />
+                <Route exact path="/register">
+                    <RegisterPage />
+                </Route>
 
                 <ProtectedRoute path="/verify-mail/:verifyToken">
                     <VerifyMailPage />
