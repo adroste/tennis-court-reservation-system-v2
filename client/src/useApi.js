@@ -14,8 +14,11 @@ export function useApi(
         // signature: ({ cur, params, req, res }) => updatedData
         setFunc = defaultSetFunc,
     },
+    // setData is called in any case after fetch was successful
+    // even if call was cancelled 
     setData,
     // autoFetch can be boolean or object like { reqParams, reqData }
+    // will trigger refetch when instance changes
     autoFetch = false,
 ) {
     const { user, logout } = useContext(authContext) || {};
@@ -52,21 +55,22 @@ export function useApi(
                     headers['Authorization'] = `Bearer ${userToken}`;
                 if (reqData)
                     headers['Content-Type'] = 'application/json';
+                
+                if (cancelled) 
+                    return;
 
                 const response = await fetch(parameterizedUrl, {
                     method,
                     headers,
                     body: reqData ? JSON.stringify(reqData) : undefined,
                 });
-                if (cancelled) return;
 
-                setStatus(response.status);
+                if (!cancelled)
+                    setStatus(response.status);
 
                 const resData = await response.json();
-                if (cancelled) return;
 
                 if (response.ok) {
-                    setSuccess(true);
                     if (setData)
                         setData(cur => setFunc({
                             cur, 
@@ -74,10 +78,14 @@ export function useApi(
                             req: reqData, 
                             res: resData,
                         }));
-                    if (successCallback)
-                        successCallback();
+                    if (!cancelled) {
+                        setSuccess(true);
+                        if (successCallback)
+                            successCallback();
+                    }
                 } else {
-                    setError(resData);
+                    if (!cancelled)
+                        setError(resData);
                     is401 = response.status === 401;
                 }
             } catch (err) {
@@ -105,7 +113,7 @@ export function useApi(
     ]);
 
     useEffect(() => {
-        if (autoFetch && !lastCallRef.current)
+        if (autoFetch)
             call(autoFetch?.reqParams, autoFetch?.reqData);
     }, [autoFetch, call])
 
