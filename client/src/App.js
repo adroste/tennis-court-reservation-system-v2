@@ -15,7 +15,7 @@ const KioskPage = lazy(() => import('./kiosk/KioskPage').then(m => ({ default: m
 const DemoControls = lazy(() => import('./demo/DemoControls').then(m => ({ default: m.DemoControls })));
 
 function App() {
-    const { state } = useContext(appContext);
+    const { config, state } = useContext(appContext);
 
     const basename = process.env.PUBLIC_URL;
     const demoMode = process.env.REACT_APP_DEMO;
@@ -23,7 +23,7 @@ function App() {
     if (state.error)
         return <ErrorResult />;
 
-    if (state.loading)
+    if (!config)
         return <Ball visible preloader spin />;
 
     return (
