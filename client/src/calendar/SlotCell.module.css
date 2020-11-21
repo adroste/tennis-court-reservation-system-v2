@@ -22,6 +22,7 @@
     height: 32px;
     font-size: 12px;
     line-height: 18px;
+    margin: 0 auto;
 }
 
 .cell:not(.enabled) .slot {

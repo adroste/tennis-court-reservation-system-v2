@@ -1,6 +1,7 @@
 .wrapper {
     padding: 0 5px;
     border-left: 1px solid #ddd;
+    position: relative;
 }
 
 .date {
@@ -23,4 +24,31 @@
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin: 0 auto;
+}
+
+tbody.blur {
+    filter: blur(3px);
+}
+
+.infoOverlay {
+    position: absolute;
+    text-align: center;
+    top: 48px;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    background: #ffffffaa;
+}
+
+.linkButton {
+    white-space: normal;
+    height: auto;
 }
