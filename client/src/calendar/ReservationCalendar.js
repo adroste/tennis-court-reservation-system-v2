@@ -22,7 +22,6 @@ export function ReservationCalendar({
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
     const [selectedSlot, setSelectedSlot] = useState();
-    const initialScrollDoneRef = useRef(false);
     const scrollerRef = useRef();
 
     const [reservations, setReservations] = useState(null);
@@ -55,17 +54,20 @@ export function ReservationCalendar({
 
     // scroll automatically to today's date
     useEffect(() => {
-        if (initialScrollDoneRef.current || !scrollerRef.current)
+        if (!scrollerRef.current)
             return;
         if (selectedDate.isSame(today, 'week')) {
-            initialScrollDoneRef.current = true;
             const index = Math.abs(today.startOf('week').diff(today, 'day'));
             requestAnimationFrame(() => {
                 scrollerRef.current.scrollLeft
                     = ((scrollerRef.current.scrollWidth) / VISIBLE_DATES_COUNT) * index;
             });
+        } else {
+            requestAnimationFrame(() => {
+                scrollerRef.current.scrollLeft = 0;
+            });
         }
-    }, [selectedDate, today, reservations]);
+    }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
         if (!kiosk)
