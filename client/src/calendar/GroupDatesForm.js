@@ -2,6 +2,7 @@ import { Button, Checkbox, Radio } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
@@ -158,19 +159,16 @@ export function GroupDatesForm({
     return (
         <div className={styles.wrapper}>
             <div>
-                <Radio.Group
-                    className={styles.repeatTypes}
+                <ScrollRadioGroup
                     value={repeatValue}
                     onChange={handleRepeatValueChange}
                     disabled={currentGroupDates?.length > 1 || disabled}
-                    buttonStyle="solid"
-                    size="small"
                 >
                     <Radio.Button key={0} value={0}>Einzeltermin</Radio.Button>
                     {Object.keys(repeatValuesMap).map(value => (
                         <Radio.Button key={value} value={value}>{repeatValuesMap[value]}</Radio.Button>
                     ))}
-                </Radio.Group>
+                </ScrollRadioGroup>
             </div>
 
             {repeatValue > 0 &&
