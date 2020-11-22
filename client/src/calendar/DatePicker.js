@@ -1,4 +1,35 @@
 import dayjsGenerateConfig from 'rc-picker/lib/generate/dayjs';
 import generatePicker from 'antd/es/date-picker/generatePicker';
+import styles from './DatePicker.module.css';
 
-export const DatePicker = generatePicker(dayjsGenerateConfig);
+const AntDatePicker = generatePicker(dayjsGenerateConfig);
+
+export function DatePicker(props) {
+    return (
+        <AntDatePicker
+            inputReadOnly
+            size="large"
+            panelRender={panel => 
+                <div className={styles.pickerPanel}>
+                    {panel}
+                </div>
+            }
+            {...props}
+        />
+    );
+}
+
+export function RangePicker(props) {
+    return (
+        <AntDatePicker.RangePicker
+            inputReadOnly
+            size="large"
+            panelRender={panel => 
+                <div className={styles.pickerPanel}>
+                    {panel}
+                </div>
+            }
+            {...props}
+        />
+    );
+}
