@@ -66,6 +66,9 @@ export function DemoControls() {
                                 </>
                             )
                         }
+                        <Button size="middle" type="primary" onClick={() => setOpen(false)}>
+                            Demosteuerung ausblenden
+                        </Button>
                     </Space>
                 </>
             ),
@@ -79,7 +82,7 @@ export function DemoControls() {
                 type="primary" 
                 onClick={() => setOpen(true)}
             >
-                Demosteuerung öffnen
+                Demosteuerung einblenden
             </Button>
         );
 
