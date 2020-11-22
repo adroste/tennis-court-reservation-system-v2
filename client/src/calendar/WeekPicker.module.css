@@ -23,19 +23,6 @@
     margin: 5px;
 }
 
-.picker * {
-    font-size: 16px!important;
-}
-
-.pickerPanel :global(.ant-picker-header) > button:first-child,
-.pickerPanel :global(.ant-picker-header) > button:last-child {
-    display: none;
-}
-
-.pickerPanel :global(.ant-picker-header) > button {
-    padding: 0 20px;
-}
-
 .leftButton,
 .rightButton {
     width: 150px;

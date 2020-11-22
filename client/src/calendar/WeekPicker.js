@@ -56,11 +56,6 @@ export function WeekPicker({
                     format={'[Kalenderwoche] w (YYYY)'}
                     onClick={handleClick}
                     onChange={handleChange}
-                    panelRender={panel => 
-                        <div className={styles.pickerPanel}>
-                            {panel}
-                        </div>
-                    }
                     renderExtraFooter={() => 
                         <Button onClick={handleThisWeekButtonClick} type="link">Diese Woche</Button>
                     }

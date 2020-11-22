@@ -2,7 +2,7 @@ import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { DatePicker } from '../calendar/DatePicker';
+import { RangePicker } from '../calendar/DatePicker';
 import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
 import { putCourtsApi } from '../api';
@@ -151,7 +151,7 @@ export function CourtConfigForm() {
                                             fieldKey={[field.fieldKey, 'disabledFromTil']}
                                             rules={[{ required: true, message: 'Zeitraum erforderlich' }]}
                                         >
-                                            <DatePicker.RangePicker />
+                                            <RangePicker />
                                         </Form.Item>
 
                                         <Form.Item
