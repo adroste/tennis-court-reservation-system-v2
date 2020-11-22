@@ -10,6 +10,7 @@ import { getReservationsApi } from '../api';
 import styles from './ReservationCalendar.module.css';
 import { useApi } from '../useApi';
 import { useUpdateEffect } from '../useUpdateEffect';
+import { visibleHoursToHoursArray } from '../helper';
 
 const VISIBLE_DATES_COUNT = 7; // week
 
@@ -41,12 +42,7 @@ export function ReservationCalendar({
         updateReservations();
     }, [updateReservations]);
 
-    const hours = useMemo(() => {
-        const hours = [];
-        for (let i = parseInt(visibleHours[0]); i < parseInt(visibleHours[1]); ++i)
-            hours.push(i);
-        return hours;
-    }, [visibleHours]);
+    const hours = useMemo(() => visibleHoursToHoursArray(visibleHours), [visibleHours]);
 
     const visibleDates = useMemo(() => Array.from(Array(VISIBLE_DATES_COUNT)).map((_, i) =>
         selectedDate.startOf('week').add(i, 'day') // startOf also sets hours, mins, secs to zero

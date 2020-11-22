@@ -17,3 +17,10 @@ export function parseQuery(queryString) {
     }
     return query;
 }
+
+export function visibleHoursToHoursArray([start, end]) {
+    const hours = [];
+    for (let i = parseInt(start); i < parseInt(end); ++i)
+        hours.push(i);
+    return hours;
+}
