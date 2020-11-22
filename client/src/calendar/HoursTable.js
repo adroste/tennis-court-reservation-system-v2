@@ -17,7 +17,7 @@ export function HoursTable({
                             <th>
                                 <div className={styles.hour}>
                                     {hour} Uhr<br />
-                                    <span className={styles.til}>bis {hour + 1} Uhr</span>
+                                    <span className={styles.to}>bis {hour + 1} Uhr</span>
                                 </div>
                             </th>
                         </tr>

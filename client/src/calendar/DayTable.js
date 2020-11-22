@@ -30,8 +30,8 @@ export function DayTable({
     const reservableAsOf = useMemo(() => date.subtract(reservationDaysInAdvance, 'day').format('L'), [date, reservationDaysInAdvance]);
 
 
-    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabled, disabledFromTil }) => {
-        const manuallyDisabled = disabled && date.isBetween(disabledFromTil[0], disabledFromTil[1], 'day', '[]');
+    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabled, disabledFromTo }) => {
+        const manuallyDisabled = disabled && date.isBetween(disabledFromTo[0], disabledFromTo[1], 'day', '[]');
         return {
             courtId,
             name,

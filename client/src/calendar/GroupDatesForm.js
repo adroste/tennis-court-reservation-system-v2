@@ -34,17 +34,17 @@ export function GroupDatesForm({
     const [visibleDates, setVisibleDates] = useState([]);
     const [selectedDates, _setSelectedDates] = useState([]);
 
-    const courtDisabledFromTil = useMemo(() =>
-        (courts.find(c => c.courtId === courtId))?.disabledFromTil, [courts, courtId]);
+    const courtDisabledFromTo = useMemo(() =>
+        (courts.find(c => c.courtId === courtId))?.disabledFromTo, [courts, courtId]);
 
     const checkIfTooFarAhead = useCallback(date => (
         date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day')
     ), [today, reservationDaysInAdvance]);
 
     const checkIfNotAvailable = useCallback(date => (
-        (courtDisabledFromTil && date.isBetween(courtDisabledFromTil[0], courtDisabledFromTil[1], 'day', '[]'))
+        (courtDisabledFromTo && date.isBetween(courtDisabledFromTo[0], courtDisabledFromTo[1], 'day', '[]'))
         || (unavailableDates && unavailableDates.some(d => date.isSame(d, 'day')))
-    ), [courtDisabledFromTil, unavailableDates]);
+    ), [courtDisabledFromTo, unavailableDates]);
 
     const dates = useMemo(() => {
         return visibleDates.map(d => ({

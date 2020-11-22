@@ -8,7 +8,7 @@ export const getBaseDataApi = {
         ...res,
         courts: res.courts?.map(c => ({
             ...c,
-            disabledFromTil: c.disabledFromTil?.map(t => dayjs(t)),
+            disabledFromTo: c.disabledFromTo?.map(t => dayjs(t)),
         })),
     }),
 };

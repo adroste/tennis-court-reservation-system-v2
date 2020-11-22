@@ -145,10 +145,10 @@ export function CourtConfigForm() {
                                     <Space>
                                         <Form.Item
                                             {...field}
-                                            key="disabledFromTil"
+                                            key="disabledFromTo"
                                             label="Zeitraum der Sperrung"
-                                            name={[field.name, 'disabledFromTil']}
-                                            fieldKey={[field.fieldKey, 'disabledFromTil']}
+                                            name={[field.name, 'disabledFromTo']}
+                                            fieldKey={[field.fieldKey, 'disabledFromTo']}
                                             rules={[{ required: true, message: 'Zeitraum erforderlich' }]}
                                         >
                                             <RangePicker />

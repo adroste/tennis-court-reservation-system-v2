@@ -291,7 +291,7 @@ async function handleRequests(url, options) {
                             (!user.admin && date.isAfter(maxDate, 'day'))
                             || (!user.admin && date.isBefore(today, 'day'))
                             || db.reservations.some(r => r.date.isSame(date, 'hour'))
-                            || (court.disabledFromTil && date.isBetween(court.disabledFromTil[0], court.disabledFromTil[1], 'day', '[]'))
+                            || (court.disabledFromTo && date.isBetween(court.disabledFromTo[0], court.disabledFromTo[1], 'day', '[]'))
                         ) {
                             conflicts.push(date);
                         }
