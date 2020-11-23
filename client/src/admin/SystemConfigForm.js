@@ -6,8 +6,8 @@ import { appContext } from '../AppContext';
 import { patchConfigApi } from '../api';
 import { useApi } from '../useApi';
 
-const sliderMarks = Array.from(Array(24)).reduce((marks, _, i) => {
-    marks[i] = i; 
+const sliderMarks = Array.from(Array(25)).reduce((marks, _, i) => {
+    marks[i] = i % 24; 
     return marks;
 }, {})
 
@@ -102,7 +102,7 @@ export function SystemConfigForm() {
                     marks={sliderMarks}
                     range
                     min={0}
-                    max={23}
+                    max={24}
                 />
             </Form.Item>
 
