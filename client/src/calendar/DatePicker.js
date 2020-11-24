@@ -18,18 +18,3 @@ export function DatePicker(props) {
         />
     );
 }
-
-export function RangePicker(props) {
-    return (
-        <AntDatePicker.RangePicker
-            inputReadOnly
-            size="large"
-            panelRender={panel => 
-                <div className={styles.pickerPanel}>
-                    {panel}
-                </div>
-            }
-            {...props}
-        />
-    );
-}
