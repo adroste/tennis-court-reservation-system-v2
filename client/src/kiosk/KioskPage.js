@@ -13,7 +13,7 @@ import { useTime } from '../calendar/useTime';
 
 export function KioskPage() {
 
-    const { config: { announcement, orgName }, courts } = useContext(appContext);
+    const { config: { announcement, orgName } } = useContext(appContext);
 
     const hour = useTime('hour');
     const { search } = useLocation();
@@ -64,18 +64,6 @@ export function KioskPage() {
                     />
                 </div>
             }
-
-            {courts.map(({ courtId, name, disabled, disabledFromTo, disabledReason }) => (
-                disabled && (
-                    <div key={courtId} className={styles.alert}>
-                        <Alert
-                            message={`${name} ist gesperrt ab ${disabledFromTo[0].format('dd L')}${disabledFromTo[1] ? disabledFromTo[1].format('[ bis] dd L') : ''}${disabledReason ? `: ${disabledReason}` : ''}`}
-                            type="warning"
-                            showIcon
-                        />
-                    </div>
-                )
-            ))}
 
             <ReservationCalendar
                 highlightHour={hour.hour()}

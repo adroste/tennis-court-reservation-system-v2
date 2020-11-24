@@ -96,13 +96,6 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
         {
             courtId: 2,
             name: 'Platz 2',
-            disabled: true,
-            disabledFromTo: [
-                today.add(-2, 'week'),
-                today.add(4, 'week'),
-                // today.add(8, 'week'),
-            ],
-            disabledReason: 'beliebiger Grund',
         },
         // {
         //     courtId: 2,

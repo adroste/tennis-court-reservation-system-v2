@@ -9,7 +9,7 @@ import { useTime } from './useTime';
 
 export function CalendarPage() {
 
-    const { config: { announcement }, courts } = useContext(appContext);
+    const { config: { announcement } } = useContext(appContext);
 
     const today = useTime('day');
     const [selectedDate, setSelectedDate] = useState(null);
@@ -30,18 +30,6 @@ export function CalendarPage() {
                     />
                 </div>
             }
-
-            {courts.map(({ courtId, name, disabled, disabledFromTo, disabledReason }) => (
-                disabled && (
-                    <div key={courtId} className={styles.alert}>
-                        <Alert
-                            message={`${name} ist gesperrt ab ${disabledFromTo[0].format('dd L')}${disabledFromTo[1] ? disabledFromTo[1].format('[ bis] dd L') : ''}${disabledReason ? `: ${disabledReason}` : ''}`}
-                            type="warning"
-                            showIcon
-                        />
-                    </div>
-                )
-            ))}
 
             <WeekPicker
                 date={selectedDate || today}

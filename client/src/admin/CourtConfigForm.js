@@ -1,8 +1,7 @@
-import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
+import { Button, Form, Input, Modal, Space } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { RangePicker } from '../calendar/DatePicker';
 import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
 import { putCourtsApi } from '../api';
@@ -12,7 +11,6 @@ import { useApi } from '../useApi';
 export function CourtConfigForm() {
 
     const { courts, setCourts } = useContext(appContext);
-    const [, forceUpdate] = useState();
     const [disableReset, setDisableReset] = useState(true);
     const [state, putCourts] = useApi(putCourtsApi, setCourts);
 
@@ -125,46 +123,6 @@ export function CourtConfigForm() {
                                         </Space>
                                     </Form.Item>
                                 </Space>
-
-                                <Space>
-                                    <Form.Item
-                                        {...field}
-                                        key="disabled"
-                                        name={[field.name, 'disabled']}
-                                        fieldKey={[field.fieldKey, 'disabled']}
-                                        valuePropName="checked"
-                                    >
-                                        {/*<Checkbox onChange={() => move() /* hack to force update }>*/}
-                                        <Checkbox onChange={forceUpdate}>
-                                            Sperren?
-                                        </Checkbox>
-                                    </Form.Item>
-                                </Space>
-
-                                {form.getFieldValue(['courts', field.name, 'disabled']) &&
-                                    <Space>
-                                        <Form.Item
-                                            {...field}
-                                            key="disabledFromTo"
-                                            label="Zeitraum der Sperrung"
-                                            name={[field.name, 'disabledFromTo']}
-                                            fieldKey={[field.fieldKey, 'disabledFromTo']}
-                                            rules={[{ required: true, message: 'Zeitraum erforderlich' }]}
-                                        >
-                                            <RangePicker />
-                                        </Form.Item>
-
-                                        <Form.Item
-                                            {...field}
-                                            key="disabledReason"
-                                            label="Grund für Sperrung"
-                                            name={[field.name, 'disabledReason']}
-                                            fieldKey={[field.fieldKey, 'disabledReason']}
-                                        >
-                                            <Input placeholder="z.B.: Arbeiten" />
-                                        </Form.Item>
-                                    </Space>
-                                }
                             </div>
                         ))}
 

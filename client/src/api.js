@@ -4,13 +4,7 @@ const BASE_PATH = '/api';
 
 export const getBaseDataApi = {
     url: `${BASE_PATH}/base-data`,
-    setFunc: ({ res }) => ({
-        ...res,
-        courts: res.courts?.map(c => ({
-            ...c,
-            disabledFromTo: c.disabledFromTo?.map(t => dayjs(t)),
-        })),
-    }),
+    setFunc: ({ res }) => res,
 };
 
 export const patchConfigApi = {
