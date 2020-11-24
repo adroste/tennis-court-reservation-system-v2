@@ -22,7 +22,7 @@ export function DateClock() {
                 {dateTime.format('HH')}<span className={styles.clockDots}>:</span>{dateTime.format('mm')} Uhr
             </div>
             <div className={styles.date}>
-                {dateTime.format('dddd LL')}
+                {dateTime.format('dddd[\xa0]LL')}
             </div>
         </div>
     );
