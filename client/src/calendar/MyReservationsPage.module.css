@@ -16,9 +16,8 @@
     border-radius: 2px;
 }
 
-.card {
+.cardList {
     width: 100%;
-    margin-bottom: 10px;
 }
 
 .empty {

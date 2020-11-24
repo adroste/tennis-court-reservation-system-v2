@@ -1,7 +1,7 @@
+import { Empty, Space } from 'antd';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { Ball } from '../Ball';
-import { Empty } from 'antd';
 import { ErrorResult } from '../ErrorResult';
 import { ReservationDetailsCard } from './ReservationDetailsCard';
 import { ReservationModal } from './ReservationModal';
@@ -80,7 +80,7 @@ export function MyReservationsPage() {
 
             {sortedReservations?.length > 0 &&
                 <>
-                    <h1>Nächster Termin</h1>
+                    <h1>Nächste Reservierung</h1>
                     <div className={styles.content}>
                         <ReservationDetailsCard
                             reservation={sortedReservations[0]}
@@ -93,24 +93,26 @@ export function MyReservationsPage() {
 
             {sortedReservations?.length > 1 &&
                 <>
-                    <h1>Weitere Termine</h1>
+                    <h1>Weitere Reservierungen</h1>
+
                     <div className={styles.content}>
-                        {sortedReservations.map((reservation, i) => {
-                            if (i === 0)
-                                return null;
-                            return (
-                                <ReservationDetailsCard
-                                    key={`${reservation.courtId}${reservation.date}`}
-                                    reservation={reservation}
-                                    groupDates={getGroupDates(sortedReservations, reservation)}
-                                    onEditClick={handleEditClick}
-                                />
-                            );
-                        })}
+                        <Space className={styles.cardList} direction="vertical">
+                            {sortedReservations.map((reservation, i) => {
+                                if (i === 0)
+                                    return null;
+                                return (
+                                    <ReservationDetailsCard
+                                        key={`${reservation.courtId}${reservation.from}`}
+                                        reservation={reservation}
+                                        groupDates={getGroupDates(sortedReservations, reservation)}
+                                        onEditClick={handleEditClick}
+                                    />
+                                );
+                            })}
+                        </Space>
                     </div>
                 </>
             }
-
             {selectedReservation &&
                 <ReservationModal
                     date={selectedReservation?.date}
