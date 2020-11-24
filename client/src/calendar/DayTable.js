@@ -6,6 +6,7 @@ import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
 import { findReservation } from '../helper';
 import styles from './DayTable.module.css';
+import { useTime } from './useTime';
 
 const cn = classNames.bind(styles);
 
@@ -17,69 +18,49 @@ export function DayTable({
     onSlotClick,
     reservationDaysInAdvance,
     reservations,
-    today,
 }) {
     const { user } = useContext(authContext);
-    const [adminOverride, setAdminOverride] = useState(false);
-    useEffect(() => setAdminOverride(false), [user?.admin]);
+    const [disableOverlay, setDisableOverlay] = useState(false);
+    useEffect(() => setDisableOverlay(false), [user]);
 
-    const isToday = useMemo(() => today.isSame(date, 'day'), [date, today]);
-    const inPast = useMemo(() => date.isBefore(today, 'day'), [date, today]);
+    const now = useTime('hour');
+
+    const isToday = useMemo(() => now.isSame(date, 'day'), [date, now]);
     const tooFarAhead = useMemo(() =>
-        date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day'), [date, today, reservationDaysInAdvance]);
+        date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day'), [date, now, reservationDaysInAdvance]);
     const reservableAsOf = useMemo(() => date.subtract(reservationDaysInAdvance, 'day').format('L'), [date, reservationDaysInAdvance]);
 
+    const showInfoOverlay = !disableOverlay && tooFarAhead;
 
-    const courtsToday = useMemo(() => courts.map(({ courtId, name, disabled, disabledFromTo }) => {
-        const manuallyDisabled = disabled && date.isBetween(disabledFromTo[0], disabledFromTo[1], 'day', '[]');
-        return {
-            courtId,
-            name,
-            disabled: manuallyDisabled || (!adminOverride && (inPast || tooFarAhead)),
-            disabledText: manuallyDisabled ? 'Gesperrt' : null,
-        };
-    }), [adminOverride, courts, date, inPast, tooFarAhead]);
+    const handleDisableOverlayClick = useCallback(() => setDisableOverlay(true), []);
 
-    const showInfoOverlay = !adminOverride && tooFarAhead;
-
-    const handleClick = useCallback(({ courtId, hour, reservation }) => {
-        onSlotClick({
-            courtId,
-            date: date.hour(hour),
-            reservation,
-        });
-    }, [date, onSlotClick]);
-
-    const handleAdminOverrideClick = useCallback(() => {
-        setAdminOverride(true)
-    }, []);
-
-    const renderRowSlots = (hour) => courtsToday.map(({ courtId, name, disabled, disabledText }) => (
+    const renderRowSlots = useCallback((date) => courts.map(({ courtId, name }) => (
         <SlotCell
+            alwaysClickable={user?.admin}
             courtId={courtId}
             courtName={name}
-            disabled={disabled}
-            disabledText={disabledText}
-            hour={hour}
+            date={date}
+            disabled={date.isBefore(now, 'hour')}
+            hours={hours}
             key={courtId}
             loading={loading}
-            onClick={handleClick}
-            reservation={findReservation(reservations, date.hour(hour), courtId)}
+            onClick={onSlotClick}
+            reservation={findReservation(reservations, date, courtId)}
         />
-    ));
+    )), [user?.admin, courts, hours, loading, now, onSlotClick, reservations]);
 
     return (
         <div className={styles.wrapper}>
             <table>
                 <thead>
                     <tr>
-                        <th className={styles.date} colSpan={courtsToday.length}>
+                        <th className={styles.date} colSpan={courts.length}>
                             {isToday && <span className={styles.today}>Heute</span>}
-                            {date.format('dd L')}
+                            {date.format('dd[\xa0]L')}
                         </th>
                     </tr>
                     <tr>
-                        {courtsToday.map(({ courtId, name }) => (
+                        {courts.map(({ courtId, name }) => (
                             <td key={courtId}>
                                 <div className={styles.court}>
                                     {name}
@@ -95,22 +76,35 @@ export function DayTable({
                 >
                     {hours.map(hour => (
                         <tr key={hour}>
-                            {renderRowSlots(hour)}
+                            {renderRowSlots(date.hour(hour))}
                         </tr>
                     ))}
+                    {user?.admin &&
+                        <tr className={styles.adminActions}>
+                            {courts.map(({ courtId }) => (
+                                <td key={courtId}>
+                                    <Button
+                                        type="link"
+                                    >
+                                        Sperren
+                                    </Button>
+                                </td>
+                            ))}
+                        </tr>
+                    }
                 </tbody>
             </table>
+
             {showInfoOverlay &&
                 <div className={styles.infoOverlay}>
-                    {inPast && <div>Bereits Vergangen</div>}
-                    {tooFarAhead && <div>Reservierbar<br />ab {reservableAsOf}</div>}
+                    <div>Reservierbar<br />ab {reservableAsOf}</div>
                     {user?.admin &&
                         <Button
                             className={styles.linkButton}
                             type="link"
-                            onClick={handleAdminOverrideClick}
+                            onClick={handleDisableOverlayClick}
                         >
-                            Trotzdem reservieren<br />(Nur Admin)
+                            Trotzdem reservieren<br />(Trainer/Admin)
                         </Button>
                     }
                 </div>

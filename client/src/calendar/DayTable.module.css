@@ -52,3 +52,8 @@ tbody.blur {
     white-space: normal;
     height: auto;
 }
+
+.adminActions button  {
+    font-size: 13px;
+    color: rgba(0,0,0,.45);
+}
