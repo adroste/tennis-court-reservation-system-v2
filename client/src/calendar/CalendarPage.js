@@ -38,7 +38,6 @@ export function CalendarPage() {
 
             <ReservationCalendar
                 selectedDate={selectedDate || today}
-                today={today}
             />
         </div>
     );

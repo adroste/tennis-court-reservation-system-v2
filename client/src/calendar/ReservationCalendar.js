@@ -9,6 +9,7 @@ import { appContext } from '../AppContext';
 import { getReservationsApi } from '../api';
 import styles from './ReservationCalendar.module.css';
 import { useApi } from '../useApi';
+import { useTime } from './useTime';
 import { useUpdateEffect } from '../useUpdateEffect';
 import { visibleHoursToHoursArray } from '../helper';
 
@@ -18,9 +19,10 @@ export function ReservationCalendar({
     highlightHour,
     kiosk = false,
     selectedDate,
-    today,
 }) {
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
+
+    const today = useTime('day');
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();

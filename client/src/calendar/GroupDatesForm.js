@@ -7,6 +7,7 @@ import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
 import styles from './GroupDatesForm.module.css';
+import { useTime } from './useTime';
 
 const cn = classNames.bind(styles);
 
@@ -24,11 +25,12 @@ export function GroupDatesForm({
     disabled = false,
     onGroupDatesChange,
     repeatValuesMap = defaultRepeatValuesMap,
-    today,
     unavailableDates,
 }) {
     const { user } = useContext(authContext);
     const { courts, config: { reservationDaysInAdvance } } = useContext(appContext);
+
+    const today = useTime('day');
 
     const [repeatValue, setRepeatValue] = useState(0);
     const [visibleDates, setVisibleDates] = useState([]);
@@ -186,7 +188,7 @@ export function GroupDatesForm({
                                 checked={checked}
                                 onChange={handleCheckedChange}
                             >
-                                <span className={styles.date}>{date.format('dd L')}</span>
+                                <span className={styles.date}>{date.format('dd[\xa0]L')}</span>
                                 {!past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
                                 {!past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
                                 {!notAvailable && past && <span className={styles.extra}> Bereits vergangen</span>}
