@@ -84,7 +84,7 @@ export function ReservationCalendar({
         );
 
     return (
-        <>
+        <div className={styles.wrapper}>
             <div className={styles.tableWrapper}>
                 <HoursTable
                     hours={hours}
@@ -102,7 +102,6 @@ export function ReservationCalendar({
                             onSlotClick={handleSlotClicked}
                             reservationDaysInAdvance={reservationDaysInAdvance}
                             reservations={reservations}
-                            today={today}
                         />
                     ))}
                 </div>
@@ -113,11 +112,10 @@ export function ReservationCalendar({
                     date={selectedSlot?.date}
                     courtId={selectedSlot?.courtId}
                     reservation={selectedSlot?.reservation}
-                    today={today}
                     onFinish={handleReservationFinish}
                     setReservations={setReservations}
                 />
             }
-        </>
+        </div>
     );
 }

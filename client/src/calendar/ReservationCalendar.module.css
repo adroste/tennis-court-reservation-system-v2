@@ -1,14 +1,18 @@
-.tableWrapper {
-    position: relative;
-    padding: 30px 0;
-    display: flex;
-    overflow: hidden;
+.wrapper {
+    padding: 15px 0;
     background: #fff;
-    border-radius: 2px;
     /* fake padding with box-shadow
         cause it does not take up space 
         and is not scrollable */
     box-shadow: 30px 0 #fff, -30px 0 #fff;
+    border-radius: 2px;
+}
+
+.tableWrapper {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    padding: 15px 0;
 }
 
 .tableWrapper table {
