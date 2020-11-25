@@ -20,3 +20,7 @@
     margin-top: 5px;
     font-style: italic;
 }
+
+.cancelRadioGroup {
+    font-size: 14px; /* needed to display ul elements */
+}

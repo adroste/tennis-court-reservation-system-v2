@@ -152,8 +152,9 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f�
 * [ ] color my reservations in calendar
 * [ ] better group dates form
 * [ ] trainer type
-* [ ] diesen stornieren / alle zukünftigen stornieren dialog
+* [x] diesen stornieren / alle zukünftigen stornieren dialog
 * [ ] 0 Uhr testen
+* [ ] set color global
 
 
 ### tables

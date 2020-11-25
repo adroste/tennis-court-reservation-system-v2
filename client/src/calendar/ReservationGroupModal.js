@@ -9,8 +9,10 @@ import { RESERVATION_TYPES } from '../ReservationTypes';
 import { ReservationDetailsForm } from './ReservationDetailsForm';
 import { ReservationTosConfirm } from './ReservationTosConfirm';
 import { StatusText } from '../admin/StatusText';
+import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import dayjs from 'dayjs';
+import { getCourtName } from '../helper';
 import styles from './ReservationGroupModal.module.css';
 import { useApi } from '../useApi';
 
@@ -23,6 +25,7 @@ export function ReservationGroupModal({
     onFinish,
     setReservations: setOuterReservations,
 }) {
+    const { courts } = useContext(appContext);
     const { user } = useContext(authContext);
 
     const [changeReason, setChangeReason] = useState('');
@@ -115,8 +118,8 @@ export function ReservationGroupModal({
                         <>
                             <div className={styles.heading}>Neue Termine</div>
                             <ul>
-                                {newReservations.map(({ from, to }) => (
-                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                {newReservations.map(({ courtId, from, to }) => (
+                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()}&nbsp;bis&nbsp;{to.hour()}&nbsp;Uhr, {getCourtName(courts, courtId)}</li>
                                 ))}
                             </ul>
                         </>
@@ -126,8 +129,8 @@ export function ReservationGroupModal({
                         <>
                             <div className={styles.heading}>Zu Stornieren</div>
                             <ul>
-                                {cancelReservations.map(({ from, to }) => (
-                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                {cancelReservations.map(({ courtId, from, to }) => (
+                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()}&nbsp;bis&nbsp;{to.hour()}&nbsp;Uhr, {getCourtName(courts, courtId)}</li>
                                 ))}
                             </ul>
                         </>
@@ -154,6 +157,7 @@ export function ReservationGroupModal({
         cancelReservations,
         changeReason,
         changeText,
+        courts,
         newReservations,
         onFinish,
         patchReservationGroup,
@@ -164,7 +168,7 @@ export function ReservationGroupModal({
 
 
     const handleCancelReservation = useCallback(() => {
-        let cancelType;
+        let cancelType = 'single';
 
         const handleCancelTypeChange = e => (cancelType = e.target.value);
 
@@ -202,23 +206,27 @@ export function ReservationGroupModal({
                 icon: <ExclamationCircleOutlined />,
                 centered: true,
                 content: (
-                    <Radio.Group onChange={handleCancelTypeChange}>
+                    <Radio.Group 
+                        className={styles.cancelRadioGroup}
+                        onChange={handleCancelTypeChange}
+                        defaultValue={cancelType}
+                    >
                         <Radio value="single">Nur diesen Termin</Radio>
                         <ul>
-                            <li key={reservation.from}>{reservation.from.format('dd[\xa0]L')}, {reservation.from.hour()} bis {reservation.to.hour()} Uhr</li>
+                            <li key={reservation.from}>{reservation.from.format('dd[\xa0]L')}, {reservation.from.hour()}&nbsp;bis&nbsp;{reservation.to.hour()}&nbsp;Uhr, {getCourtName(courts, reservation.courtId)}</li>
                         </ul>
                         <Radio value="allActive">Alle offenen Termine</Radio>
                         <ul>
-                            {groupReservations.filter(r => !r.from.isBefore(dayjs(), 'hour')).map(({ from, to }) => (
-                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                            {groupReservations.filter(r => !r.from.isBefore(dayjs(), 'hour')).map(({ courtId, from, to }) => (
+                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()}&nbsp;bis&nbsp;{to.hour()}&nbsp;Uhr, {getCourtName(courts, courtId)}</li>
                             ))}
                         </ul>
                         {user?.admin &&
                             <>
                                 <Radio value="all">Alle Termine</Radio>
                                 <ul>
-                                    {groupReservations.map(({ from, to }) => (
-                                        <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                    {groupReservations.map(({ courtId, from, to }) => (
+                                        <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()}&nbsp;bis&nbsp;{to.hour()}&nbsp;Uhr, {getCourtName(courts, courtId)}</li>
                                     ))}
                                 </ul>
                             </>
@@ -234,6 +242,7 @@ export function ReservationGroupModal({
     }, [
         adminEdit,
         changeReason,
+        courts,
         groupReservations,
         onFinish,
         patchReservationGroup,
@@ -259,8 +268,8 @@ export function ReservationGroupModal({
                             Folgende Termine sind nicht verfügbar:
                         </div>
                         <ul>
-                            {unavailableReservations.map(({ from, to }) => (
-                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                            {unavailableReservations.map(({ courtId, from, to }) => (
+                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()}&nbsp;bis&nbsp;{to.hour()}&nbsp;Uhr, {getCourtName(courts, courtId)}</li>
                             ))}
                         </ul>
                     </div>
@@ -293,7 +302,7 @@ export function ReservationGroupModal({
                 )
             });
         }
-    }, [reservations?.length, postState.error, patchState.error, unavailableReservations])
+    }, [courts, reservations?.length, postState.error, patchState.error, unavailableReservations])
 
     if (
         state.error
