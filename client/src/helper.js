@@ -3,7 +3,7 @@ export function findReservation(reservations, date, courtId) {
         return null;
 
     for (let r of reservations)
-        if (date.isSame(r.date, 'hour') && courtId === r.courtId)
+        if (date.isBetween(r.from, r.to, 'hour', '[)') && courtId === r.courtId)
             return r;
     return null;
 }

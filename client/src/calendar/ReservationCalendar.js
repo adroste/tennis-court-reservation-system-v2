@@ -109,8 +109,8 @@ export function ReservationCalendar({
 
             {selectedSlot &&
                 <ReservationModal
-                    date={selectedSlot?.date}
-                    courtId={selectedSlot?.courtId}
+                    initialFrom={selectedSlot?.date}
+                    initialCourtId={selectedSlot?.courtId}
                     reservation={selectedSlot?.reservation}
                     onFinish={handleReservationFinish}
                     setReservations={setReservations}

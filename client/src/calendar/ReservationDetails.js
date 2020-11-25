@@ -1,101 +1,75 @@
 import { CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined, RedoOutlined, UserOutlined } from '@ant-design/icons';
-import React, { useMemo } from 'react';
 
-import dayjs from 'dayjs';
+import React from 'react';
+import classNames from 'classnames/bind';
 import styles from './ReservationDetails.module.css';
 
-const formatVal = 'dd[\xa0]L';
+const cn = classNames.bind(styles);
 
 export function ReservationDetails({
-    courtName,
+    court,
     date,
-    groupDates,
+    inline = false,
     name,
     repeat,
-    showAllDates = false,
-    showDateRange = false,
-    showFollowUpDate = false,
+    time,
 }) {
-    let dateStr = date.format(formatVal);
-    if (showDateRange && groupDates) {
-        dateStr = groupDates.length ? groupDates[0].format(formatVal) : '-';
-        if (groupDates.length > 1)
-            dateStr += ` bis ${groupDates[groupDates.length - 1].format(formatVal)}`;
-    }
-
-    const pastGroupEventsCount = useMemo(() => {
-        const today = dayjs();
-        return groupDates?.reduce((count, date) => {
-            if (date.isBefore(today, 'day'))
-                return count + 1;
-            return count;
-        }, 0);
-    }, [groupDates]);
-
-    const futureGroupEvents = useMemo(() => {
-        const today = dayjs();
-        return groupDates?.filter(date => !date.isBefore(today, 'day'));
-    }, [groupDates]);
-
-    const followUpReservation = useMemo(() => {
-        const sorted = [...groupDates];
-        sorted.sort((a, b) => a - b);
-        return sorted?.find(gd => gd.isAfter(date, 'day'));
-    }, [groupDates, date]);
-
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.item}>
-                <div><CalendarOutlined /></div>
-                <div>{dateStr}</div>
-            </div>
-
-            <div className={styles.item}>
-                <div><ClockCircleOutlined /></div>
-                <div>{`${date.format('H')} bis ${date.add(1, 'h').format('H')} Uhr`}</div>
-            </div>
-
-            <div className={styles.item}>
-                <div><EnvironmentOutlined /></div>
-                <div>{courtName}</div>
-            </div>
-
+        <div className={cn({
+            wrapper: true,
+            inline
+        })}>
             {name &&
                 <div className={styles.item}>
-                    <div><UserOutlined /></div>
-                    <div>{name}</div>
-                </div>
-            }
-            
-            {repeat &&
-                <div className={styles.item}>
-                    <div><RedoOutlined /></div>
-                    <div>{repeat}</div>
-                </div>
-            }
-
-            {showAllDates && groupDates?.length &&
-                <div className={styles.item}>
-                    <div><RedoOutlined /></div>
-                    <div className={styles.allDates}>
-                        <span>Wiederkehrender Termin</span>
-                        <div className={styles.dateList}>
-                            {pastGroupEventsCount === 1 && <span>Ein vergangener Termin</span>}
-                            {pastGroupEventsCount > 1 && <span>{pastGroupEventsCount} vergangene Termine</span>}
-                            {futureGroupEvents?.map(d => <span key={d}>{d.format(formatVal)}</span>)}
-                        </div>
+                    <div className={styles.title}>
+                        <UserOutlined />&nbsp;Name
+                    </div>
+                    <div className={styles.content}>
+                        {name}
                     </div>
                 </div>
             }
 
-            {showFollowUpDate && followUpReservation &&
+            {date && 
                 <div className={styles.item}>
-                    <div><RedoOutlined /></div>
-                    <div className={styles.allDates}>
-                        <span>Folgetermin</span>
-                        <div className={styles.dateList}>
-                            <span>{followUpReservation.format(formatVal)}</span>
-                        </div>
+                    <div className={styles.title}>
+                        <CalendarOutlined />&nbsp;Datum
+                    </div>
+                    <div className={styles.content}>
+                        {date}
+                    </div>
+                </div>
+            }
+
+            {time &&
+                <div className={styles.item}>
+                    <div className={styles.title}>
+                        <ClockCircleOutlined />&nbsp;Uhrzeit
+                    </div>
+                    <div className={styles.content}>
+                        {time}
+                    </div>
+                </div>
+            }
+
+            {court &&
+                <div className={styles.item}>
+                    <div className={styles.title}>
+                        <EnvironmentOutlined />&nbsp;Platz
+                    </div>
+                    <div className={styles.content}>
+                        {court}
+                    </div>
+                </div>
+            }
+
+            {repeat &&
+                <div className={styles.item}>
+                    <div className={styles.title}>
+                        <RedoOutlined />&nbsp;Wiederholung
+                    </div>
+                    <div className={styles.content}>
+                        {repeat}
                     </div>
                 </div>
             }

@@ -55,7 +55,8 @@ export const getReservationsApi = {
     method: 'POST',
     setFunc: ({ res }) => res.map(r => ({
         ...r,
-        date: dayjs(r.date),
+        from: dayjs(r.from),
+        to: dayjs(r.to),
     })),
 };
 
@@ -66,7 +67,8 @@ export const postReservationGroupApi = {
         ...cur,
         ...res.map(r => ({
             ...r,
-            date: dayjs(r.date),
+            from: dayjs(r.from),
+            to: dayjs(r.to),
         })),
     ]),
 };
@@ -79,22 +81,22 @@ export const patchReservationGroupApi = {
         const reference = cur.find(r => r.groupId === groupId);
         return [
             ...cur.filter(r => r.groupId !== groupId),
-            ...req.dates.map(date => ({
+            ...req.reservations.map(r => ({
                 ...reference,
-                date,
-                customName: req.customName || reference.customName,
+                ...r,
+                text: req.text || reference.text,
             }))
         ];
     },
 };
 
-export const deleteReservationGroupApi = {
-    url: `${BASE_PATH}/reservation-group/:groupId`,
-    method: 'DELETE',
-    setFunc: ({ cur, params }) => (
-        cur.filter(r => r.groupId !== params.path.groupId)
-    ),
-};
+// export const deleteReservationGroupApi = {
+//     url: `${BASE_PATH}/reservation-group/:groupId`,
+//     method: 'DELETE',
+//     setFunc: ({ cur, params }) => (
+//         cur.filter(r => r.groupId !== params.path.groupId)
+//     ),
+// };
 
 export const postSendVerifyMailApi = {
     url: `${BASE_PATH}/send-verify-mail`,

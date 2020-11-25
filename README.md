@@ -147,22 +147,31 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] max reservation count user
 * [x] admin/general loop bug
 * [ ] court config better reason input
+* [ ] disable court form/dialog
+* [ ] announcement popup
+* [ ] color my reservations in calendar
+* [ ] better group dates form
+* [ ] trainer type
+* [ ] diesen stornieren / alle zuk√ºnftigen stornieren dialog
+* [ ] 0 Uhr testen
 
 
 ### tables
 
 reservations
 {
-  date,
-  courtId,
+  id auto_inc unique primary,
+  from,
+  to,
   groupId foreign_key(reservation_group.groupId),
   created,
-  primary_key(date,courtId)
 }
 
 reservation_group
 {
   groupId auto_inc unique primary,
+  courtId,
   userId,
-  customName,
+  text,
+  type,
 }

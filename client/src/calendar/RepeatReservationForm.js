@@ -6,7 +6,7 @@ import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
-import styles from './GroupDatesForm.module.css';
+import styles from './RepeatReservationForm.module.css';
 import { useTime } from './useTime';
 
 const cn = classNames.bind(styles);
@@ -17,47 +17,55 @@ const defaultRepeatValuesMap = {
     14: '2-Wöchentlich',
 };
 
-export function GroupDatesForm({
-    courtId,
-    currentGroupDates,
-    date,
+export function RepeatReservationForm({
+    from,
+    to,
     defaultAddCount = 2,
     disabled = false,
-    onGroupDatesChange,
+    onChange,
     repeatValuesMap = defaultRepeatValuesMap,
-    unavailableDates,
+    currentReservations,
+    unavailableReservations,
 }) {
     const { user } = useContext(authContext);
-    const { courts, config: { reservationDaysInAdvance } } = useContext(appContext);
+    const { config: { reservationDaysInAdvance } } = useContext(appContext);
 
-    const today = useTime('day');
+    const now = useTime('hour');
 
     const [repeatValue, setRepeatValue] = useState(0);
     const [visibleDates, setVisibleDates] = useState([]);
     const [selectedDates, _setSelectedDates] = useState([]);
 
-    const courtDisabledFromTo = useMemo(() =>
-        (courts.find(c => c.courtId === courtId))?.disabledFromTo, [courts, courtId]);
+    const fromToHourDiff = useMemo(() => Math.abs(to.diff(from, 'hour')), [from, to]);
+    const dateToReservation = useCallback(from => ({
+        from,
+        to: from.add(fromToHourDiff, 'hour'),
+    }), [fromToHourDiff]);
 
     const checkIfTooFarAhead = useCallback(date => (
-        date.isAfter(today.add(reservationDaysInAdvance, 'day'), 'day')
-    ), [today, reservationDaysInAdvance]);
+        date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day')
+    ), [now, reservationDaysInAdvance]);
 
-    const checkIfNotAvailable = useCallback(date => (
-        (courtDisabledFromTo && date.isBetween(courtDisabledFromTo[0], courtDisabledFromTo[1], 'day', '[]'))
-        || (unavailableDates && unavailableDates.some(d => date.isSame(d, 'day')))
-    ), [courtDisabledFromTo, unavailableDates]);
+    const checkIfNotAvailable = useCallback(date => {
+        if (!unavailableReservations)
+            return false;
+        const r = dateToReservation(date);
+        return unavailableReservations.some(r2 => (
+            r2.from.isBefore(r.to, 'hour')
+            && r2.to.isAfter(r.from, 'hour')
+        ));
+    }, [unavailableReservations, dateToReservation]);
 
     const dates = useMemo(() => {
         return visibleDates.map(d => ({
             date: d,
-            checked: selectedDates.findIndex(gd => gd.isSame(d, 'day')) !== -1,
-            reserved: currentGroupDates?.findIndex(gd => gd.isSame(d, 'day')) !== -1,
-            past: d.isBefore(today, 'day'),
+            checked: selectedDates.some(sd => sd.isSame(d, 'day')),
+            reserved: currentReservations?.some(r => r.from.isSame(d, 'day')),
+            past: d.isBefore(now, 'hour'),
             notAvailable: checkIfNotAvailable(d),
             tooFarAhead: checkIfTooFarAhead(d),
         }));
-    }, [checkIfNotAvailable, selectedDates, currentGroupDates, visibleDates, today, checkIfTooFarAhead]);
+    }, [checkIfNotAvailable, selectedDates, currentReservations, visibleDates, now, checkIfTooFarAhead]);
 
     const setSelectedDates = useCallback(selectedDates => {
         _setSelectedDates(_selectedDates => {
@@ -69,18 +77,18 @@ export function GroupDatesForm({
     }, [checkIfNotAvailable]);
 
     useEffect(() => {
-        onGroupDatesChange(selectedDates);
-    }, [selectedDates, onGroupDatesChange]);
+        onChange(selectedDates.map(dateToReservation));
+    }, [selectedDates, onChange, dateToReservation]);
 
     // automatically unchecks unavailable dates if unavailableDates changes
     useEffect(() => setSelectedDates(s => s), [setSelectedDates]);
 
     useEffect(() => {
-        let selectedDates = [date];
-        let visibleDates = [date];
+        let selectedDates = [from];
+        let visibleDates = [from];
 
-        if (currentGroupDates?.length > 1) {
-            selectedDates = [...currentGroupDates];
+        if (currentReservations?.length > 1) {
+            selectedDates = currentReservations.map(r => r.from);
             selectedDates.sort((a, b) => a.valueOf() - b.valueOf());
             let repeatValue = Number.MAX_SAFE_INTEGER;
 
@@ -107,7 +115,7 @@ export function GroupDatesForm({
 
         setVisibleDates(visibleDates);
         _setSelectedDates(selectedDates);
-    }, [currentGroupDates, date, repeatValuesMap]);
+    }, [currentReservations, from, to, repeatValuesMap]);
 
     const addDate = useCallback(() => {
         setVisibleDates(visibleDates => {
@@ -122,27 +130,27 @@ export function GroupDatesForm({
     const removeDate = useCallback(() => {
         setVisibleDates(visibleDates => {
             const last = visibleDates[visibleDates.length - 1];
-            const reserved = currentGroupDates?.findIndex(gd => gd.isSame(last, 'day')) !== -1;
+            const reserved = currentReservations?.some(r => r.from.isSame(last, 'day'));
             if (visibleDates.length <= 1 || reserved)
                 return visibleDates;
-            setSelectedDates(selectedDates => selectedDates.filter(gd => !gd.isSame(last, 'day')));
+            setSelectedDates(selectedDates => selectedDates.filter(d => !d.isSame(last, 'day')));
             return visibleDates.slice(0, -1);
         });
-    }, [currentGroupDates, setSelectedDates]);
+    }, [currentReservations, setSelectedDates]);
 
     const handleRepeatValueChange = useCallback(e => {
         const newRepeatValue = e.target.value;
         setRepeatValue(newRepeatValue);
 
-        const newDates = [date];
+        const newDates = [from];
         if (newRepeatValue > 0) {
             for (let i = 1; i <= defaultAddCount; ++i)
-                newDates.push(date.add(i * newRepeatValue, 'day'));
+                newDates.push(from.add(i * newRepeatValue, 'day'));
         }
 
         setVisibleDates(newDates);
         setSelectedDates(newDates.filter(d => !checkIfTooFarAhead(d)));
-    }, [date, defaultAddCount, setSelectedDates, checkIfTooFarAhead]);
+    }, [from, defaultAddCount, setSelectedDates, checkIfTooFarAhead]);
 
     const handleCheckedChange = useCallback(e => {
         const index = e.target.value;
@@ -150,7 +158,7 @@ export function GroupDatesForm({
         const date = visibleDates[index];
 
         setSelectedDates(selectedDates => {
-            const newSelection = selectedDates.filter(gd => !gd.isSame(date, 'day'));
+            const newSelection = selectedDates.filter(d => !d.isSame(date, 'day'));
             if (checked)
                 newSelection.push(date);
             newSelection.sort((a, b) => a.valueOf() - b.valueOf());
@@ -162,9 +170,9 @@ export function GroupDatesForm({
         <div className={styles.wrapper}>
             <div>
                 <ScrollRadioGroup
-                    value={repeatValue}
+                    disabled={currentReservations?.length > 1 || disabled}
                     onChange={handleRepeatValueChange}
-                    disabled={currentGroupDates?.length > 1 || disabled}
+                    value={repeatValue}
                 >
                     <Radio.Button key={0} value={0}>Einzeltermin</Radio.Button>
                     {Object.keys(repeatValuesMap).map(value => (
@@ -178,15 +186,15 @@ export function GroupDatesForm({
                     <div className={styles.dates}>
                         {dates.map(({ date, checked, reserved, past, notAvailable, tooFarAhead }, i) => (
                             <Checkbox
+                                key={date}
                                 className={cn({
                                     unchecked: !checked,
                                     danger: (reserved && !checked) || notAvailable,
                                 })}
-                                key={date}
-                                value={i}
-                                disabled={(!user?.admin && (past || tooFarAhead)) || notAvailable || disabled}
                                 checked={checked}
+                                disabled={(!user?.admin && (past || tooFarAhead)) || notAvailable || disabled}
                                 onChange={handleCheckedChange}
+                                value={i}
                             >
                                 <span className={styles.date}>{date.format('dd[\xa0]L')}</span>
                                 {!past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}

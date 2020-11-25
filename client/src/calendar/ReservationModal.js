@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { LoginModal } from '../user/LoginModal';
-import { ReservationModalInner } from './ReservationModalInner';
+import { ReservationGroupModal } from './ReservationGroupModal';
 import { VerifyMailModal } from '../user/VerifyMailModal';
 import { authContext } from '../AuthContext';
 
@@ -16,5 +16,5 @@ export function ReservationModal(props) {
     if (!user.verified)
         return <VerifyMailModal onClose={onFinish} />
 
-    return <ReservationModalInner {...props} />;
+    return <ReservationGroupModal {...props} />;
 }

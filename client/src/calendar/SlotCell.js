@@ -1,46 +1,75 @@
 import React, { useCallback } from 'react';
 
+import { RESERVATION_TYPES } from '../ReservationTypes';
 import classNames from 'classnames/bind';
 import styles from './SlotCell.module.css';
 
 const cn = classNames.bind(styles);
 
+const SLOT_HEIGHT_PX = 32;
+const CELL_PADDING_PX = 3;
+
 export function SlotCell({
+    alwaysClickable = false,
     courtId,
     courtName,
+    date,
     disabled = false,
-    disabledText,
-    hour,
+    hours,
     loading = false,
     onClick,
     reservation,
 }) {
     const handleClick = useCallback(() => {
-        if (!disabled)
-            onClick({ courtId, hour, reservation });
-    }, [courtId, disabled, hour, onClick, reservation]);
+        if (alwaysClickable || (!disabled && reservation?.type !== RESERVATION_TYPES.DISABLE))
+            onClick({ courtId, date, reservation });
+    }, [alwaysClickable, courtId, date, disabled, onClick, reservation]);
+
+    let rowSpan = 1;
+    if (reservation) {
+        if (reservation.from.isBefore(date, 'hour') && date.hour() !== hours[0]) {
+            rowSpan = 0;
+        } else {
+            const maxRowSpan = hours.length - hours.indexOf(date.hour());
+            rowSpan = Math.min(reservation.to.diff(date, 'hour'), maxRowSpan);
+        }
+    }
+
+    if (rowSpan === 0)
+        return null;
 
     return (
         <td
             className={cn({
+                alwaysClickable,
                 cell: true,
-                enabled: !disabled,
+                enabled: !disabled && reservation?.type !== RESERVATION_TYPES.DISABLE,
             })}
+            style={{ padding: CELL_PADDING_PX }}
+            rowSpan={rowSpan}
             onClick={handleClick}
         >
             <div
                 className={cn({
                     slot: true,
                     loading,
-                    reserved: reservation,
-                    disabled,
-                    disabledText,
+                    reserved: reservation?.type === RESERVATION_TYPES.NORMAL,
                 })}
+                style={{ height: SLOT_HEIGHT_PX * rowSpan + CELL_PADDING_PX * 2 * (rowSpan - 1) }}
                 data-free-text="Frei"
-                data-free-text-hover={`${hour} Uhr, ${courtName}`}
+                data-free-text-hover={`${date.hour()} Uhr, ${courtName}`}
             >
-                {!(disabled && disabledText) && reservation && (reservation.customName ?? reservation.name)}
-                {disabled && disabledText}
+                <div className={cn({
+                    text: true,
+                    singleLine: rowSpan === 1,
+                })}>
+                    {reservation?.type === RESERVATION_TYPES.DISABLE && 
+                        <div>Gesperrt</div>
+                    }
+                    {reservation && 
+                        <div>{reservation.text || reservation.name}</div>
+                    }
+                </div>
             </div>
         </td>
     );

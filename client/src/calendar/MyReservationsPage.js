@@ -11,14 +11,6 @@ import styles from './MyReservationsPage.module.css';
 import { useApi } from '../useApi';
 import { useTime } from './useTime';
 
-function getGroupDates(myReservations, reservation) {
-    if (!reservation?.groupId)
-        return null;
-    return myReservations
-        .filter(r => r.groupId === reservation.groupId)
-        .map(r => r.date);
-}
-
 export function MyReservationsPage() {
 
     const { user: { userId } } = useContext(authContext);
@@ -40,7 +32,7 @@ export function MyReservationsPage() {
 
     const sortedReservations = useMemo(() => {
         const s = [...reservations];
-        s.sort((a, b) => a.date - b.date);
+        s.sort((a, b) => a.from - b.from);
         return s;
     }, [reservations]);
 
@@ -84,7 +76,6 @@ export function MyReservationsPage() {
                     <div className={styles.content}>
                         <ReservationDetailsCard
                             reservation={sortedReservations[0]}
-                            groupDates={getGroupDates(sortedReservations, sortedReservations[0])}
                             onEditClick={handleEditClick}
                         />
                     </div>
@@ -102,9 +93,8 @@ export function MyReservationsPage() {
                                     return null;
                                 return (
                                     <ReservationDetailsCard
-                                        key={`${reservation.courtId}${reservation.from}`}
+                                        key={reservation.id}
                                         reservation={reservation}
-                                        groupDates={getGroupDates(sortedReservations, reservation)}
                                         onEditClick={handleEditClick}
                                     />
                                 );
@@ -113,13 +103,11 @@ export function MyReservationsPage() {
                     </div>
                 </>
             }
+
             {selectedReservation &&
                 <ReservationModal
-                    date={selectedReservation?.date}
-                    courtId={selectedReservation?.courtId}
                     reservation={selectedReservation}
                     onFinish={handleReservationEditFinish}
-                    today={time}
                 />
             }
         </div>

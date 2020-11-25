@@ -1,71 +1,76 @@
-import { Button, Checkbox, Input, Modal, message } from 'antd';
+import { Button, Input, Modal, Radio, message } from 'antd';
+import { DownOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { deleteReservationGroupApi, getReservationsApi, patchReservationGroupApi, postReservationGroupApi } from '../api';
+import { getReservationsApi, patchReservationGroupApi, postReservationGroupApi } from '../api';
 
+import { DatePicker } from './DatePicker';
 import { ErrorResult } from '../ErrorResult';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { GroupDatesForm } from './GroupDatesForm';
+import { RESERVATION_TYPES } from '../ReservationTypes';
+import { RepeatReservationForm } from './RepeatReservationForm';
 import { ReservationDetails } from './ReservationDetails';
+import { ReservationTimeSelect } from './ReservationTimeSelect';
+import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { StatusText } from '../admin/StatusText';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
-import styles from './ReservationModalInner.module.css';
+import dayjs from 'dayjs';
+import styles from './ReservationGroupModal.module.css';
 import { useApi } from '../useApi';
 
-export function ReservationModalInner({
-    date,
-    courtId,
+const INITIAL_TO_HOUR_ADD = 1;
+
+export function ReservationGroupModal({
+    initialFrom,
+    initialCourtId,
     reservation,
-    today,
     onFinish,
-    setReservations,
+    setReservations: setOuterReservations,
 }) {
     const { courts, templates: { reservationPrice, reservationTos } } = useContext(appContext);
     const { user } = useContext(authContext);
 
-    const courtName = courts.find(c => c.courtId === courtId)?.name;
-
     const [changeReason, setChangeReason] = useState('');
-    const [tosAccepted, setTosAccepted] = useState(false);
-    const [newCustomName, setNewCustomName] = useState(null);
-    const [newGroupDates, setNewGroupDates] = useState(null);
+    const [text, setText] = useState(null);
+    const [reservations, setReservations] = useState(null);
     const [editName, setEditName] = useState(false);
+    const [from, setFrom] = useState(reservation?.from || initialFrom);
+    const [to, setTo] = useState(() => reservation?.to || initialFrom.add(INITIAL_TO_HOUR_ADD, 'hour'));
+    const [courtId, setCourtId] = useState(reservation?.courtId || initialCourtId);
     const prevErrorRef = useRef({});
 
     const [groupReservations, setGroupReservations] = useState([]);
     const [state, getGroupReservations] = useApi(getReservationsApi, setGroupReservations);
 
-    const [postState, postReservationGroup] = useApi(postReservationGroupApi, setReservations);
-    const [deleteState, deleteReservationGroup] = useApi(deleteReservationGroupApi, setReservations);
-    const [patchState, patchReservationGroup] = useApi(patchReservationGroupApi, setReservations);
+    const [postState, postReservationGroup] = useApi(postReservationGroupApi, setOuterReservations);
+    const [patchState, patchReservationGroup] = useApi(patchReservationGroupApi, setOuterReservations);
 
-    const loading = state.loading || postState.loading || patchState.loading || deleteState.loading;
+    const loading = state.loading || postState.loading || patchState.loading;
 
     const adminEdit = reservation && user.admin && reservation?.userId !== user.userId;
     const canEdit = user.admin || !reservation || reservation.userId === user.userId;
 
-    const groupDates = useMemo(() => groupReservations.map(r => r.date), [groupReservations]);
+    const newReservations = useMemo(() => reservations?.filter(
+        r => !groupReservations.some(gr => gr.from.isSame(r.from, 'hour'))
+    ), [reservations, groupReservations]);
+    const cancelReservations = useMemo(() => reservations && groupReservations.filter(
+        gr => !reservations.some(r => r.from.isSame(gr.from, 'hour'))
+    ), [reservations, groupReservations]);
+    const changeText = !!(groupReservations && text);
 
-    const newDates = useMemo(() => newGroupDates?.filter(
-        ngd => !groupDates.some(gd => gd.isSame(ngd, 'hour'))
-    ), [newGroupDates, groupDates]);
-    const cancelDates = useMemo(() => newGroupDates && groupDates.filter(
-        gd => !newGroupDates.some(ngd => gd.isSame(ngd, 'hour'))
-    ), [newGroupDates, groupDates]);
-    const changeCustomName = !!(groupDates && newCustomName);
+    const unavailableReservations = useMemo(() => {
+        let uaRes = postState.error?.unavailableReservations || patchState.error?.unavailableReservations;
+        if (uaRes)
+            uaRes = uaRes.map(({ from, to }) => ({
+                from: dayjs(from),
+                to: dayjs(to),
+            }));
+        return uaRes;
+    }, [patchState.error?.unavailableReservations, postState.error?.unavailableReservations]);
 
     useEffect(() => {
         if (reservation?.groupId)
             getGroupReservations({ query: { 'group-id': reservation?.groupId } });
     }, [reservation, getGroupReservations]);
-
-    const handleGroupDatesChange = useCallback(dates => {
-        setNewGroupDates(dates);
-    }, []);
-
-    const handleAcceptTos = useCallback(e => {
-        setTosAccepted(e.target.checked);
-    }, []);
 
     const handleEditName = useCallback(() => {
         setEditName(true);
@@ -73,11 +78,26 @@ export function ReservationModalInner({
 
     const handleCancelEditName = useCallback(() => {
         setEditName(false);
-        setNewCustomName(null);
+        setText(null);
     }, []);
 
-    const handleNewCustomNameChange = useCallback(e => {
-        setNewCustomName(e.target.value);
+    const handleDateChange = useCallback(date => {
+        setFrom(from => {
+            const newFrom = date.hour(from.hour());
+            setTo(to => {
+                const diff = Math.abs(to.diff(from, 'hour'));
+                return newFrom.add(diff, 'hour');
+            });
+            return newFrom;
+        });
+    }, []);
+
+    const handleTextChange = useCallback(e => {
+        setText(e.target.value);
+    }, []);
+
+    const handleCourtIdChange = useCallback(e => {
+        setCourtId(e.target.value);
     }, []);
 
     const handleChangeChangeReason = useCallback(e => {
@@ -87,20 +107,19 @@ export function ReservationModalInner({
     const handlePostReservation = useCallback(() => {
         postReservationGroup(null, {
             courtId,
-            dates: newDates,
-            userId: user.userId,
-            customName: newCustomName,
+            reservations,
+            text,
+            type: RESERVATION_TYPES.NORMAL,
         }, () => {
             message.success("Reservierung erfolgreich");
             onFinish();
         });
     }, [
         courtId,
-        newCustomName,
-        newDates,
         onFinish,
         postReservationGroup,
-        user,
+        reservations,
+        text,
     ]);
 
     const handleChangeReservation = useCallback(() => {
@@ -110,10 +129,9 @@ export function ReservationModalInner({
                     groupId: reservation.groupId
                 }
             }, {
-                groupId: reservation.groupId,
-                dates: newGroupDates,
-                customName: newCustomName,
                 reason: adminEdit ? changeReason : undefined,
+                reservations,
+                text,
             }, () => {
                 message.success("Speichern erfolgreich");
                 onFinish();
@@ -127,29 +145,33 @@ export function ReservationModalInner({
             content: (
                 <div className={styles.wrapper}>
 
-                    {newDates.length > 0 &&
+                    {newReservations.length > 0 &&
                         <>
                             <div className={styles.heading}>Neue Termine</div>
                             <ul>
-                                {newDates.map(date => <li key={date}>{date.format('dd L')}</li>)}
+                                {newReservations.map(({ from, to }) => (
+                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                ))}
                             </ul>
                         </>
                     }
 
-                    {cancelDates.length > 0 &&
+                    {cancelReservations.length > 0 &&
                         <>
                             <div className={styles.heading}>Zu Stornieren</div>
                             <ul>
-                                {cancelDates.map(date => <li key={date}>{date.format('dd L')}</li>)}
+                                {cancelReservations.map(({ from, to }) => (
+                                    <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                ))}
                             </ul>
                         </>
                     }
 
-                    {changeCustomName &&
+                    {changeText &&
                         <>
                             <div className={styles.heading}>Änderungen</div>
                             <ul>
-                                <li>Name: <strong>{newCustomName}</strong></li>
+                                <li>Name: <strong>{text}</strong></li>
                             </ul>
                         </>
                     }
@@ -163,19 +185,23 @@ export function ReservationModalInner({
         });
     }, [
         adminEdit,
-        cancelDates,
-        changeCustomName,
+        cancelReservations,
         changeReason,
-        newCustomName,
-        newDates,
-        newGroupDates,
+        changeText,
+        newReservations,
         onFinish,
         patchReservationGroup,
         reservation,
+        reservations,
+        text,
     ]);
 
 
     const handleCancelReservation = useCallback(() => {
+        let cancelType;
+
+        const handleCancelTypeChange = e => (cancelType = e.target.value);
+
         const doDelete = () => {
             const reqParams = {
                 path: {
@@ -187,34 +213,53 @@ export function ReservationModalInner({
                 onFinish();
             }
 
-            if (adminEdit) {
-                // same as delete but with body
-                // to submit reason
-                patchReservationGroup(reqParams, {
-                    groupId: reservation.groupId,
-                    dates: [],
-                    reason: changeReason,
-                }, cb);
+            let reservations;
+            if (cancelType === 'single') {
+                reservations = groupReservations.filter(r => !r.from.isSame(reservation.from, 'day'));
+            } else if (cancelType === 'allActive') {
+                reservations = groupReservations.filter(r => r.from.isBefore(dayjs(), 'hour'));
             } else {
-                deleteReservationGroup(reqParams, null, cb);
+                reservations = [];
             }
+
+            patchReservationGroup(reqParams, {
+                reason: adminEdit ? changeReason : undefined,
+                reservations,
+            }, cb);
         };
 
-        if (groupDates.length <= 1) {
+        if (groupReservations.length <= 1) {
             doDelete();
         } else {
             Modal.confirm({
-                title: 'Wirklich alle stornieren?',
+                title: 'Termine stornieren',
                 icon: <ExclamationCircleOutlined />,
                 centered: true,
                 content: (
-                    <ul>
-                        {groupDates.map(date => (
-                            <li key={date}>{date.format('dd L')}</li>
-                        ))}
-                    </ul>
+                    <Radio.Group onChange={handleCancelTypeChange}>
+                        <Radio value="single">Nur diesen Termin</Radio>
+                        <ul>
+                            <li key={reservation.from}>{reservation.from.format('dd[\xa0]L')}, {reservation.from.hour()} bis {reservation.to.hour()} Uhr</li>
+                        </ul>
+                        <Radio value="allActive">Alle offenen Termine</Radio>
+                        <ul>
+                            {groupReservations.filter(r => !r.from.isBefore(dayjs(), 'hour')).map(({ from, to }) => (
+                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                            ))}
+                        </ul>
+                        {user?.admin &&
+                            <>
+                                <Radio value="all">Alle Termine</Radio>
+                                <ul>
+                                    {groupReservations.map(({ from, to }) => (
+                                        <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
+                                    ))}
+                                </ul>
+                            </>
+                        }
+                    </Radio.Group>
                 ),
-                okText: 'Bestätigen',
+                okText: 'Stornieren',
                 okType: 'danger',
                 cancelText: 'Abbrechen',
                 onOk: doDelete,
@@ -223,23 +268,22 @@ export function ReservationModalInner({
     }, [
         adminEdit,
         changeReason,
-        deleteReservationGroup,
-        groupDates,
+        groupReservations,
         onFinish,
         patchReservationGroup,
         reservation,
+        user?.admin,
     ]);
 
     useEffect(() => {
-        if (prevErrorRef.current.post === postState.error 
+        if (prevErrorRef.current.post === postState.error
             && prevErrorRef.current.patch === patchState.error)
             return;
         prevErrorRef.current.post = postState.error;
         prevErrorRef.current.patch = patchState.error;
 
-        const uaDates = postState.error?.unavailableDates || patchState.error?.unavailableDates;
         const message = postState.error?.message || patchState.error?.message;
-        if (uaDates) {
+        if (unavailableReservations) {
             Modal.error({
                 centered: true,
                 title: 'Reservierung fehlgeschlagen',
@@ -249,8 +293,8 @@ export function ReservationModalInner({
                             Folgende Termine sind nicht verfügbar:
                         </div>
                         <ul>
-                            {uaDates.map(date => (
-                                <li key={date}>{date.format('dd L')}</li>
+                            {unavailableReservations.map(({ from, to }) => (
+                                <li key={from}>{from.format('dd[\xa0]L')}, {from.hour()} bis {to.hour()} Uhr</li>
                             ))}
                         </ul>
                     </div>
@@ -265,7 +309,7 @@ export function ReservationModalInner({
                 title: 'Reservierungslimit erreicht',
                 content: (
                     <div>
-                        {newGroupDates?.length > diff ?
+                        {reservations?.length > diff ?
                             (
                                 <p>
                                     Bitte entfernen Sie mindestens <strong>{diff}</strong> Termine.
@@ -283,19 +327,17 @@ export function ReservationModalInner({
                 )
             });
         }
-    }, [newGroupDates?.length, postState.error, patchState.error])
+    }, [reservations?.length, postState.error, patchState.error, unavailableReservations])
 
     if (
         state.error
-        || (postState.error && !postState.error.unavailableDates && postState.error.message !== 'too many active reservations')
-        || (patchState.error && !patchState.error.unavailableDates && patchState.error.message !== 'too many active reservations')
-        || deleteState.error
+        || (postState.error && !postState.error.unavailableReservations && postState.error.message !== 'too many active reservations')
+        || (patchState.error && !patchState.error.unavailableReservations && patchState.error.message !== 'too many active reservations')
     ) {
         return (
             <Modal
                 title="Reservierung"
                 visible={true}
-                width={600}
                 centered
                 onCancel={onFinish}
                 onOk={onFinish}
@@ -316,9 +358,8 @@ export function ReservationModalInner({
 
     return (
         <Modal
-            title="Reservierung"
             visible={true}
-            width={600}
+            width={530}
             centered
             onCancel={onFinish}
             onOk={onFinish}
@@ -341,19 +382,22 @@ export function ReservationModalInner({
                                         onClick={handleCancelReservation}
                                         disabled={adminEdit && !changeReason}
                                     >
-                                        {groupDates.length > 1 ? 'Alle stornieren' : 'Stornieren'}
+                                        Stornieren
                                     </Button>
                                     <Button
                                         type="primary"
                                         onClick={handleChangeReservation}
-                                        disabled={!(newDates?.length || cancelDates?.length || changeCustomName) || (adminEdit && !changeReason)}
+                                        disabled={
+                                            !(newReservations?.length || cancelReservations?.length || changeText)
+                                            || (adminEdit && !changeReason)
+                                        }
                                     >
                                         Speichern
                                     </Button>
                                 </>
                             ) : (
                                 <Button
-                                    disabled={(reservationTos.body && !tosAccepted) || !newDates?.length}
+                                    disabled={!newReservations?.length}
                                     type="primary"
                                     onClick={handlePostReservation}
                                 >
@@ -368,24 +412,52 @@ export function ReservationModalInner({
             <div className={styles.wrapper}>
                 <div>
                     <ReservationDetails
-                        courtName={courtName}
-                        date={date}
-                        groupDates={newGroupDates || groupDates}
+                        court={
+                            <ScrollRadioGroup
+                                disabled={loading}
+                                onChange={handleCourtIdChange}
+                                value={courtId}
+                            >
+                                {courts.map(({ courtId, name }) => (
+                                    <Radio.Button key={courtId} value={courtId}>{name}</Radio.Button>
+                                ))}
+                            </ScrollRadioGroup>
+                        }
+                        date={
+                            <DatePicker
+                                allowClear={false}
+                                bordered={false}
+                                className={styles.datePicker}
+                                disabled={loading}
+                                format="L"
+                                onChange={handleDateChange}
+                                showToday={false}
+                                suffixIcon={<DownOutlined />}
+                                value={from}
+                            />
+                        }
+                        time={
+                            <ReservationTimeSelect
+                                from={from}
+                                to={to}
+                                onFromChange={setFrom}
+                                onToChange={setTo}
+                            />
+                        }
                         name={editName ?
                             (
                                 <>
                                     <Input
                                         className={styles.nameInput}
                                         disabled={loading}
-                                        onChange={handleNewCustomNameChange}
+                                        onChange={handleTextChange}
                                         placeholder="z.B. Training, ..."
-                                        size="small"
-                                        value={newCustomName}
+                                        value={text}
+                                        size="large"
                                     />
                                     <Button
                                         disabled={loading}
                                         onClick={handleCancelEditName}
-                                        size="small"
                                         type='link'
                                     >
                                         abbrechen
@@ -393,15 +465,18 @@ export function ReservationModalInner({
                                 </>
                             ) : (
                                 <>
-                                    {reservation?.customName || reservation?.name || user.name}
+                                    <div className={styles.name}>
+                                        <span>
+                                            {reservation?.text || reservation?.name || user.name}
+                                        </span>
+                                    </div>
                                     {user.admin &&
                                         <Button
                                             disabled={loading}
                                             onClick={handleEditName}
-                                            size="small"
                                             type='link'
                                         >
-                                            ändern
+                                            <EditOutlined /> bearbeiten
                                         </Button>
                                     }
                                 </>
@@ -410,20 +485,19 @@ export function ReservationModalInner({
                         showAllDates={!canEdit}
                         showDateRange={canEdit}
                         repeat={canEdit &&
-                            <GroupDatesForm
-                                courtId={courtId}
-                                currentGroupDates={groupDates}
-                                date={date}
+                            <RepeatReservationForm
+                                from={from}
+                                to={to}
                                 disabled={loading}
-                                onGroupDatesChange={handleGroupDatesChange}
-                                today={today}
-                                unavailableDates={postState.error?.unavailableDates || patchState.error?.unavailableDates}
+                                onChange={setReservations}
+                                currentReservations={groupReservations}
+                                unavailableReservations={unavailableReservations}
                             />
                         }
                     />
                 </div>
 
-                {!reservation &&
+                {false && /*TODO */ !reservation &&
                     <>
                         {reservationPrice.body &&
                             <div>
@@ -436,14 +510,6 @@ export function ReservationModalInner({
                             <div>
                                 <h1>Nutzungsordnung</h1>
                                 <div dangerouslySetInnerHTML={{ __html: reservationTos.body }} />
-
-                                <Checkbox
-                                    checked={tosAccepted}
-                                    onChange={handleAcceptTos}
-                                    disabled={loading}
-                                >
-                                    Ich akzeptiere die Nutzungsordnung.
-                                </Checkbox>
                             </div>
                         }
                     </>

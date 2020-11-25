@@ -1,3 +1,4 @@
+import { RESERVATION_TYPES } from '../ReservationTypes';
 import dayjs from 'dayjs';
 
 const today = dayjs().startOf('day');
@@ -110,6 +111,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'max@example.com',
             verified: true,
             admin: false,
+            registeredAt: dayjs(),
         },
         {
             userId: 2,
@@ -117,6 +119,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'otto@example.com',
             verified: true,
             admin: true,
+            registeredAt: dayjs(),
         },
         {
             userId: 3,
@@ -124,6 +127,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'juergen@example.com',
             verified: true,
             admin: false,
+            registeredAt: dayjs(),
         },
         {
             userId: 8,
@@ -131,6 +135,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'mueller@example.com',
             verified: true,
             admin: false,
+            registeredAt: dayjs(),
         },
         {
             userId: 661,
@@ -138,6 +143,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'test.franz.mein.mail@franz.de',
             verified: true,
             admin: false,
+            registeredAt: dayjs(),
         },
         {
             userId: 41,
@@ -145,68 +151,97 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
             mail: 'test.franz.mein.mail@franz.de',
             verified: false,
             admin: false,
+            registeredAt: dayjs(),
         }
     ],
 
-    // primary key: courtId x Date
+    // primary key: id auto inc
     // foreign key: groupId
     reservations: [
         {
-            date: today.add(-1, 'day').hour(11),
+            id: 0,
+            from: today.add(-1, 'day').hour(11),
+            to: today.add(+3, 'day').hour(20),
+            courtId: 2,
+            groupId: 0,
+            created: today.add(-2, 'day').hour(11),
+        },
+        {
+            id: 1,
+            from: today.add(-1, 'day').hour(11),
+            to: today.add(-1, 'day').hour(12),
             courtId: 1,
             groupId: 1,
             created: today.add(-2, 'day').hour(11),
         },
         {
-            date: today.add(3, 'day').hour(20),
+            id: 2,
+            from: today.add(3, 'day').hour(20),
+            to: today.add(3, 'day').hour(21),
             courtId: 1,
             groupId: 3,
             created: today.add(-2, 'day').hour(11),
         },
         {
-            date: today.add(-2, 'day').hour(15),
+            id: 3,
+            from: today.add(-2, 'day').hour(15),
+            to: today.add(-2, 'day').hour(16),
             courtId: 1,
             groupId: 2,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(-1, 'day').hour(15),
+            id: 4,
+            from: today.add(-1, 'day').hour(15),
+            to: today.add(-1, 'day').hour(16),
             courtId: 1,
             groupId: 2,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(-0, 'day').hour(15),
+            id: 5,
+            from: today.add(-0, 'day').hour(15),
+            to: today.add(-0, 'day').hour(16),
             courtId: 1,
             groupId: 2,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(1, 'day').hour(15),
+            id: 6,
+            from: today.add(1, 'day').hour(15),
+            to: today.add(1, 'day').hour(18),
             courtId: 1,
             groupId: 2,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(0, 'day').hour(17),
+            id: 7,
+            from: today.add(0, 'day').hour(17),
+            to: today.add(0, 'day').hour(18),
             courtId: 1,
             groupId: 4,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(7, 'day').hour(17),
+            id: 8,
+            from: today.add(7, 'day').hour(17),
+            to: today.add(7, 'day').hour(18),
             courtId: 1,
             groupId: 4,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(14, 'day').hour(17),
+            id: 9,
+            from: today.add(14, 'day').hour(17),
+            to: today.add(14, 'day').hour(18),
             courtId: 1,
             groupId: 4,
             created: today.add(-4, 'day').hour(11),
         },
         {
-            date: today.add(21, 'day').hour(17),
+            id: 10,
+            from: today.add(21, 'day').hour(17),
+            to: today.add(21, 'day').hour(18),
             courtId: 1,
             groupId: 4,
             created: today.add(-4, 'day').hour(11),
@@ -216,24 +251,34 @@ xbasdfyz aad, asdfkj 129388 8123 <br />
     // primary key: groupId auto_inc
     reservationGroups: [
         {
+            groupId: 0,
+            userId: null,
+            text: "Pflegearbeiten",
+            type: RESERVATION_TYPES.DISABLE,
+        },
+        {
             groupId: 1,
             userId: 9,
-            customName: null,
+            text: null,
+            type: RESERVATION_TYPES.NORMAL,
         },
         {
             groupId: 3,
             userId: 9,
-            customName: null,
+            text: null,
+            type: RESERVATION_TYPES.NORMAL,
         },
         {
             groupId: 2,
             userId: 3,
-            customName: null,
+            text: null,
+            type: RESERVATION_TYPES.NORMAL,
         },
         {
             groupId: 4,
             userId: 2,
-            customName: null,
+            text: null,
+            type: RESERVATION_TYPES.NORMAL,
         },
     ]
 };
@@ -246,11 +291,13 @@ window.addFakeReservation = () => {
     db.reservationGroups.push({
         groupId: 999,
         userId: 2,
-        customName: 'Fake',
+        text: 'Fake',
+        type: RESERVATION_TYPES.NORMAL,
     });
 
     db.reservations.push({
-        date: today.hour(8),
+        from: today.hour(8),
+        to: today.hour(9),
         courtId: 1,
         groupId: 999,
         created: today,

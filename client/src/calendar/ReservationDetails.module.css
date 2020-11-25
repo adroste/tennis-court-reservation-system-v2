@@ -1,34 +1,32 @@
-.wrapper > div+div {
-    margin-top: 5px;
+.inline.wrapper {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.inline .item {
+    margin: 0 10px;
+    margin: 5px 10px;
 }
 
 .item {
-    display: flex;
+    white-space: nowrap;
+}
+
+.wrapper:not(.inline) .item + .item {
+    margin-top: 14px;
+}
+
+.item .title {
+    display: inline-block;
+    color: #444;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+}
+
+.item .content {
+    overflow: scroll;
     font-size: 16px;
     font-weight: 600;
-    line-height: 28px;
-    /* justify-content: center; */
-    /* align-items: center; */
-}
-
-.item > div:first-child {
-    border-right: 1px solid #eee;
-    margin-right: 7px;
-    padding-right: 6px;
-    color: #555;
-}
-
-.allDates {
-    /* font-weight: 400; */
-}
-
-.dateList {
-    margin-right: 10px;
-    font-weight: 400;
-    font-size: 14px;
-    margin-left: 24px
-}
-    
-.dateList > span {
-    display: block;
 }

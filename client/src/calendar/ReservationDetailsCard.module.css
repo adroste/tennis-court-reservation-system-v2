@@ -1,17 +1,3 @@
-.card {
-    width: 100%;
-    border: 1px solid #f0f0f0;
-    border-radius: 2px;
-    padding: 12px;
-    box-shadow: 1px 1px 2px 0px #cccccc;
-    background: #fff;
-}
-
-.card + .card {
-    margin-top: 10px
-}
-
-.editButton {
-    float: right;
-    padding-top: 0;
+.card > div {
+    padding: 10px 0;
 }
