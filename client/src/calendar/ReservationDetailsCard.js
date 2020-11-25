@@ -36,7 +36,7 @@ export function ReservationDetailsCard({
                 date={from.format('dd[\xa0]L')}
                 inline
                 name={text || (user?.name !== name && name)}
-                time={`${from.format('H [Uhr]')} bis ${to.format('H [Uhr]')}`}
+                time={`${from.format('H')} Uhr bis ${to.format('H')} Uhr`}
             />
         </Card>
     );
