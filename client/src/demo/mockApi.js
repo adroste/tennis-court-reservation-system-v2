@@ -243,7 +243,8 @@ async function handleRequests(url, options) {
                 }, 0) + 1;
                 const text = body?.text;
                 // todo real server: check if from,to are set
-                const reservations = body?.reservations?.map(({ from, to }) => ({
+                const reservations = body?.reservations?.map(({ courtId, from, to }) => ({
+                    courtId,
                     from: dayjs(from),
                     to: dayjs(to),
                 }));
@@ -265,21 +266,12 @@ async function handleRequests(url, options) {
                         return acc;
                     }, { groupReservations: [], rest: [] });
 
-                    const courtId = body?.courtId || groupReservations[0]?.courtId;
-                    if (!courtId)
-                        return {
-                            __status: 400,
-                            json: { message: 'courtId is required' }
-                        };
-                    if (body?.courtId && groupReservations[0]?.courtId && body?.courtId !== groupReservations[0]?.courtId)
-                        return {
-                            __status: 400,
-                            json: { message: 'courtId change not implemented' }
-                        };
-
-                    const { keepReservations, newReservations } = reservations.reduce((acc, { from, to }) => {
+                    const { keepReservations, newReservations } = reservations.reduce((acc, { courtId, from, to }) => {
                         const found = groupReservations.find(r =>
-                            r.from.isSame(from, 'hour') && r.to.isSame(to, 'hour'));
+                            r.from.isSame(from, 'hour') 
+                            && r.to.isSame(to, 'hour')
+                            && r.courtId === courtId
+                        );
                         if (found)
                             acc.keepReservations.push(found);
                         else
@@ -298,17 +290,25 @@ async function handleRequests(url, options) {
 
                     const today = dayjs();
                     const maxDate = today.add(db.config.reservationDaysInAdvance, 'day');
-                    const conflicts = newReservations.reduce((conflicts, { from, to }) => {
+                    const conflicts = newReservations.reduce((conflicts, { courtId, from, to }) => {
                         const conflict = rest.find(r => (
                             r.from.isBefore(to, 'hour')
                             && r.to.isAfter(from, 'hour')
                             && r.courtId === courtId
                         ));
                         if (conflict)
-                            conflicts.push({ from: conflict.from, to: conflict.to });
+                            conflicts.push({ 
+                                courtId, 
+                                from: conflict.from.isAfter(from) ? conflict.from : from, 
+                                to: conflict.to.isBefore(to) ? conflict.to : to, 
+                            });
                         else if ((!user.admin && to.isAfter(maxDate, 'day'))
                             || (!user.admin && from.isBefore(today, 'hour')))
-                            conflicts.push({ from, to });
+                            conflicts.push({ 
+                                courtId, 
+                                from, 
+                                to 
+                            });
                         return conflicts;
                     }, []);
 

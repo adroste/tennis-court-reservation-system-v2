@@ -55,7 +55,8 @@ export function ReservationGroupModal({
     const unavailableReservations = useMemo(() => {
         let uaRes = postState.error?.unavailableReservations || patchState.error?.unavailableReservations;
         if (uaRes)
-            uaRes = uaRes.map(({ from, to }) => ({
+            uaRes = uaRes.map(({ courtId, from, to }) => ({
+                courtId,
                 from: dayjs(from),
                 to: dayjs(to),
             }));
@@ -73,7 +74,6 @@ export function ReservationGroupModal({
 
     const handlePostReservation = useCallback(() => {
         postReservationGroup(null, {
-            courtId,
             reservations,
             text,
             type: RESERVATION_TYPES.NORMAL,
@@ -82,7 +82,6 @@ export function ReservationGroupModal({
             onFinish();
         });
     }, [
-        courtId,
         onFinish,
         postReservationGroup,
         reservations,

@@ -18,14 +18,38 @@
     font-style: italic;
 }
 
+.dates .unchecked .date {
+    text-decoration: line-through;
+}
+
+.dateButton,
+.dateButton:hover,
+.dateButton:focus,
+.dateButton:active {
+    color: #333;
+}
+
+.dateButton:hover {
+    opacity: 0.7;
+}
+
 .dates .danger,
 .dates .danger .date,
-.dates .danger .extra {
+.dates .danger .extra,
+.danger .dateButton, 
+.danger .dateButton:hover,
+.danger .dateButton:focus,
+.danger .dateButton:active {
     color: #ff4d4f;
 }
 
-.dates .unchecked .date {
-    text-decoration: line-through;
+.dateButton {
+    height: auto;
+    padding: 0;
+}
+
+.dateButton > span + span {
+    margin-left: 10px;
 }
 
 .buttons {
@@ -33,4 +57,5 @@
 }
 .buttons > * {
     margin-right: 10px;
+    min-width: 120px;
 }

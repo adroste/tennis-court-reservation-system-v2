@@ -203,7 +203,7 @@ xbasdfyz aad, asdfkj 129388 8123 <br>
         {
             id: 6,
             from: today.add(1, 'day').hour(15),
-            to: today.add(1, 'day').hour(18),
+            to: today.add(1, 'day').hour(16),
             courtId: 1,
             groupId: 2,
             created: today.add(-4, 'day').hour(11),

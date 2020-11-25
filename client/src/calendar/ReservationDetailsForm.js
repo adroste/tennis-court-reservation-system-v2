@@ -9,6 +9,7 @@ import { ReservationTimeSelect } from './ReservationTimeSelect';
 import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
+import { getCourtName } from '../helper';
 import styles from './ReservationDetailsForm.module.css';
 
 export function ReservationDetailsForm({
@@ -100,7 +101,7 @@ export function ReservationDetailsForm({
                     allowClear={false}
                     bordered={false}
                     className={styles.datePicker}
-                    disabled={disabled}
+                    disabled={currentReservations?.length > 1 || disabled}
                     format="L"
                     onChange={handleDateChange}
                     showToday={false}
@@ -156,11 +157,12 @@ export function ReservationDetailsForm({
             }
             repeat={
                 <RepeatReservationForm
-                    from={from}
-                    to={to}
-                    disabled={disabled}
-                    onChange={onReservationsChange}
+                    courtId={courtId}
                     currentReservations={currentReservations}
+                    disabled={disabled}
+                    from={from}
+                    onChange={onReservationsChange}
+                    to={to}
                     unavailableReservations={unavailableReservations}
                 />
             }

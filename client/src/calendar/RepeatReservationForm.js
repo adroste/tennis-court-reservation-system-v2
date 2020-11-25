@@ -1,5 +1,5 @@
-import { Button, Checkbox, Radio } from 'antd';
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Radio } from 'antd';
+import { DeleteOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { ScrollRadioGroup } from './ScrollRadioGroup';
@@ -18,13 +18,14 @@ const defaultRepeatValuesMap = {
 };
 
 export function RepeatReservationForm({
-    from,
-    to,
+    courtId,
+    currentReservations,
     defaultAddCount = 2,
     disabled = false,
+    from,
     onChange,
     repeatValuesMap = defaultRepeatValuesMap,
-    currentReservations,
+    to,
     unavailableReservations,
 }) {
     const { user } = useContext(authContext);
@@ -38,9 +39,10 @@ export function RepeatReservationForm({
 
     const fromToHourDiff = useMemo(() => Math.abs(to.diff(from, 'hour')), [from, to]);
     const dateToReservation = useCallback(from => ({
+        courtId,
         from,
         to: from.add(fromToHourDiff, 'hour'),
-    }), [fromToHourDiff]);
+    }), [courtId, fromToHourDiff]);
 
     const checkIfTooFarAhead = useCallback(date => (
         date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day')
@@ -53,25 +55,9 @@ export function RepeatReservationForm({
         return unavailableReservations.some(r2 => (
             r2.from.isBefore(r.to, 'hour')
             && r2.to.isAfter(r.from, 'hour')
+            && r2.courtId === r.courtId
         ));
     }, [unavailableReservations, dateToReservation]);
-
-    const dates = useMemo(() => {
-        return visibleDates.map(d => {
-            const r = dateToReservation(d);
-            const reserved = currentReservations?.some(cr => 
-                cr.from.isSame(r.from, 'hour') && cr.to.isSame(r.to, 'hour'));
-            return {
-                date: d,
-                checked: selectedDates.some(sd => sd.isSame(d, 'day')),
-                change: !reserved && currentReservations?.some(r => r.from.isSame(d, 'day')),
-                reserved,
-                past: d.isBefore(now, 'hour'),
-                notAvailable: checkIfNotAvailable(d),
-                tooFarAhead: checkIfTooFarAhead(d),
-            };
-        });
-    }, [visibleDates, selectedDates, currentReservations, now, checkIfNotAvailable, checkIfTooFarAhead, dateToReservation]);
 
     const setSelectedDates = useCallback(selectedDates => {
         _setSelectedDates(_selectedDates => {
@@ -117,11 +103,29 @@ export function RepeatReservationForm({
             visibleDates = [];
             for (let i = 0; i <= count; ++i)
                 visibleDates.push(first.add(i * repeatValue, 'day'));
+        } else {
+            if (repeatValue > 0) {
+                for (let i = 1; i <= defaultAddCount; ++i) {
+                    const date = from.add(i * repeatValue, 'day');
+                    visibleDates.push(date);
+                    if (!checkIfNotAvailable(date))
+                        selectedDates.push(date);
+                }
+            }
         }
 
         setVisibleDates(visibleDates);
         _setSelectedDates(selectedDates);
-    }, [currentReservations, from, to, repeatValuesMap]);
+    }, [
+        checkIfNotAvailable,
+        courtId, 
+        currentReservations, 
+        defaultAddCount, 
+        from, 
+        repeatValue, 
+        repeatValuesMap, 
+        to, 
+    ]);
 
     const addDate = useCallback(() => {
         setVisibleDates(visibleDates => {
@@ -133,44 +137,67 @@ export function RepeatReservationForm({
         });
     }, [repeatValue, setSelectedDates, checkIfTooFarAhead]);
 
-    const removeDate = useCallback(() => {
-        setVisibleDates(visibleDates => {
-            const last = visibleDates[visibleDates.length - 1];
-            const reserved = currentReservations?.some(r => r.from.isSame(last, 'day'));
-            if (visibleDates.length <= 1 || reserved)
-                return visibleDates;
-            setSelectedDates(selectedDates => selectedDates.filter(d => !d.isSame(last, 'day')));
-            return visibleDates.slice(0, -1);
-        });
-    }, [currentReservations, setSelectedDates]);
-
     const handleRepeatValueChange = useCallback(e => {
         const newRepeatValue = e.target.value;
         setRepeatValue(newRepeatValue);
+    }, []);
 
-        const newDates = [from];
-        if (newRepeatValue > 0) {
-            for (let i = 1; i <= defaultAddCount; ++i)
-                newDates.push(from.add(i * newRepeatValue, 'day'));
-        }
-
-        setVisibleDates(newDates);
-        setSelectedDates(newDates.filter(d => !checkIfTooFarAhead(d)));
-    }, [from, defaultAddCount, setSelectedDates, checkIfTooFarAhead]);
-
-    const handleCheckedChange = useCallback(e => {
-        const index = e.target.value;
-        const checked = e.target.checked;
-        const date = visibleDates[index];
-
+    const handleCheckedChange = useCallback((date, checked) => {
         setSelectedDates(selectedDates => {
+            // change checked state
             const newSelection = selectedDates.filter(d => !d.isSame(date, 'day'));
             if (checked)
                 newSelection.push(date);
             newSelection.sort((a, b) => a.valueOf() - b.valueOf());
+
+            // remove unchecked visible dates at end
+            setVisibleDates(visibleDates => {
+                const newVisibleDates = [...visibleDates];
+                // i > 0: make sure at least one item is visible
+                for (let i = newVisibleDates.length - 1; i > 0; --i) {
+                    if (
+                        currentReservations?.some(r => r.from.isSame(newVisibleDates[i], 'day'))
+                        || newSelection.some(d => d.isSame(newVisibleDates[i], 'day'))
+                    ) {
+                        break;
+                    }
+                    newVisibleDates.pop();
+                }
+                return newVisibleDates;
+            });
+
             return newSelection;
         });
-    }, [visibleDates, setSelectedDates]);
+    }, [currentReservations, setSelectedDates]);
+
+    const dates = useMemo(() => {
+        return visibleDates.map(d => {
+            const r = dateToReservation(d);
+            const reserved = currentReservations?.some(cr => 
+                cr.from.isSame(r.from, 'hour') && cr.to.isSame(r.to, 'hour'));
+            const checked = selectedDates.some(sd => sd.isSame(d, 'day'));
+            return {
+                date: d,
+                checked,
+                change: !reserved && currentReservations?.some(r => r.from.isSame(d, 'day')),
+                reserved,
+                past: d.isBefore(now, 'hour'),
+                notAvailable: checkIfNotAvailable(d),
+                tooFarAhead: checkIfTooFarAhead(d),
+                onClick: () => handleCheckedChange(d, !checked),
+            };
+        });
+    }, [
+        checkIfNotAvailable, 
+        checkIfTooFarAhead, 
+        currentReservations, 
+        dateToReservation, 
+        handleCheckedChange,
+        now, 
+        selectedDates, 
+        visibleDates, 
+    ]);
+
 
     return (
         <div className={styles.wrapper}>
@@ -190,26 +217,31 @@ export function RepeatReservationForm({
             {repeatValue > 0 &&
                 <>
                     <div className={styles.dates}>
-                        {dates.map(({ date, checked, change, reserved, past, notAvailable, tooFarAhead }, i) => (
-                            <Checkbox
+                        {dates.map(({ date, checked, change, reserved, past, notAvailable, tooFarAhead, onClick }) => (
+                            <Button
                                 key={date}
                                 className={cn({
+                                    dateButton: true,
                                     unchecked: !checked,
                                     danger: (reserved && !checked) || notAvailable,
                                 })}
-                                checked={checked}
                                 disabled={(!user?.admin && (past || tooFarAhead)) || notAvailable || disabled}
-                                onChange={handleCheckedChange}
-                                value={i}
+                                onClick={onClick}
+                                type="link"
+                                icon={
+                                    ((!user?.admin && (past || tooFarAhead)) || notAvailable || disabled) 
+                                        ? <LockOutlined />
+                                        : checked ? <DeleteOutlined /> : <PlusOutlined />
+                                }
                             >
                                 <span className={styles.date}>{date.format('dd[\xa0]L')}</span>
-                                {!past && reserved && checked && <span className={styles.extra}> Aktuell reserviert</span>}
-                                {!past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
-                                {!notAvailable && past && <span className={styles.extra}> Bereits vergangen</span>}
-                                {!notAvailable && tooFarAhead && <span className={styles.extra}> Zu weit in der Zukunft</span>}
-                                {!notAvailable && change && <span className={styles.extra}> Wird geändert</span>}
-                                {notAvailable && <span className={styles.extra}> Nicht verfügbar</span>}
-                            </Checkbox>
+                                {!past && reserved && checked && <span className={styles.extra}>Aktuell reserviert</span>}
+                                {!past && reserved && !checked && <span className={styles.extra}>Wird storniert</span>}
+                                {!notAvailable && past && <span className={styles.extra}>Bereits vergangen</span>}
+                                {!notAvailable && tooFarAhead && <span className={styles.extra}>Zu weit in der Zukunft</span>}
+                                {!notAvailable && change && <span className={styles.extra}>Wird geändert</span>}
+                                {notAvailable && <span className={styles.extra}>Nicht verfügbar</span>}
+                            </Button>
                         ))}
                     </div>
                     <div className={styles.buttons}>
