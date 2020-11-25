@@ -8,6 +8,10 @@ export function findReservation(reservations, date, courtId) {
     return null;
 }
 
+export function getCourtName(courts, courtId) {
+    return courts.find(c => c.courtId === courtId)?.name;
+}
+
 export function parseQuery(queryString) {
     const query = {};
     const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');

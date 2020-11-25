@@ -5,6 +5,7 @@ import { EditOutlined } from '@ant-design/icons';
 import { ReservationDetails } from './ReservationDetails';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
+import { getCourtName } from '../helper';
 import styles from './ReservationDetailsCard.module.css';
 
 export function ReservationDetailsCard({
@@ -16,7 +17,6 @@ export function ReservationDetailsCard({
 
     const { from, to, courtId, name, text } = reservation;
 
-    const courtName = courts.find(c => c.courtId === courtId)?.name;
 
     const handleEditClick = useCallback(() => {
         onEditClick(reservation);
@@ -32,7 +32,7 @@ export function ReservationDetailsCard({
             ]}
         >
             <ReservationDetails
-                court={courtName}
+                court={getCourtName(courts, courtId)}
                 date={from.format('dd[\xa0]L')}
                 inline
                 name={text || (user?.name !== name && name)}

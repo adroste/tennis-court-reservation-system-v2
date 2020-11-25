@@ -60,7 +60,7 @@ export function ReservationDetailsForm({
             <ReservationDetails
                 court={
                     <div className={styles.plain}>
-                        {courts.find(c => c.courtId === courtId)?.name}
+                        {getCourtName(courts, courtId)}
                     </div>
                 }
                 date={
