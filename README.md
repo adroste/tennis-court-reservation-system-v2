@@ -146,7 +146,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [ ] week in url
 * [x] max reservation count user
 * [x] admin/general loop bug
-* [ ] court config better reason input
+* [x] court config better reason input
 * [ ] disable court form/dialog
 * [ ] announcement popup
 * [ ] color my reservations in calendar

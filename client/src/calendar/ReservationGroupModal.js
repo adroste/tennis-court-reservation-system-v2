@@ -1,17 +1,14 @@
-import { Button, Input, Modal, Radio, message } from 'antd';
-import { DownOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Radio, message } from 'antd';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { getReservationsApi, patchReservationGroupApi, postReservationGroupApi } from '../api';
 
-import { DatePicker } from './DatePicker';
+import { Ball } from '../Ball';
 import { ErrorResult } from '../ErrorResult';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { RESERVATION_TYPES } from '../ReservationTypes';
-import { RepeatReservationForm } from './RepeatReservationForm';
-import { ReservationDetails } from './ReservationDetails';
-import { ReservationTimeSelect } from './ReservationTimeSelect';
-import { ScrollRadioGroup } from './ScrollRadioGroup';
+import { ReservationDetailsForm } from './ReservationDetailsForm';
+import { ReservationTosConfirm } from './ReservationTosConfirm';
 import { StatusText } from '../admin/StatusText';
-import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import dayjs from 'dayjs';
 import styles from './ReservationGroupModal.module.css';
@@ -26,13 +23,11 @@ export function ReservationGroupModal({
     onFinish,
     setReservations: setOuterReservations,
 }) {
-    const { courts, templates: { reservationPrice, reservationTos } } = useContext(appContext);
     const { user } = useContext(authContext);
 
     const [changeReason, setChangeReason] = useState('');
     const [text, setText] = useState(null);
     const [reservations, setReservations] = useState(null);
-    const [editName, setEditName] = useState(false);
     const [from, setFrom] = useState(reservation?.from || initialFrom);
     const [to, setTo] = useState(() => reservation?.to || initialFrom.add(INITIAL_TO_HOUR_ADD, 'hour'));
     const [courtId, setCourtId] = useState(reservation?.courtId || initialCourtId);
@@ -50,10 +45,10 @@ export function ReservationGroupModal({
     const canEdit = user.admin || !reservation || reservation.userId === user.userId;
 
     const newReservations = useMemo(() => reservations?.filter(
-        r => !groupReservations.some(gr => gr.from.isSame(r.from, 'hour'))
+        r => !groupReservations.some(gr => gr.from.isSame(r.from, 'hour') && gr.to.isSame(r.to, 'hour'))
     ), [reservations, groupReservations]);
     const cancelReservations = useMemo(() => reservations && groupReservations.filter(
-        gr => !reservations.some(r => r.from.isSame(gr.from, 'hour'))
+        gr => !reservations.some(r => r.from.isSame(gr.from, 'hour') && r.to.isSame(gr.to, 'hour'))
     ), [reservations, groupReservations]);
     const changeText = !!(groupReservations && text);
 
@@ -71,34 +66,6 @@ export function ReservationGroupModal({
         if (reservation?.groupId)
             getGroupReservations({ query: { 'group-id': reservation?.groupId } });
     }, [reservation, getGroupReservations]);
-
-    const handleEditName = useCallback(() => {
-        setEditName(true);
-    }, []);
-
-    const handleCancelEditName = useCallback(() => {
-        setEditName(false);
-        setText(null);
-    }, []);
-
-    const handleDateChange = useCallback(date => {
-        setFrom(from => {
-            const newFrom = date.hour(from.hour());
-            setTo(to => {
-                const diff = Math.abs(to.diff(from, 'hour'));
-                return newFrom.add(diff, 'hour');
-            });
-            return newFrom;
-        });
-    }, []);
-
-    const handleTextChange = useCallback(e => {
-        setText(e.target.value);
-    }, []);
-
-    const handleCourtIdChange = useCallback(e => {
-        setCourtId(e.target.value);
-    }, []);
 
     const handleChangeChangeReason = useCallback(e => {
         setChangeReason(e.target.value);
@@ -410,125 +377,53 @@ export function ReservationGroupModal({
             }
         >
             <div className={styles.wrapper}>
-                <div>
-                    <ReservationDetails
-                        court={
-                            <ScrollRadioGroup
-                                disabled={loading}
-                                onChange={handleCourtIdChange}
-                                value={courtId}
-                            >
-                                {courts.map(({ courtId, name }) => (
-                                    <Radio.Button key={courtId} value={courtId}>{name}</Radio.Button>
-                                ))}
-                            </ScrollRadioGroup>
-                        }
-                        date={
-                            <DatePicker
-                                allowClear={false}
-                                bordered={false}
-                                className={styles.datePicker}
-                                disabled={loading}
-                                format="L"
-                                onChange={handleDateChange}
-                                showToday={false}
-                                suffixIcon={<DownOutlined />}
-                                value={from}
-                            />
-                        }
-                        time={
-                            <ReservationTimeSelect
-                                from={from}
-                                to={to}
-                                onFromChange={setFrom}
-                                onToChange={setTo}
-                            />
-                        }
-                        name={editName ?
-                            (
-                                <>
-                                    <Input
-                                        className={styles.nameInput}
-                                        disabled={loading}
-                                        onChange={handleTextChange}
-                                        placeholder="z.B. Training, ..."
-                                        value={text}
-                                        size="large"
-                                    />
-                                    <Button
-                                        disabled={loading}
-                                        onClick={handleCancelEditName}
-                                        type='link'
-                                    >
-                                        abbrechen
-                                    </Button>
-                                </>
-                            ) : (
-                                <>
-                                    <div className={styles.name}>
-                                        <span>
-                                            {reservation?.text || reservation?.name || user.name}
-                                        </span>
-                                    </div>
-                                    {user.admin &&
-                                        <Button
-                                            disabled={loading}
-                                            onClick={handleEditName}
-                                            type='link'
-                                        >
-                                            <EditOutlined /> bearbeiten
-                                        </Button>
-                                    }
-                                </>
-                            )
-                        }
-                        showAllDates={!canEdit}
-                        showDateRange={canEdit}
-                        repeat={canEdit &&
-                            <RepeatReservationForm
-                                from={from}
-                                to={to}
-                                disabled={loading}
-                                onChange={setReservations}
-                                currentReservations={groupReservations}
-                                unavailableReservations={unavailableReservations}
-                            />
-                        }
-                    />
-                </div>
+                {state.loading ?
+                    (
+                        <Ball visible spin centered large />
+                    ) : (
 
-                {false && /*TODO */ !reservation &&
-                    <>
-                        {reservationPrice.body &&
-                            <div>
-                                <h1>Preis</h1>
-                                <div dangerouslySetInnerHTML={{ __html: reservationPrice.body }} />
-                            </div>
-                        }
-
-                        {reservationTos.body &&
-                            <div>
-                                <h1>Nutzungsordnung</h1>
-                                <div dangerouslySetInnerHTML={{ __html: reservationTos.body }} />
-                            </div>
-                        }
-                    </>
+                        <ReservationDetailsForm
+                            courtId={courtId}
+                            currentReservations={groupReservations}
+                            disabled={loading}
+                            from={from}
+                            onCourtIdChange={setCourtId}
+                            onFromChange={setFrom}
+                            onReservationsChange={setReservations}
+                            onTextChange={setText}
+                            onToChange={setTo}
+                            readOnly={!canEdit}
+                            text={text}
+                            to={to}
+                            unavailableReservations={unavailableReservations}
+                        />
+                    )
                 }
 
                 {adminEdit &&
-                    <div className={styles.changeReason}>
-                        <Input.TextArea
-                            autoSize
-                            disabled={loading}
-                            onChange={handleChangeChangeReason}
-                            placeholder="Grund der Änderung"
+                    <Form layout="vertical">
+                        <Form.Item 
+                            label="Grund der Änderung"
                             required
-                            value={changeReason}
-                        />
-                        <div className={styles.changeReasonHint}>
-                            *Erforderlich. Der Inhaber der Reservierung wird über die Änderungen sowie dessen Grund per E-Mail informiert.
-                        </div>
-                    </div>
+                        >
+                            <Input.TextArea
+                                autoSize
+                                disabled={loading}
+                                onChange={handleChangeChangeReason}
+                                placeholder="Erforderlich"
+                                required
+                                value={changeReason}
+                            />
+                            <div className={styles.changeReasonHint}>
+                                Der Inhaber der Reservierung wird über die Änderungen sowie dessen Grund per E-Mail informiert.
+                            </div>
+                        </Form.Item>
+                    </Form>
+                }
+
+                {false && /*TODO */ !reservation &&
+                    <ReservationTosConfirm
+                    />
                 }
             </div>
         </Modal>

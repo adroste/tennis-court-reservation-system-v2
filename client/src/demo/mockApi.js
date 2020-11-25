@@ -257,18 +257,6 @@ async function handleRequests(url, options) {
                     if (text && group) // group is null if post
                         group.text = text;
 
-                    const courtId = body?.courtId || group?.courtId;
-                    if (!courtId)
-                        return {
-                            __status: 400,
-                            json: { message: 'courtId is required' }
-                        };
-                    if (body?.courtId && group?.courtId && body?.courtId !== group?.courtId)
-                        return {
-                            __status: 400,
-                            json: { message: 'courtId change not implemented' }
-                        };
-
                     const { groupReservations, rest } = db.reservations.reduce((acc, r) => {
                         if (r.groupId === groupId)
                             acc.groupReservations.push(r);
@@ -276,6 +264,18 @@ async function handleRequests(url, options) {
                             acc.rest.push(r);
                         return acc;
                     }, { groupReservations: [], rest: [] });
+
+                    const courtId = body?.courtId || groupReservations[0]?.courtId;
+                    if (!courtId)
+                        return {
+                            __status: 400,
+                            json: { message: 'courtId is required' }
+                        };
+                    if (body?.courtId && groupReservations[0]?.courtId && body?.courtId !== groupReservations[0]?.courtId)
+                        return {
+                            __status: 400,
+                            json: { message: 'courtId change not implemented' }
+                        };
 
                     const { keepReservations, newReservations } = reservations.reduce((acc, { from, to }) => {
                         const found = groupReservations.find(r =>

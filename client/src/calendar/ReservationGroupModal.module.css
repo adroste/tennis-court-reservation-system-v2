@@ -6,10 +6,6 @@
     margin-bottom: 0;
 }
 
-.nameInput {
-    width: 200px;
-}
-
 .footer button {
     margin-top: 5px;
 }
@@ -23,26 +19,4 @@
 .changeReasonHint {
     margin-top: 5px;
     font-style: italic;
-}
-
-.name {
-    display: inline-block;
-    padding: 6.5px 11px;
-}
-
-.datePicker {
-    cursor: pointer;
-}
-
-.datePicker input {
-    font-weight: 600;
-    width: 100px;
-}
-
-.datePicker :global(.ant-picker-suffix) {
-    margin-left: 0;
-}
-
-.datePicker :global(.ant-picker-suffix) button {
-    padding-left: 0;
 }

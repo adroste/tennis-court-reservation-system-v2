@@ -57,15 +57,21 @@ export function RepeatReservationForm({
     }, [unavailableReservations, dateToReservation]);
 
     const dates = useMemo(() => {
-        return visibleDates.map(d => ({
-            date: d,
-            checked: selectedDates.some(sd => sd.isSame(d, 'day')),
-            reserved: currentReservations?.some(r => r.from.isSame(d, 'day')),
-            past: d.isBefore(now, 'hour'),
-            notAvailable: checkIfNotAvailable(d),
-            tooFarAhead: checkIfTooFarAhead(d),
-        }));
-    }, [checkIfNotAvailable, selectedDates, currentReservations, visibleDates, now, checkIfTooFarAhead]);
+        return visibleDates.map(d => {
+            const r = dateToReservation(d);
+            const reserved = currentReservations?.some(cr => 
+                cr.from.isSame(r.from, 'hour') && cr.to.isSame(r.to, 'hour'));
+            return {
+                date: d,
+                checked: selectedDates.some(sd => sd.isSame(d, 'day')),
+                change: !reserved && currentReservations?.some(r => r.from.isSame(d, 'day')),
+                reserved,
+                past: d.isBefore(now, 'hour'),
+                notAvailable: checkIfNotAvailable(d),
+                tooFarAhead: checkIfTooFarAhead(d),
+            };
+        });
+    }, [visibleDates, selectedDates, currentReservations, now, checkIfNotAvailable, checkIfTooFarAhead, dateToReservation]);
 
     const setSelectedDates = useCallback(selectedDates => {
         _setSelectedDates(_selectedDates => {
@@ -88,7 +94,7 @@ export function RepeatReservationForm({
         let visibleDates = [from];
 
         if (currentReservations?.length > 1) {
-            selectedDates = currentReservations.map(r => r.from);
+            selectedDates = currentReservations.map(r => r.from.hour(from.hour()));
             selectedDates.sort((a, b) => a.valueOf() - b.valueOf());
             let repeatValue = Number.MAX_SAFE_INTEGER;
 
@@ -184,7 +190,7 @@ export function RepeatReservationForm({
             {repeatValue > 0 &&
                 <>
                     <div className={styles.dates}>
-                        {dates.map(({ date, checked, reserved, past, notAvailable, tooFarAhead }, i) => (
+                        {dates.map(({ date, checked, change, reserved, past, notAvailable, tooFarAhead }, i) => (
                             <Checkbox
                                 key={date}
                                 className={cn({
@@ -201,6 +207,7 @@ export function RepeatReservationForm({
                                 {!past && reserved && !checked && <span className={styles.extra}> Wird storniert</span>}
                                 {!notAvailable && past && <span className={styles.extra}> Bereits vergangen</span>}
                                 {!notAvailable && tooFarAhead && <span className={styles.extra}> Zu weit in der Zukunft</span>}
+                                {!notAvailable && change && <span className={styles.extra}> Wird geändert</span>}
                                 {notAvailable && <span className={styles.extra}> Nicht verfügbar</span>}
                             </Checkbox>
                         ))}
@@ -210,11 +217,7 @@ export function RepeatReservationForm({
                             disabled={disabled}
                             icon={<PlusOutlined />}
                             onClick={addDate}
-                        />
-                        <Button
-                            disabled={disabled}
-                            icon={<MinusOutlined />}
-                            onClick={removeDate}
+                            type="dashed"
                         />
                     </div>
                 </>
