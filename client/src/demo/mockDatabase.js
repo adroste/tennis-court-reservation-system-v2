@@ -35,18 +35,12 @@ export const db = {
     },
 
     templates: {
-        reservationPrice: {
-            body: `<div>
-    15,- Euro pro Wertmarke<br />
-    145,- Euro pro 10 Wertmarken
-</div>`
-        },
         reservationTos: {
-            body: `<ul>
+            body: `<h1>Preis</h1><div>15,- Euro pro Wertmarke<br>145,- Euro pro 10 Wertmarken<br></div><div><br></div><h1>Nutzungsordnung</h1><ul>
     <li>
-        Zur Nutzung benötigen Sie Wertmarken und einen Zugangscode. Diese erhalten Sie bei unserern Partnern: <br />
-xyz asfdlkafsd, asdfkj 012387878 <br />
-xbasdfyz aad, asdfkj 129388 8123 <br />
+        Zur Nutzung benötigen Sie Wertmarken und einen Zugangscode. Diese erhalten Sie bei unserern Partnern: <br>
+xyz asfdlkafsd, asdfkj 012387878 <br>
+xbasdfyz aad, asdfkj 129388 8123 <br>
     </li>
     <li>
         Am Eingang der Halle ist ein Codeschloß angebracht, in das ein 4-stelliger Zahlencode eingegeben werden muß, um den Türöffner zu betätigen.

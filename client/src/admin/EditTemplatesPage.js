@@ -62,21 +62,11 @@ export function EditTemplatesPage() {
                 <Tabs.TabPane tab="Reservierungsdialog" key="1">
                     <div className={styles.content}>
 
-                        <h1>Preis</h1>
-                        <TemplateEditor
-                            id='reservationPrice'
-                            extra='Ein leerer Wert deaktiviert diesen Textblock.'
-                        />
-
-                        <Divider />
-
-                        <h1>Nutzungsordnung</h1>
                         <TemplateEditor
                             id='reservationTos'
                             extra={
                                 <>
-                                    <div>Der Nutzer muss diese Nutzungsordnung akzeptieren, um eine Reservierung durchzuführen.</div>
-                                    <div>Ein leerer Wert deaktviert diesen Textblock.</div>
+                                    <div>Der Nutzer wird während einer Reservierung dazu aufgefordert, oben stehende Hinweise / Ordnung zu akzeptieren.</div>
                                 </>
                             }
                         />
