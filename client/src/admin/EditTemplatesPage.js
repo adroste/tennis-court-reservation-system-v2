@@ -1,7 +1,6 @@
-import { Divider, Tabs } from 'antd';
-
 import { MailTemplatesPane } from './MailTemplatesPane';
 import React from 'react';
+import { Tabs } from 'antd';
 import { TemplateEditor } from './TemplateEditor';
 import styles from './EditTemplatesPage.module.css';
 
