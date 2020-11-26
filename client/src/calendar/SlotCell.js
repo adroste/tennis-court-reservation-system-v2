@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { RESERVATION_TYPES } from '../ReservationTypes';
+import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
 import styles from './SlotCell.module.css';
 
@@ -20,6 +21,8 @@ export function SlotCell({
     onClick,
     reservation,
 }) {
+    const { user } = useContext(authContext);
+
     const handleClick = useCallback(() => {
         if (alwaysClickable || (!disabled && reservation?.type !== RESERVATION_TYPES.DISABLE))
             onClick({ courtId, date, reservation });
@@ -54,6 +57,7 @@ export function SlotCell({
                     slot: true,
                     loading,
                     reserved: reservation?.type === RESERVATION_TYPES.NORMAL,
+                    mine: user && user?.userId === reservation?.userId,
                 })}
                 style={{ height: SLOT_HEIGHT_PX * rowSpan + CELL_PADDING_PX * 2 * (rowSpan - 1) }}
                 data-free-text="Frei"

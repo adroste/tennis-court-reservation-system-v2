@@ -149,12 +149,11 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [x] court config better reason input
 * [ ] disable court form/dialog
 * [ ] announcement popup
-* [ ] color my reservations in calendar
-* [ ] better group dates form
+* [x] color my reservations in calendar
+* [x] better group dates form
 * [ ] trainer type
 * [x] diesen stornieren / alle zuk√ºnftigen stornieren dialog
 * [ ] 0 Uhr testen
-* [ ] set color global
 
 
 ### tables
