@@ -2,6 +2,7 @@ import { Button, Space, notification } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { ExperimentOutlined } from '@ant-design/icons';
 import { authContext } from '../AuthContext';
 import { postLoginApi } from '../api';
 import { useApi } from '../useApi';
@@ -25,11 +26,11 @@ export function DemoControls() {
         }
 
         notification.info({
-            style: { zIndex: 200},
             key: 'demo',
             message: 'Demo Modus',
             duration: 0,
             placement: 'bottomRight',
+            icon: <ExperimentOutlined />,
             onClose: () => setOpen(false),
             description: (
                 <>
@@ -67,7 +68,7 @@ export function DemoControls() {
                             )
                         }
                         <Button size="middle" type="primary" onClick={() => setOpen(false)}>
-                            Demosteuerung ausblenden
+                            Ausblenden
                         </Button>
                     </Space>
                 </>
