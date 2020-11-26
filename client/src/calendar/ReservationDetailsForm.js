@@ -111,6 +111,7 @@ export function ReservationDetailsForm({
             }
             time={
                 <ReservationTimeSelect
+                    disabled={disabled}
                     from={from}
                     to={to}
                     onFromChange={onFromChange}

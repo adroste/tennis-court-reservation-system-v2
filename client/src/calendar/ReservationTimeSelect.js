@@ -5,6 +5,7 @@ import { appContext } from '../AppContext';
 import { visibleHoursToHoursArray } from '../helper';
 
 export function ReservationTimeSelect({
+    disabled = false,
     from,
     to,
     onFromChange,
@@ -36,10 +37,11 @@ export function ReservationTimeSelect({
     return (
         <Space direction="horizontal" size="middle">
             <Select
-                size="large"
                 bordered={false}
-                value={from.hour()}
+                disabled={disabled}
                 onChange={handleFromChange}
+                size="large"
+                value={from.hour()}
             >
                 {hours.map(hour => (
                     <Select.Option
@@ -54,10 +56,11 @@ export function ReservationTimeSelect({
             <span>bis</span>
 
             <Select
-                size="large"
                 bordered={false}
-                value={to.hour()}
+                disabled={disabled}
                 onChange={handleToChange}
+                size="large"
+                value={to.hour()}
             >
                 {toHours.map(hour => (
                     <Select.Option
