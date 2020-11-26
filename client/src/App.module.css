@@ -9,3 +9,7 @@
     text-align: center;
     overflow: hidden;
 }
+
+.announcement {
+    white-space: pre-wrap;
+}

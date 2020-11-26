@@ -1,11 +1,11 @@
-import React, { Suspense, lazy, useContext } from 'react';
+import { Layout, Modal } from 'antd';
+import React, { Suspense, lazy, useContext, useEffect, useRef } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { Ball } from './Ball';
 import { CookieNotice } from './CookieNotice';
 import { ErrorResult } from './ErrorResult';
 import { Footer } from './Footer';
-import { Layout } from 'antd';
 import { NavBar } from './navigation/NavBar';
 import { RouterSwitch } from './navigation/RouterSwitch';
 import { appContext } from './AppContext';
@@ -16,9 +16,23 @@ const DemoControls = lazy(() => import('./demo/DemoControls').then(m => ({ defau
 
 function App() {
     const { config, state } = useContext(appContext);
+    const lastAnnouncementRef = useRef(null);
 
     const basename = process.env.PUBLIC_URL;
     const demoMode = process.env.REACT_APP_DEMO;
+
+    useEffect(() => {
+        if (config?.announcement && config.announcement !== lastAnnouncementRef.current) {
+            lastAnnouncementRef.current = config.announcement;
+            Modal.info({
+                className: styles.announcement,
+                title: "Ankündigung",
+                centered: true,
+                content: config.announcement,
+                zIndex: 1200,
+            });
+        }
+    }, [config]);
 
     if (state.error)
         return <ErrorResult />;

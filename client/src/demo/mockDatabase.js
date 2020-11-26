@@ -6,7 +6,7 @@ const today = dayjs().startOf('day');
 export const db = {
 
     config: {
-        announcement: "Beispielankündigung: abcdefg bla bla",
+        announcement: 'Dies ist eine Beispielankündigung.\nEine Ankündigung kann als Admin unter Verwaltung -> Allgemein eingestellt werden.',
         visibleHours: [8, 22],
         orgName: 'Tennisclub Beispiel',
         serverMail: 'abc@def.de',
