@@ -7,7 +7,6 @@ import { ErrorResult } from '../ErrorResult';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { RESERVATION_TYPES } from '../ReservationTypes';
 import { ReservationDetailsForm } from './ReservationDetailsForm';
-import { ReservationTosConfirm } from './ReservationTosConfirm';
 import { StatusText } from '../admin/StatusText';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
@@ -25,7 +24,7 @@ export function ReservationGroupModal({
     onFinish,
     setReservations: setOuterReservations,
 }) {
-    const { courts } = useContext(appContext);
+    const { courts, templates: { reservationTos } } = useContext(appContext);
     const { user } = useContext(authContext);
 
     const [changeReason, setChangeReason] = useState('');
@@ -76,18 +75,32 @@ export function ReservationGroupModal({
     }, []);
 
     const handlePostReservation = useCallback(() => {
-        postReservationGroup(null, {
-            reservations,
-            text,
-            type: RESERVATION_TYPES.NORMAL,
-        }, () => {
-            message.success("Reservierung erfolgreich");
-            onFinish();
+        const doPost = () => {
+            postReservationGroup(null, {
+                reservations,
+                text,
+                type: RESERVATION_TYPES.NORMAL,
+            }, () => {
+                message.success("Reservierung erfolgreich");
+                onFinish();
+            });
+        };
+
+        Modal.confirm({
+            icon: false,
+            okText: 'Akzeptieren',
+            width: 530,
+            centered: true,
+            content: (
+                <div dangerouslySetInnerHTML={{ __html: reservationTos.body }} />
+            ),
+            onOk: doPost,
         });
     }, [
         onFinish,
         postReservationGroup,
         reservations,
+        reservationTos,
         text,
     ]);
 
@@ -427,11 +440,6 @@ export function ReservationGroupModal({
                             </div>
                         </Form.Item>
                     </Form>
-                }
-
-                {false && /*TODO */ !reservation &&
-                    <ReservationTosConfirm
-                    />
                 }
             </div>
         </Modal>
