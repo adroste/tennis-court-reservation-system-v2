@@ -1,2 +1,0 @@
-(this["webpackJsonpreservierungssystem-tennis"]=this["webpackJsonpreservierungssystem-tennis"]||[]).push([[25],{469:function(e,r,s){e.exports={wrapper:"LegalPrivacyPage_wrapper__2ayGP"}},532:function(e,r,s){"use strict";s.r(r),s.d(r,"LegalPrivacyPage",(function(){return p}));var n=s(2),t=s(0),a=s(55),i=s(469),c=s.n(i);function p(){var e=Object(t.useContext)(a.b).templates.legalPrivacy;return Object(n.jsx)("div",{className:c.a.wrapper,children:Object(n.jsx)("div",{dangerouslySetInnerHTML:{__html:e.body}})})}}}]);
-//# sourceMappingURL=25.eed105be.chunk.js.map
