@@ -3,6 +3,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { DayTable } from './DayTable';
 import { ErrorResult } from '../ErrorResult';
 import { HoursTable } from './HoursTable';
+import { RESERVATION_TYPES } from '../ReservationTypes';
 import { ReservationModal } from './ReservationModal';
 import { UPDATE_INTERVALS_SEC } from '../updateIntervals';
 import { appContext } from '../AppContext';
@@ -72,6 +73,13 @@ export function ReservationCalendar({
             setSelectedSlot(selectedSlot);
     }, [kiosk]);
 
+    const handleDisableCourtClicked = useCallback(selectedSlot => {
+        setSelectedSlot({ 
+            ...selectedSlot,
+            type: RESERVATION_TYPES.DISABLE,
+        });
+    }, []);
+
     const handleReservationFinish = useCallback(() => {
         setSelectedSlot(null);
     }, []);
@@ -99,6 +107,7 @@ export function ReservationCalendar({
                             hours={hours}
                             key={date}
                             loading={!reservations}
+                            onDisableCourtClick={handleDisableCourtClicked}
                             onSlotClick={handleSlotClicked}
                             reservationDaysInAdvance={reservationDaysInAdvance}
                             reservations={reservations}
@@ -112,6 +121,7 @@ export function ReservationCalendar({
                     initialFrom={selectedSlot?.date}
                     initialCourtId={selectedSlot?.courtId}
                     reservation={selectedSlot?.reservation}
+                    type={selectedSlot?.type}
                     onFinish={handleReservationFinish}
                     setReservations={setReservations}
                 />

@@ -70,17 +70,6 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 
 ## todos
 
-* [x] Cookie Notice
-* [x] Legal Notice
-* [x] Logos
-* [x] Size + Code-Splitting
-  * [x] react lazy for routes
-* [x] Kiosk Mode
-  * [x] Clock + Date
-  * [x] URL + QR Code
-  * [x] Auto day switch
-  * [x] highlight current row
-  * [ ] auto reload app context (announcements, courts)
 * [ ] Analytics
   * [ ] backend: create fingerprint by header + ip, change daily
   * [x] mark user count as predicted
@@ -96,64 +85,16 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
     * [x] os
     * [x] device
 * [ ] .htaccess for client side routing
-* [x] Auto refresh reservation data (interval in useWeekReservations, ... hooks)
-* [x] disabled dates for reservation < today
-* [x] reservations days in advance (implement)
-* [x] html editor switch
-* [x] editor 16px font-size
-* [x] replace antd typography heading
-* [x] style h1 / h2 / h3 elements
-* [x] navbar replace h1
-* [x] my reservations page auto day switch
-* [x] my reservations page check for date >= today
-* [x] announcements
-* [x] login
-* [x] registration
-* [x] registration step 2/confirm
 * [ ] password recovery
-* [x] loading gate for appcontext
-* [x] login redirect to referrer
-* [x] weekpicker fix outside tap
-* [x] close sidedrawer on click
-* [x] input font-size 16px
-* [x] redirect to login on calendar item click
-* [x] calendar item click: login required modal
-* [x] demo mode
-* [x] antd message for reservation successful, change, cancel, ...
-* [x] admin cancel reservation => reason 
-* [x] reset button for forms
-* [x] groupdatesform check tooFarAhead and disabledDates
-* [x] fix disabled announcement not showing
-* [x] weekpicker => heute button
-* [x] isEmpty check for templates
 * [ ] test mail template button
-* [x] user management sorting
-* [x] show npm version
-* [x] implement fetch/api routines
-* [x] fix demo login button
-* [x] fix demo notification overlapping cookie notice on mobile
 * [x] bestehende reservierungen bei platzsperre stornieren (hinweis)
   * [ ] implementation
 * [ ] datenschutz buttons unter mein benutzerkonto implementieren
 * [ ] activity table backend
-* [x] verified email state
-* [x] set verified=false when changing email via myaccount
-* [x] register: check for unique mail
-* [x] make delete, put id based param
-* [x] daytable loading state
-* [x] consistent paths
-* [x] reservation error handling
-* [ ] week in url
-* [x] max reservation count user
-* [x] admin/general loop bug
-* [x] court config better reason input
 * [ ] disable court form/dialog
-* [ ] announcement popup
-* [x] color my reservations in calendar
-* [x] better group dates form
 * [ ] trainer type
-* [x] diesen stornieren / alle zuk√ºnftigen stornieren dialog
 * [ ] 0 Uhr testen
+* [x] backend: handle conflicting court disable reservations on post
 
 
 ### tables

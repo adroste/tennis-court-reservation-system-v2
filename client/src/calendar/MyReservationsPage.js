@@ -108,6 +108,7 @@ export function MyReservationsPage() {
                 <ReservationModal
                     reservation={selectedReservation}
                     onFinish={handleReservationEditFinish}
+                    setReservations={setReservations}
                 />
             }
         </div>

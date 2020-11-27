@@ -1,11 +1,11 @@
 import { Button, notification } from 'antd';
 import { deleteUserApi, getBaseDataApi, getMailTemplatesApi, getReservationsApi, getUsersApi, patchConfigApi, patchReservationGroupApi, patchUserApi, postLoginApi, postLogoutApi, postRegisterApi, postReservationGroupApi, postSendVerifyMailApi, postVerifyMailApi, putCourtsApi, putMailTemplateApi, putTemplateApi } from '../api';
+import { parseQuery, reservationOverlap } from '../helper';
 
 import { RESERVATION_TYPES } from '../ReservationTypes';
 import dayjs from 'dayjs';
 import { db } from './mockDatabase';
 import { demoControl } from './DemoControls';
-import { parseQuery } from '../helper';
 
 const fakeDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -234,13 +234,16 @@ async function handleRequests(url, options) {
             // case cn(deleteReservationGroupApi):
             case cn(patchReservationGroupApi):
             case cn(postReservationGroupApi): {
+                // TODO ensure that user is admin if reservation.type = DISABLE
                 let groupId;
                 try {
                     groupId = parseInt(lastUrlPart);
+                    if (isNaN(groupId))
+                        groupId = null;
                 } catch (e) { }
-                groupId = groupId || db.reservationGroups.reduce((nextId, g) => {
+                groupId = groupId ?? (db.reservationGroups.reduce((nextId, g) => {
                     return Math.max(nextId, g.groupId);
-                }, 0) + 1;
+                }, 0) + 1);
                 const text = body?.text;
                 // todo real server: check if from,to are set
                 const reservations = body?.reservations?.map(({ courtId, from, to }) => ({
@@ -257,7 +260,7 @@ async function handleRequests(url, options) {
                     const group = db.reservationGroups.find(g => g.groupId === groupId);
                     if (text && group) // group is null if post
                         group.text = text;
-
+                    
                     const { groupReservations, rest } = db.reservations.reduce((acc, r) => {
                         if (r.groupId === groupId)
                             acc.groupReservations.push(r);
@@ -266,7 +269,7 @@ async function handleRequests(url, options) {
                         return acc;
                     }, { groupReservations: [], rest: [] });
 
-                    const { keepReservations, newReservations } = reservations.reduce((acc, { courtId, from, to }) => {
+                    let { keepReservations, newReservations } = reservations.reduce((acc, { courtId, from, to }) => {
                         const found = groupReservations.find(r =>
                             r.from.isSame(from, 'hour') 
                             && r.to.isSame(to, 'hour')
@@ -283,43 +286,58 @@ async function handleRequests(url, options) {
                                 created: dayjs(),
                             });
                         return acc;
-                    }, { keepReservations: [], newReservations: [] });
+                    }, { keepReservations: [...rest], newReservations: [] });
 
                     const userId = group?.userId || authUserId;
                     const user = db.users.find(u => u.userId === userId);
 
                     const today = dayjs();
                     const maxDate = today.add(db.config.reservationDaysInAdvance, 'day');
-                    const conflicts = newReservations.reduce((conflicts, { courtId, from, to }) => {
-                        const conflict = rest.find(r => (
-                            r.from.isBefore(to, 'hour')
-                            && r.to.isAfter(from, 'hour')
-                            && r.courtId === courtId
-                        ));
-                        if (conflict)
-                            conflicts.push({ 
-                                courtId, 
-                                from: conflict.from.isAfter(from) ? conflict.from : from, 
-                                to: conflict.to.isBefore(to) ? conflict.to : to, 
-                            });
-                        else if ((!user.admin && to.isAfter(maxDate, 'day'))
-                            || (!user.admin && from.isBefore(today, 'hour')))
-                            conflicts.push({ 
-                                courtId, 
-                                from, 
-                                to 
-                            });
-                        return conflicts;
-                    }, []);
+                    let { conflicts, unavailableReservations } = newReservations.reduce((acc, r) => {
+                        const allFound = keepReservations.filter(r2 => reservationOverlap(r, r2));
+                        if (allFound.length) {
+                            acc.conflicts.push(...allFound);
+                            acc.unavailableReservations.push(r);
+                        } else if ((!user.admin && r.to.isAfter(maxDate, 'day'))
+                            || (!user.admin && r.from.isBefore(today, 'hour'))) {
+                            acc.unavailableReservations.push(r);
+                        }
+                        return acc;
+                    }, { conflicts: [], unavailableReservations: [] });
 
-                    if (conflicts.length > 0)
+                    const type = body?.type || group.type;
+                    if (type === RESERVATION_TYPES.DISABLE) {
+                        // delete 
+                        const { normal, disabled } = conflicts.reduce((acc, r) => {
+                            const group = db.reservationGroups.find(g => g.groupId === r.groupId);
+                            if (group.type === RESERVATION_TYPES.DISABLE)
+                                acc.disabled.push(r);
+                            else
+                                acc.normal.push(r);
+                            return acc;
+                        }, { normal: [], disabled: [] });
+                        
+                        if (disabled.length) 
+                            return {
+                                __status: 409,
+                                json: { unavailableReservations: disabled }
+                            };
+                        
+                        // todo delete empty groups
+                        if (normal.length)
+                            keepReservations = keepReservations.filter(k => !normal.some(n => 
+                                n.from.isSame(k.from, 'hour') 
+                                && n.to.isSame(k.to, 'hour') 
+                                && n.courtId === k.courtId));
+                        
+                    } else if (unavailableReservations.length > 0) {
                         return {
                             __status: 409,
-                            json: { unavailableReservations: conflicts }
+                            json: { unavailableReservations }
                         };
+                    }
 
                     const updatedReservations = [
-                        ...rest,
                         ...keepReservations,
                         ...newReservations,
                     ];

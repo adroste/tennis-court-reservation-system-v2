@@ -1,4 +1,6 @@
+import { RESERVATION_TYPES } from './ReservationTypes';
 import dayjs from 'dayjs';
+import { reservationOverlap } from './helper';
 
 const BASE_PATH = '/api';
 
@@ -63,14 +65,26 @@ export const getReservationsApi = {
 export const postReservationGroupApi = {
     url: `${BASE_PATH}/reservation-group`,
     method: 'POST',
-    setFunc: ({ cur, res }) => ([
-        ...cur,
-        ...res.map(r => ({
-            ...r,
-            from: dayjs(r.from),
-            to: dayjs(r.to),
-        })),
-    ]),
+    setFunc: ({ cur, res }) => {
+        if (!res?.length)
+            return cur;
+
+        let out = [...cur];
+        if (res[0].type === RESERVATION_TYPES.DISABLE) {
+            out = out.filter(r1 => (
+                !res.some(r2 => reservationOverlap(r1, r2))
+            ));
+        }
+
+        return [
+            ...out,
+            ...res.map(r => ({
+                ...r,
+                from: dayjs(r.from),
+                to: dayjs(r.to),
+            })),
+        ]
+    },
 };
 
 export const patchReservationGroupApi = {
@@ -79,8 +93,18 @@ export const patchReservationGroupApi = {
     setFunc: ({ cur, req, params }) => {
         const groupId = params.path.groupId;
         const reference = cur.find(r => r.groupId === groupId);
+        if (!reference)
+            return cur;
+
+        let out = [...cur];
+        if (reference.type === RESERVATION_TYPES.DISABLE) {
+            out = out.filter(r1 => (
+                !req.reservations.some(r2 => reservationOverlap(r1, r2))
+            ));
+        }
+
         return [
-            ...cur.filter(r => r.groupId !== groupId),
+            ...out.filter(r => r.groupId !== groupId),
             ...req.reservations.map(r => ({
                 ...reference,
                 ...r,

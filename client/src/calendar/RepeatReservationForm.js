@@ -6,6 +6,7 @@ import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
+import { reservationOverlap } from '../helper';
 import styles from './RepeatReservationForm.module.css';
 import { useTime } from './useTime';
 
@@ -51,12 +52,8 @@ export function RepeatReservationForm({
     const checkIfNotAvailable = useCallback(date => {
         if (!unavailableReservations)
             return false;
-        const r = dateToReservation(date);
-        return unavailableReservations.some(r2 => (
-            r2.from.isBefore(r.to, 'hour')
-            && r2.to.isAfter(r.from, 'hour')
-            && r2.courtId === r.courtId
-        ));
+        const r1 = dateToReservation(date);
+        return unavailableReservations.some(r2 => reservationOverlap(r1, r2));
     }, [unavailableReservations, dateToReservation]);
 
     const setSelectedDates = useCallback(selectedDates => {
@@ -76,8 +73,8 @@ export function RepeatReservationForm({
     useEffect(() => setSelectedDates(s => s), [setSelectedDates]);
 
     useEffect(() => {
-        let selectedDates = [from];
-        let visibleDates = [from];
+        let selectedDates = [];
+        let visibleDates = [];
 
         if (currentReservations?.length > 1) {
             selectedDates = currentReservations.map(r => r.from.hour(from.hour()));
@@ -103,15 +100,16 @@ export function RepeatReservationForm({
             visibleDates = [];
             for (let i = 0; i <= count; ++i)
                 visibleDates.push(first.add(i * repeatValue, 'day'));
-        } else {
-            if (repeatValue > 0) {
-                for (let i = 1; i <= defaultAddCount; ++i) {
-                    const date = from.add(i * repeatValue, 'day');
-                    visibleDates.push(date);
-                    if (!checkIfNotAvailable(date))
-                        selectedDates.push(date);
-                }
+        } else if (repeatValue > 0) {
+            for (let i = 0; i <= defaultAddCount; ++i) {
+                const date = from.add(i * repeatValue, 'day');
+                visibleDates.push(date);
+                if (!checkIfNotAvailable(date))
+                    selectedDates.push(date);
             }
+        } else {
+            selectedDates = [from];
+            visibleDates = [from];
         }
 
         setVisibleDates(visibleDates);

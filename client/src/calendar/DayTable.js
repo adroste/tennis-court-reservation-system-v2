@@ -15,6 +15,7 @@ export function DayTable({
     date,
     hours,
     loading,
+    onDisableCourtClick,
     onSlotClick,
     reservationDaysInAdvance,
     reservations,
@@ -85,6 +86,7 @@ export function DayTable({
                                 <td key={courtId}>
                                     <Button
                                         type="link"
+                                        onClick={() => onDisableCourtClick({ courtId, date })}
                                     >
                                         Sperren
                                     </Button>

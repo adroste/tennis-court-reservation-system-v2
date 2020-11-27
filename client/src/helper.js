@@ -8,6 +8,12 @@ export function findReservation(reservations, date, courtId) {
     return null;
 }
 
+export function reservationOverlap(r1, r2) {
+    return r1.from.isBefore(r2.to, 'hour')
+        && r1.to.isAfter(r2.from, 'hour')
+        && r1.courtId === r2.courtId;
+}
+
 export function getCourtName(courts, courtId) {
     return courts.find(c => c.courtId === courtId)?.name;
 }

@@ -67,12 +67,16 @@ export function SlotCell({
                     text: true,
                     singleLine: rowSpan === 1,
                 })}>
-                    {reservation?.type === RESERVATION_TYPES.DISABLE && 
-                        <div>Gesperrt</div>
-                    }
-                    {reservation && 
-                        <div>{reservation.text || reservation.name}</div>
-                    }
+                    {reservation && (reservation.type === RESERVATION_TYPES.DISABLE ?
+                        (
+                            <>
+                                <div>Gesperrt</div>
+                                <div>{reservation.text}</div>
+                            </>
+                        ) : (
+                            <div>{reservation.text || reservation.name}</div>
+                        )
+                    )}
                 </div>
             </div>
         </td>
