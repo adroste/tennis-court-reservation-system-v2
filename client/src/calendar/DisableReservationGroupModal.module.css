@@ -1,0 +1,15 @@
+.wrapper > * {
+    margin-bottom: 20px;
+}
+
+.wrapper > *:last-child {
+    margin-bottom: 0;
+}
+
+.footer button {
+    margin-top: 5px;
+}
+.changeReasonHint {
+    margin-top: 5px;
+    font-style: italic;
+}
