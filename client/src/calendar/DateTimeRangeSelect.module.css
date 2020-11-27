@@ -1,0 +1,22 @@
+.datePicker {
+    cursor: pointer;
+}
+
+.datePicker input {
+    font-weight: 600;
+    width: 100px;
+}
+
+.datePicker :global(.ant-picker-suffix) {
+    margin-left: 0;
+}
+
+.datePicker :global(.ant-picker-suffix) button {
+    padding-left: 0;
+}
+
+.to {
+    color: #888;
+    vertical-align: baseline;
+    padding: 0px 11px;
+}
