@@ -91,10 +91,8 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
   * [ ] implementation
 * [ ] datenschutz buttons unter mein benutzerkonto implementieren
 * [ ] activity table backend
-* [ ] disable court form/dialog
 * [ ] trainer type
 * [ ] 0 Uhr testen
-* [x] backend: handle conflicting court disable reservations on post
 
 
 ### tables
