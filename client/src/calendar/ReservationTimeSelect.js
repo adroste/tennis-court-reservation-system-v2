@@ -60,7 +60,7 @@ export function ReservationTimeSelect({
                 disabled={disabled}
                 onChange={handleToChange}
                 size="large"
-                value={to.hour()}
+                value={to.hour() === 0 ? 24 : to.hour()}
             >
                 {toHours.map(hour => (
                     <Select.Option
