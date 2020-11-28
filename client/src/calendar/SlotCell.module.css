@@ -19,9 +19,8 @@
     text-overflow: ellipsis;
     padding: 7px 5px;
     border-radius: 2px;
-    background: #9dc88d;
+    background: #b7d9a6;
     color: #fff;
-    opacity: 0.65;
     font-size: 12px;
     margin: 0 auto;
 }
@@ -40,11 +39,15 @@
 }
 
 .cell:not(.enabled) .slot {
+    background: #d0d0d0;
+}
+
+.cell:not(.enabled) .slot.reserved {
     background: #bbb;
 }
 
-.cell.enabled:hover .slot {
-    opacity: 1;
+.cell.enabled:hover .slot:not(.reserved) {
+    background: #9dc88d;
 }
 
 .cell.enabled .slot:not(.reserved)::after {
@@ -79,7 +82,7 @@
 
 .slot.loading::before {
     opacity: 1;
-    animation: load 1.5s linear infinite;
+    animation: load 2s linear infinite;
 }
 
 .slot:not(.loading)::before {
@@ -91,7 +94,7 @@
         background: #ddd;
     }
     50% {
-        background: #aaa;
+        background: #bbb;
     }
     100% {
         background: #ddd;
