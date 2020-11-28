@@ -22,7 +22,7 @@ export function ReservationCalendar({
 }) {
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
-    const now = useTime('hour');
+    const today = useTime('day');
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
@@ -54,8 +54,8 @@ export function ReservationCalendar({
     useEffect(() => {
         if (!scrollerRef.current)
             return;
-        if (selectedDate.isSame(now, 'week')) {
-            const index = Math.abs(now.startOf('week').diff(now, 'day'));
+        if (selectedDate.isSame(today, 'week')) {
+            const index = Math.abs(today.startOf('week').diff(today, 'day'));
             requestAnimationFrame(() => {
                 scrollerRef.current.scrollLeft
                     = ((scrollerRef.current.scrollWidth) / VISIBLE_DATES_COUNT) * index;
@@ -65,7 +65,7 @@ export function ReservationCalendar({
                 scrollerRef.current.scrollLeft = 0;
             });
         }
-    }, [selectedDate, now]);
+    }, [selectedDate, today]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
         if (!kiosk)
@@ -95,7 +95,7 @@ export function ReservationCalendar({
             <div className={styles.tableWrapper}>
                 <HoursTable
                     hours={hours}
-                    highlightHour={selectedDate.isSame(now, 'week') ? now.hour() : false}
+                    highlightHour={selectedDate.isSame(today, 'week')}
                 />
 
                 <div className={styles.tableScroller} ref={scrollerRef}>

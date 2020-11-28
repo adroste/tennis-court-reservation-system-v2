@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './HoursTable.module.css';
+import { useTime } from './useTime';
 
 const cn = classNames.bind(styles);
 
@@ -8,6 +9,8 @@ export function HoursTable({
     hours,
     highlightHour,
 }) {
+    const now = useTime('hour');
+
     return (
         <div className={styles.wrapper}>
             {hours.map(hour => (
@@ -15,7 +18,7 @@ export function HoursTable({
                     key={hour} 
                     className={cn({ 
                         hour: true,
-                        highlight: highlightHour === hour 
+                        highlight: highlightHour && now.hour() === hour
                     })}
                 >
                     {hour} Uhr<br />
