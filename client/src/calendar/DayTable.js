@@ -33,84 +33,73 @@ export function DayTable({
 
     const showInfoOverlay = !disableOverlay && tooFarAhead;
 
-    const handleDisableOverlayClick = useCallback(() => setDisableOverlay(true), []);
+    const dates = useMemo(() => hours.map(h => date.hour(h)), [date, hours]);
 
-    const renderRowSlots = useCallback((date) => courts.map(({ courtId, name }) => (
-        <SlotCell
-            alwaysClickable={user?.admin}
-            courtId={courtId}
-            courtName={name}
-            date={date}
-            disabled={date.isBefore(now, 'hour')}
-            hours={hours}
-            key={courtId}
-            loading={loading}
-            onClick={onSlotClick}
-            reservation={findReservation(reservations, date, courtId)}
-        />
-    )), [user?.admin, courts, hours, loading, now, onSlotClick, reservations]);
+    const handleDisableOverlayClick = useCallback(() => setDisableOverlay(true), []);
 
     return (
         <div className={styles.wrapper}>
-            <table>
-                <thead>
-                    <tr>
-                        <th className={styles.date} colSpan={courts.length}>
-                            {isToday && <span className={styles.today}>Heute</span>}
-                            {date.format('dd[\xa0]L')}
-                        </th>
-                    </tr>
-                    <tr>
-                        {courts.map(({ courtId, name }) => (
-                            <td key={courtId}>
-                                <div className={styles.court}>
-                                    {name}
-                                </div>
-                            </td>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody
-                    className={cn({
-                        blur: showInfoOverlay
-                    })}
-                >
-                    {hours.map(hour => (
-                        <tr key={hour}>
-                            {renderRowSlots(date.hour(hour))}
-                        </tr>
-                    ))}
-                    {user?.admin &&
-                        <tr className={styles.adminActions}>
-                            {courts.map(({ courtId }) => (
-                                <td key={courtId}>
-                                    <Button
-                                        type="link"
-                                        onClick={() => onDisableCourtClick({ courtId, date })}
-                                    >
-                                        Sperren
-                                    </Button>
-                                </td>
-                            ))}
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div className={styles.date}>
+                {isToday && <span className={styles.today}>Heute</span>}
+                {date.format('dd[\xa0]L')}
+            </div>
 
-            {showInfoOverlay &&
-                <div className={styles.infoOverlay}>
-                    <div>Reservierbar<br />ab {reservableAsOf}</div>
-                    {user?.admin &&
-                        <Button
-                            className={styles.linkButton}
-                            type="link"
-                            onClick={handleDisableOverlayClick}
-                        >
-                            Trotzdem reservieren<br />(Trainer/Admin)
-                        </Button>
-                    }
-                </div>
-            }
+            <div className={styles.cols}>
+                {courts.map(({ courtId, name }) => (
+                    <div key={courtId} className={styles.court}>
+                        {name}
+                    </div>
+                ))}
+            </div>
+
+            <div className={cn('body', 'cols')}>
+                {courts.map(({ courtId, name }) => (
+                    <div 
+                        key={courtId} 
+                        className={cn({ blur: showInfoOverlay })}
+                    >
+                        {dates.map(date => (
+                            <SlotCell
+                                alwaysClickable={user?.admin}
+                                courtId={courtId}
+                                courtName={name}
+                                date={date}
+                                disabled={date.isBefore(now, 'hour')}
+                                hours={hours}
+                                key={date}
+                                loading={loading}
+                                onClick={onSlotClick}
+                                reservation={findReservation(reservations, date, courtId)}
+                            />
+                        ))}
+                        {user?.admin &&
+                            <div className={styles.adminAction}>
+                                <Button
+                                    type="link"
+                                    onClick={() => onDisableCourtClick({ courtId, date })}
+                                >
+                                    Sperren
+                                </Button>
+                            </div>
+                        }
+                    </div>
+                ))}
+
+                {showInfoOverlay &&
+                    <div className={styles.infoOverlay}>
+                        <div>Reservierbar<br />ab {reservableAsOf}</div>
+                        {user?.admin &&
+                            <Button
+                                className={styles.linkButton}
+                                type="link"
+                                onClick={handleDisableOverlayClick}
+                            >
+                                Trotzdem reservieren<br />(Trainer/Admin)
+                            </Button>
+                        }
+                    </div>
+                }
+            </div>
         </div>
     );
 }

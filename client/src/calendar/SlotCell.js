@@ -42,7 +42,7 @@ export function SlotCell({
         return null;
 
     return (
-        <td
+        <div
             className={cn({
                 alwaysClickable,
                 cell: true,
@@ -79,6 +79,6 @@ export function SlotCell({
                     )}
                 </div>
             </div>
-        </td>
+        </div>
     );
 }

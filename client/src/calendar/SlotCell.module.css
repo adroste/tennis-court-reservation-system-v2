@@ -79,7 +79,7 @@
 
 .slot.loading::before {
     opacity: 1;
-    animation: load 2s ease-in-out infinite;
+    animation: load 1.5s linear infinite;
 }
 
 .slot:not(.loading)::before {
@@ -91,7 +91,7 @@
         background: #ddd;
     }
     50% {
-        background: #bbb;
+        background: #aaa;
     }
     100% {
         background: #ddd;

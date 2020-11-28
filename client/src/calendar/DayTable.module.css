@@ -2,10 +2,16 @@
     padding: 0 5px;
     border-left: 1px solid #ddd;
     position: relative;
+    text-align: center;
+}
+
+.cols {
+    display: flex;
 }
 
 .date {
     position: relative;
+    font-weight: 600;
 }
 
 .date .today {
@@ -21,20 +27,24 @@
 }
 
 .court {
-    width: 100px;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0 auto;
+    margin: 2px auto;
 }
 
-tbody.blur {
+.body {
+    position: relative;
+}
+
+.blur {
     filter: blur(3px);
 }
 
 .infoOverlay {
     position: absolute;
     text-align: center;
-    top: 48px;
+    top: 0;
     width: 100%;
     left: 0;
     bottom: 0;
@@ -53,7 +63,7 @@ tbody.blur {
     height: auto;
 }
 
-.adminActions button  {
+.adminAction button  {
     font-size: 13px;
     color: rgba(0,0,0,.45);
 }
