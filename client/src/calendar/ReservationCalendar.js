@@ -95,7 +95,7 @@ export function ReservationCalendar({
             <div className={styles.tableWrapper}>
                 <HoursTable
                     hours={hours}
-                    highlightHour={now.hour()}
+                    highlightHour={selectedDate.isSame(now, 'week') ? now.hour() : false}
                 />
 
                 <div className={styles.tableScroller} ref={scrollerRef}>
