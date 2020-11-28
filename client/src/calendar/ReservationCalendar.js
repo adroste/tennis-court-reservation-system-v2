@@ -17,13 +17,12 @@ import { visibleHoursToHoursArray } from '../helper';
 const VISIBLE_DATES_COUNT = 7; // week
 
 export function ReservationCalendar({
-    highlightHour,
     kiosk = false,
     selectedDate,
 }) {
     const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
 
-    const today = useTime('day');
+    const now = useTime('hour');
 
     const [selectedSlot, setSelectedSlot] = useState();
     const scrollerRef = useRef();
@@ -55,8 +54,8 @@ export function ReservationCalendar({
     useEffect(() => {
         if (!scrollerRef.current)
             return;
-        if (selectedDate.isSame(today, 'week')) {
-            const index = Math.abs(today.startOf('week').diff(today, 'day'));
+        if (selectedDate.isSame(now, 'week')) {
+            const index = Math.abs(now.startOf('week').diff(now, 'day'));
             requestAnimationFrame(() => {
                 scrollerRef.current.scrollLeft
                     = ((scrollerRef.current.scrollWidth) / VISIBLE_DATES_COUNT) * index;
@@ -66,7 +65,7 @@ export function ReservationCalendar({
                 scrollerRef.current.scrollLeft = 0;
             });
         }
-    }, [selectedDate, today]);
+    }, [selectedDate, now]);
 
     const handleSlotClicked = useCallback(selectedSlot => {
         if (!kiosk)
@@ -96,7 +95,7 @@ export function ReservationCalendar({
             <div className={styles.tableWrapper}>
                 <HoursTable
                     hours={hours}
-                    highlightHour={highlightHour}
+                    highlightHour={now.hour()}
                 />
 
                 <div className={styles.tableScroller} ref={scrollerRef}>

@@ -66,10 +66,8 @@ export function KioskPage() {
             }
 
             <ReservationCalendar
-                highlightHour={hour.hour()}
                 kiosk
                 selectedDate={hour}
-                today={hour}
             />
         </div>
     );
