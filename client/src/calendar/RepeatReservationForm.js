@@ -6,7 +6,6 @@ import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
-import { reservationOverlap } from '../helper';
 import styles from './RepeatReservationForm.module.css';
 import { useTime } from './useTime';
 
@@ -53,7 +52,11 @@ export function RepeatReservationForm({
         if (!unavailableReservations)
             return false;
         const r1 = dateToReservation(date);
-        return unavailableReservations.some(r2 => reservationOverlap(r1, r2));
+        return unavailableReservations.some(r2 => (
+            r1.courtId === r2.courtId
+            && r1.from.isSame(r2.from, 'hour')
+            && r1.to.isSame(r2.to, 'hour')
+        ));
     }, [unavailableReservations, dateToReservation]);
 
     const setSelectedDates = useCallback(selectedDates => {
