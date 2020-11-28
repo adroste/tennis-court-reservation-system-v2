@@ -14,9 +14,11 @@ export function SlotCell({
     alwaysClickable = false,
     courtId,
     courtName,
-    date,
+    from,
+    to,
+    rowIndex,
+    rows,
     disabled = false,
-    hours,
     loading = false,
     onClick,
     reservation,
@@ -25,16 +27,19 @@ export function SlotCell({
 
     const handleClick = useCallback(() => {
         if (alwaysClickable || (!disabled && reservation?.type !== RESERVATION_TYPES.DISABLE))
-            onClick({ courtId, date, reservation });
-    }, [alwaysClickable, courtId, date, disabled, onClick, reservation]);
+            onClick({ courtId, from, to, reservation });
+    }, [alwaysClickable, courtId, from, to, disabled, onClick, reservation]);
 
-    let rowSpan = 1;
+    let rowSpan = (to.hour() || 24) - from.hour();
     if (reservation) {
-        if (reservation.from.isBefore(date, 'hour') && date.hour() !== hours[0]) {
+        if (reservation.from.isBefore(from, 'hour') && rowIndex !== 0) {
             rowSpan = 0;
         } else {
-            const maxRowSpan = hours.length - hours.indexOf(date.hour());
-            rowSpan = Math.min(reservation.to.diff(date, 'hour'), maxRowSpan);
+            let maxRowSpan = (rows[rows.length - 1].to.hour() || 24) - from.hour();
+            if (from.isSame(reservation.to, 'day'))
+                rowSpan = Math.min((reservation.to.hour() || 24) - from.hour(), maxRowSpan);
+            else
+                rowSpan = maxRowSpan;
         }
     }
 
@@ -49,7 +54,6 @@ export function SlotCell({
                 enabled: !disabled && reservation?.type !== RESERVATION_TYPES.DISABLE,
             })}
             style={{ padding: CELL_PADDING_PX }}
-            rowSpan={rowSpan}
             onClick={handleClick}
         >
             <div
@@ -61,7 +65,7 @@ export function SlotCell({
                 })}
                 style={{ height: SLOT_HEIGHT_PX * rowSpan + CELL_PADDING_PX * 2 * (rowSpan - 1) }}
                 data-free-text="Frei"
-                data-free-text-hover={`${date.hour()} Uhr, ${courtName}`}
+                data-free-text-hover={`${from.hour()} Uhr, ${courtName}`}
             >
                 <div className={cn({
                     text: true,

@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { UPDATE_INTERVALS_SEC } from './updateIntervals';
+import dayjs from 'dayjs';
 import { getBaseDataApi } from './api';
 import { useApi } from './useApi';
 import { useUpdateEffect } from './useUpdateEffect';
@@ -22,6 +23,10 @@ export function AppContextProvider({ children }) {
 
     const [getBaseDataState, getBaseData] = useApi(getBaseDataApi, setBaseData, true); 
     useUpdateEffect(getBaseData, UPDATE_INTERVALS_SEC.BASE_DATA);
+
+    useEffect(() => {
+        dayjs.tz.setDefault(config?.timezone);
+    }, [config?.timezone])
 
     const value = useMemo(() => ({
         config,

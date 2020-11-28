@@ -7,12 +7,13 @@ export const db = {
 
     config: {
         announcement: 'Dies ist eine Beispielankündigung.\nEine Ankündigung kann als Admin unter Verwaltung -> Allgemein eingestellt werden.',
-        visibleHours: [8, 22],
+        visibleHours: [0, 24],
         orgName: 'Tennisclub Beispiel',
         serverMail: 'abc@def.de',
         url: 'https://reservierung.xyz.de',
         reservationDaysInAdvance: 90,
         reservationMaxActiveCount: 10,
+        timezone: 'Europe/Berlin',
     },
 
     mailTemplates: {

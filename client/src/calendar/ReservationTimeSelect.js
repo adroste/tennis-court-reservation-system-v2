@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Select, Space } from 'antd';
 
 import { appContext } from '../AppContext';
@@ -7,7 +7,7 @@ import { visibleHoursToHoursArray } from '../helper';
 export function ReservationTimeSelect({
     disabled = false,
     from,
-    to,
+    to, // don't use to.hour() to set new hour, as it can be bubbled to the next day
     onFromChange,
     onToChange,
 }) {
@@ -21,18 +21,23 @@ export function ReservationTimeSelect({
         return toHours;
     }, []), [from, hours]);
 
+    useEffect(() => {
+        if (from.isSame(to, 'hour'))
+            onToChange(from.add(1, 'hour'));
+    }, [from, to, onToChange]);
+
     const handleFromChange = useCallback(newFromHour => {
         const diff = Math.abs(to.diff(from, 'hour'));
         let newToHour = newFromHour + diff;
         if (!hours.includes(newToHour))
             newToHour = hours[hours.length - 1] + 1;
         onFromChange(from.hour(newFromHour));
-        onToChange(to.hour(newToHour));
+        onToChange(from.hour(newToHour));
     }, [from, to, onFromChange, onToChange, hours]);
 
     const handleToChange = useCallback(newToHour => {
-        onToChange(to.hour(newToHour));
-    }, [to, onToChange]);
+        onToChange(from.hour(newToHour));
+    }, [from, onToChange]);
 
     return (
         <Space direction="horizontal" size="middle">

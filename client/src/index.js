@@ -18,16 +18,20 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import locale from 'antd/lib/locale/de_DE';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import weekYear from 'dayjs/plugin/weekYear';
 
-dayjs.locale('de');
 dayjs.extend(weekOfYear);
 dayjs.extend(weekYear);
 dayjs.extend(localizedFormat);
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale('de');
 
 function renderApp() {
     ReactDOM.render((

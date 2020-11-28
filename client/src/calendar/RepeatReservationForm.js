@@ -37,12 +37,11 @@ export function RepeatReservationForm({
     const [visibleDates, setVisibleDates] = useState([]);
     const [selectedDates, _setSelectedDates] = useState([]);
 
-    const fromToHourDiff = useMemo(() => Math.abs(to.diff(from, 'hour')), [from, to]);
     const dateToReservation = useCallback(from => ({
         courtId,
         from,
-        to: from.add(fromToHourDiff, 'hour'),
-    }), [courtId, fromToHourDiff]);
+        to: from.hour(to.hour() || 24),
+    }), [courtId, to]);
 
     const checkIfTooFarAhead = useCallback(date => (
         date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day')

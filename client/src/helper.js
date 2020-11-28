@@ -1,11 +1,7 @@
-export function findReservation(reservations, date, courtId) {
+export function findReservation(reservations, from, to, courtId) {
     if (!reservations)
         return null;
-
-    for (let r of reservations)
-        if (date.isBetween(r.from, r.to, 'hour', '[)') && courtId === r.courtId)
-            return r;
-    return null;
+    return reservations.find(r => reservationOverlap(r, { from, to, courtId }));
 }
 
 export function reservationOverlap(r1, r2) {
@@ -26,6 +22,20 @@ export function parseQuery(queryString) {
         query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
     }
     return query;
+}
+
+export function visibleHoursToLocalizedHourRange(date, visibleHours) {
+    const start = parseInt(visibleHours[0]);
+    const end = parseInt(visibleHours[1]);
+    const startDate = date.hour(start);
+    const endDate = date.hour(end);
+    const hours = [];
+    for (let from = startDate; from.isBefore(endDate, 'hour');) {
+        const to = from.add(1, 'hour');
+        hours.push({ from, to });
+        from = to;
+    }
+    return hours;
 }
 
 export function visibleHoursToHoursArray([start, end]) {

@@ -1,10 +1,11 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { findReservation, visibleHoursToLocalizedHourRange } from '../helper';
 
 import { Button } from 'antd';
 import { SlotCell } from './SlotCell';
+import { appContext } from '../AppContext';
 import { authContext } from '../AuthContext';
 import classNames from 'classnames/bind';
-import { findReservation } from '../helper';
 import styles from './DayTable.module.css';
 import { useTime } from './useTime';
 
@@ -13,13 +14,13 @@ const cn = classNames.bind(styles);
 export function DayTable({
     courts,
     date,
-    hours,
     loading,
     onDisableCourtClick,
     onSlotClick,
     reservationDaysInAdvance,
     reservations,
 }) {
+    const { config: { visibleHours } } = useContext(appContext);
     const { user } = useContext(authContext);
     const [disableOverlay, setDisableOverlay] = useState(false);
     useEffect(() => setDisableOverlay(false), [user]);
@@ -33,9 +34,19 @@ export function DayTable({
 
     const showInfoOverlay = !disableOverlay && tooFarAhead;
 
-    const dates = useMemo(() => hours.map(h => date.hour(h)), [date, hours]);
+    const rows = useMemo(() => (
+        visibleHoursToLocalizedHourRange(date, visibleHours)
+    ), [date, visibleHours]);
 
     const handleDisableOverlayClick = useCallback(() => setDisableOverlay(true), []);
+
+    const handleDisableCourtClick = (courtId) => {
+        onDisableCourtClick({
+            courtId,
+            from: date.hour(0),
+            to: date.hour(24),
+        });
+    };
 
     return (
         <div className={styles.wrapper}>
@@ -54,29 +65,31 @@ export function DayTable({
 
             <div className={cn('body', 'cols')}>
                 {courts.map(({ courtId, name }) => (
-                    <div 
-                        key={courtId} 
+                    <div
+                        key={courtId}
                         className={cn({ blur: showInfoOverlay })}
                     >
-                        {dates.map(date => (
+                        {rows.map(({ from, to }, i) => (
                             <SlotCell
                                 alwaysClickable={user?.admin}
                                 courtId={courtId}
                                 courtName={name}
-                                date={date}
-                                disabled={date.isBefore(now, 'hour')}
-                                hours={hours}
-                                key={date}
+                                rowIndex={i}
+                                rows={rows}
+                                from={from}
+                                to={to}
+                                disabled={from.isBefore(now, 'hour')}
+                                key={from}
                                 loading={loading}
                                 onClick={onSlotClick}
-                                reservation={findReservation(reservations, date, courtId)}
+                                reservation={findReservation(reservations, from, to, courtId)}
                             />
                         ))}
                         {user?.admin &&
                             <div className={styles.adminAction}>
                                 <Button
                                     type="link"
-                                    onClick={() => onDisableCourtClick({ courtId, date })}
+                                    onClick={() => handleDisableCourtClick(courtId)}
                                 >
                                     Sperren
                                 </Button>

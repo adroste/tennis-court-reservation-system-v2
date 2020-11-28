@@ -15,11 +15,10 @@ import { getCourtName } from '../helper';
 import styles from './ReservationGroupModal.module.css';
 import { useApi } from '../useApi';
 
-const INITIAL_TO_HOUR_ADD = 1;
-
 export function ReservationGroupModal({
-    initialFrom,
     initialCourtId,
+    initialFrom,
+    initialTo,
     reservation,
     onFinish,
     setReservations: setOuterReservations,
@@ -31,7 +30,7 @@ export function ReservationGroupModal({
     const [text, setText] = useState(null);
     const [reservations, setReservations] = useState(null);
     const [from, setFrom] = useState(reservation?.from || initialFrom);
-    const [to, setTo] = useState(() => reservation?.to || initialFrom.add(INITIAL_TO_HOUR_ADD, 'hour'));
+    const [to, setTo] = useState(() => reservation?.to || initialTo);
     const [courtId, setCourtId] = useState(reservation?.courtId || initialCourtId);
     const prevErrorRef = useRef({});
 

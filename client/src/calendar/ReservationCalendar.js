@@ -12,7 +12,6 @@ import styles from './ReservationCalendar.module.css';
 import { useApi } from '../useApi';
 import { useTime } from './useTime';
 import { useUpdateEffect } from '../useUpdateEffect';
-import { visibleHoursToHoursArray } from '../helper';
 
 const VISIBLE_DATES_COUNT = 7; // week
 
@@ -20,7 +19,7 @@ export function ReservationCalendar({
     kiosk = false,
     selectedDate,
 }) {
-    const { courts, config: { visibleHours, reservationDaysInAdvance } } = useContext(appContext);
+    const { courts, config: { reservationDaysInAdvance } } = useContext(appContext);
 
     const today = useTime('day');
 
@@ -43,8 +42,6 @@ export function ReservationCalendar({
         setReservations(null);
         updateReservations();
     }, [updateReservations]);
-
-    const hours = useMemo(() => visibleHoursToHoursArray(visibleHours), [visibleHours]);
 
     const visibleDates = useMemo(() => Array.from(Array(VISIBLE_DATES_COUNT)).map((_, i) =>
         selectedDate.startOf('week').add(i, 'day') // startOf also sets hours, mins, secs to zero
@@ -94,7 +91,6 @@ export function ReservationCalendar({
         <div className={styles.wrapper}>
             <div className={styles.tableWrapper}>
                 <HoursTable
-                    hours={hours}
                     highlightHour={selectedDate.isSame(today, 'week')}
                 />
 
@@ -103,7 +99,6 @@ export function ReservationCalendar({
                         <DayTable
                             courts={courts}
                             date={date}
-                            hours={hours}
                             key={date}
                             loading={!reservations}
                             onDisableCourtClick={handleDisableCourtClicked}
@@ -117,8 +112,9 @@ export function ReservationCalendar({
 
             {selectedSlot &&
                 <ReservationModal
-                    initialFrom={selectedSlot?.date}
                     initialCourtId={selectedSlot?.courtId}
+                    initialFrom={selectedSlot?.from}
+                    initialTo={selectedSlot?.to}
                     reservation={selectedSlot?.reservation}
                     type={selectedSlot?.type}
                     onFinish={handleReservationFinish}
