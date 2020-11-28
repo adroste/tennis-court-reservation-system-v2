@@ -1,16 +1,14 @@
-.hoursTableWrapper {
+.wrapper {
     padding-top: 48px;
     background: #fff;
     border-right: 1px solid #ddd;
 }
 
-.hoursTable th {
-    height: 38px;
-}
-
 .hour {
+    height: 38px;
+    font-weight: 600;
     line-height: 13px;
-    padding: 0 8px;
+    padding: 6px 8px;
 }
 
 .hour .to {
@@ -18,14 +16,7 @@
     font-size: 11px;
 }
 
-.highlight::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-top: -1px;
-    height: 40px;
-    z-index: 10;
-    border-top: 2px solid #1890ff;
-    border-bottom: 2px solid #1890ff;
+.hour.highlight,
+.hour.highlight .to {
+    color: #1890ff;
 }

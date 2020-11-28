@@ -9,21 +9,19 @@ export function HoursTable({
     highlightHour,
 }) {
     return (
-        <div className={styles.hoursTableWrapper}>
-            <table className={styles.hoursTable}>
-                <tbody>
-                    {hours.map(hour => (
-                        <tr key={hour} className={cn({ highlight: highlightHour === hour })}>
-                            <th>
-                                <div className={styles.hour}>
-                                    {hour} Uhr<br />
-                                    <span className={styles.to}>bis {(hour + 1) % 24} Uhr</span>
-                                </div>
-                            </th>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className={styles.wrapper}>
+            {hours.map(hour => (
+                <div 
+                    key={hour} 
+                    className={cn({ 
+                        hour: true,
+                        highlight: highlightHour === hour 
+                    })}
+                >
+                    {hour} Uhr<br />
+                    <span className={styles.to}>bis {(hour + 1) % 24} Uhr</span>
+                </div>
+            ))}
         </div>
     );
 }
