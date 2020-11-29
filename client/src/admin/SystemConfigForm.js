@@ -3,8 +3,11 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { SubmitButtons } from './SubmitButtons';
 import { appContext } from '../AppContext';
+import { isTimeZoneValid } from '../helper';
 import { patchConfigApi } from '../api';
 import { useApi } from '../useApi';
+
+const TIMEZONE_LIST_LINK = 'https://en.wikipedia.org/wiki/List_of_tz_database_time_zones';
 
 const sliderMarks = Array.from(Array(25)).reduce((marks, _, i) => {
     marks[i] = i % 24; 
@@ -57,6 +60,23 @@ export function SystemConfigForm() {
                 name="orgName"
                 label="Vereinsname"
                 rules={[{ required: true, message: 'Vereinsname ist erforderlich' }]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                name="timeZone"
+                label={<span>Zeitzone (<a href={TIMEZONE_LIST_LINK} target="_blank" rel="noreferrer">IANA TZ name</a>)</span>}
+                rules={[
+                    { required: true, message: 'Vereinsname ist erforderlich' },
+                    { 
+                        validator(_, value) {
+                            if (!isTimeZoneValid(value))
+                                return Promise.reject('Zeitzone ungültig');
+                            return Promise.resolve();
+                        }
+                    }
+                ]}
             >
                 <Input />
             </Form.Item>

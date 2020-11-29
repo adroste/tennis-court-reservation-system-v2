@@ -44,3 +44,12 @@ export function visibleHoursToHoursArray([start, end]) {
         hours.push(i);
     return hours;
 }
+
+export function isTimeZoneValid(tz) {
+    try {
+        Intl.DateTimeFormat(undefined, {timeZone: tz});
+        return true;
+    } catch (ex) {
+        return false;
+    }
+}

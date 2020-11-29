@@ -25,8 +25,8 @@ export function AppContextProvider({ children }) {
     useUpdateEffect(getBaseData, UPDATE_INTERVALS_SEC.BASE_DATA);
 
     useEffect(() => {
-        dayjs.tz.setDefault(config?.timezone);
-    }, [config?.timezone])
+        dayjs.tz.setDefault(config?.timeZone);
+    }, [config?.timeZone])
 
     const value = useMemo(() => ({
         config,
