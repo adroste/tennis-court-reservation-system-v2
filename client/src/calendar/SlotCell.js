@@ -12,6 +12,7 @@ const CELL_PADDING_PX = 3;
 
 export function SlotCell({
     alwaysClickable = false,
+    baseRowSpan,
     courtId,
     courtName,
     from,
@@ -30,16 +31,20 @@ export function SlotCell({
             onClick({ courtId, from, to, reservation });
     }, [alwaysClickable, courtId, from, to, disabled, onClick, reservation]);
 
-    let rowSpan = (to.hour() || 24) - from.hour();
+    let rowSpan = baseRowSpan;
     if (reservation) {
         if (reservation.from.isBefore(from, 'hour') && rowIndex !== 0) {
             rowSpan = 0;
         } else {
-            let maxRowSpan = (rows[rows.length - 1].to.hour() || 24) - from.hour();
-            if (from.isSame(reservation.to, 'day'))
-                rowSpan = Math.min((reservation.to.hour() || 24) - from.hour(), maxRowSpan);
-            else
+            const maxRowSpan = (rows[rows.length - 1].to.hour() || 24) - from.hour();
+            if (from.isSame(reservation.to, 'day')) {
+                const diff = reservation.to.diff(from, 'hour');
+                rowSpan = 0;
+                for (let i = rowIndex; i < rowIndex + diff; ++i)
+                    rowSpan += rows[i].span;
+            } else {
                 rowSpan = maxRowSpan;
+            }
         }
     }
 

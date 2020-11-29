@@ -69,7 +69,7 @@ export function DayTable({
                         key={courtId}
                         className={cn({ blur: showInfoOverlay })}
                     >
-                        {rows.map(({ from, to }, i) => (
+                        {rows.map(({ from, to, span }, i) => (
                             <SlotCell
                                 alwaysClickable={user?.admin}
                                 courtId={courtId}
@@ -78,6 +78,7 @@ export function DayTable({
                                 rows={rows}
                                 from={from}
                                 to={to}
+                                baseRowSpan={span}
                                 disabled={from.isBefore(now, 'hour')}
                                 key={from}
                                 loading={loading}

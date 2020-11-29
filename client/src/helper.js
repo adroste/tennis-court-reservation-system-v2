@@ -32,7 +32,11 @@ export function visibleHoursToLocalizedHourRange(date, visibleHours) {
     const hours = [];
     for (let from = startDate; from.isBefore(endDate, 'hour');) {
         const to = from.add(1, 'hour');
-        hours.push({ from, to });
+        hours.push({ 
+            from, 
+            to,
+            span: (to.hour() || 24) - from.hour(),
+        });
         from = to;
     }
     return hours;
