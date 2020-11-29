@@ -92,6 +92,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f√
 * [ ] datenschutz buttons unter mein benutzerkonto implementieren
 * [ ] activity table backend
 * [ ] trainer type
+* [ ] bug: DST where day has two hours, reservation is not visible
 
 
 ### tables
