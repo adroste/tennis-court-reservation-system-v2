@@ -1,9 +1,6 @@
 .menu {
     flex: 1;
     min-width: 0;
-    /* overflow: hidden; */
-    /* overflow-x: auto;
-    overflow-y: visible; */
     border: 0;
     display: flex;
     flex-direction: column;
