@@ -13,7 +13,8 @@ export const db = {
         url: 'https://reservierung.xyz.de',
         reservationDaysInAdvance: 90,
         reservationMaxActiveCount: 10,
-        timeZone: 'Europe/Berlin',
+        // timeZone: 'Europe/Berlin',
+        timeZone: dayjs.tz.guess(),
     },
 
     mailTemplates: {

@@ -30,7 +30,7 @@ export function ReservationGroupModal({
     const [text, setText] = useState(null);
     const [reservations, setReservations] = useState(null);
     const [from, setFrom] = useState(reservation?.from || initialFrom);
-    const [to, setTo] = useState(() => reservation?.to || initialTo);
+    const [to, setTo] = useState(reservation?.to || initialTo);
     const [courtId, setCourtId] = useState(reservation?.courtId || initialCourtId);
     const prevErrorRef = useRef({});
 

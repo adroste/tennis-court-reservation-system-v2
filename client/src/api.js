@@ -57,8 +57,8 @@ export const getReservationsApi = {
     method: 'POST',
     setFunc: ({ res }) => res.map(r => ({
         ...r,
-        from: dayjs(r.from),
-        to: dayjs(r.to),
+        from: dayjs(r.from).tz(),
+        to: dayjs(r.to).tz(),
     })),
 };
 
@@ -80,8 +80,8 @@ export const postReservationGroupApi = {
             ...out,
             ...res.map(r => ({
                 ...r,
-                from: dayjs(r.from),
-                to: dayjs(r.to),
+                from: dayjs(r.from).tz(),
+                to: dayjs(r.to).tz(),
             })),
         ]
     },
