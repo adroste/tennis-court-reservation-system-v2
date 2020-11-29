@@ -7,6 +7,7 @@
     "antd": "^4.8.0",
     "classnames": "^2.2.6",
     "dayjs": "^1.9.5",
+    "deep-equal": "^1.1.1",
     "fontsource-inter": "^3.0.5",
     "qrcode.react": "^1.0.0",
     "react": "^17.0.1",

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { UPDATE_INTERVALS_SEC } from './updateIntervals';
 import dayjs from 'dayjs';
+import deepEqual from 'deep-equal';
 import { getBaseDataApi } from './api';
 import { useApi } from './useApi';
 import { useUpdateEffect } from './useUpdateEffect';
@@ -16,9 +17,9 @@ export function AppContextProvider({ children }) {
 
     const setBaseData = useCallback(getResult => {
         const { config, courts, templates } = getResult(null);
-        setConfig(config);
-        setTemplates(templates);
-        setCourts(courts);
+        setConfig(cur => deepEqual(cur, config) ? cur : config);
+        setTemplates(cur => deepEqual(cur, templates) ? cur : templates);
+        setCourts(cur => deepEqual(cur, courts) ? cur : courts);
     }, []);
 
     const [getBaseDataState, getBaseData] = useApi(getBaseDataApi, setBaseData, true); 
