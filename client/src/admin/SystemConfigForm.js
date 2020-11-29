@@ -68,7 +68,7 @@ export function SystemConfigForm() {
                 name="timeZone"
                 label={<span>Zeitzone (<a href={TIMEZONE_LIST_LINK} target="_blank" rel="noreferrer">IANA TZ name</a>)</span>}
                 rules={[
-                    { required: true, message: 'Vereinsname ist erforderlich' },
+                    { required: true, message: 'Zeitzone ist erforderlich' },
                     { 
                         validator(_, value) {
                             if (!isTimeZoneValid(value))
