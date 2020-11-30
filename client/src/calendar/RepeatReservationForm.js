@@ -159,20 +159,20 @@ export function RepeatReservationForm({
             newSelection.sort((a, b) => a.valueOf() - b.valueOf());
 
             // remove unchecked visible dates at end
-            setVisibleDates(visibleDates => {
-                const newVisibleDates = [...visibleDates];
-                // i > 0: make sure at least one item is visible
-                for (let i = newVisibleDates.length - 1; i > 0; --i) {
-                    if (
-                        currentReservations?.some(r => r.from.isSame(newVisibleDates[i], 'day'))
-                        || newSelection.some(d => d.isSame(newVisibleDates[i], 'day'))
-                    ) {
-                        break;
-                    }
-                    newVisibleDates.pop();
-                }
-                return newVisibleDates;
-            });
+            // setVisibleDates(visibleDates => {
+            //     const newVisibleDates = [...visibleDates];
+            //     // i > 0: make sure at least one item is visible
+            //     for (let i = newVisibleDates.length - 1; i > 0; --i) {
+            //         if (
+            //             currentReservations?.some(r => r.from.isSame(newVisibleDates[i], 'day'))
+            //             || newSelection.some(d => d.isSame(newVisibleDates[i], 'day'))
+            //         ) {
+            //             break;
+            //         }
+            //         newVisibleDates.pop();
+            //     }
+            //     return newVisibleDates;
+            // });
 
             return newSelection;
         });
