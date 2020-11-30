@@ -176,7 +176,7 @@ export function RepeatReservationForm({
 
             return newSelection;
         });
-    }, [currentReservations, setSelectedDates]);
+    }, [setSelectedDates]);
 
     const dates = useMemo(() => {
         return visibleDates.map(d => {
