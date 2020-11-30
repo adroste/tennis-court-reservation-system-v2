@@ -67,7 +67,10 @@ export function DayTable({
                 {courts.map(({ courtId, name }) => (
                     <div
                         key={courtId}
-                        className={cn({ blur: showInfoOverlay })}
+                        className={cn({ 
+                            col: true,
+                            blur: showInfoOverlay 
+                        })}
                     >
                         {rows.map(({ from, to, span }, i) => (
                             <SlotCell

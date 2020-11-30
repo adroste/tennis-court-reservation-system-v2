@@ -2,6 +2,11 @@
     position: relative;
 }
 
+.outer,
+.outer * {
+    user-select: none;
+}
+
 .inner {
     position: relative;
     overflow-x: auto;

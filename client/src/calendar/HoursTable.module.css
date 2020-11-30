@@ -5,6 +5,11 @@
     white-space: nowrap;
 }
 
+.wrapper,
+.wrapper * {
+    user-select: none;
+}
+
 .hour {
     height: 38px;
     font-weight: 600;

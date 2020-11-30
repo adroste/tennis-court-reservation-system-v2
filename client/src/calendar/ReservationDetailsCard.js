@@ -26,7 +26,10 @@ export function ReservationDetailsCard({
         <Card
             className={styles.card}
             actions={[
-                <div onClick={handleEditClick}>
+                <div 
+                    className={styles.editButton}
+                    onClick={handleEditClick}
+                >
                     <EditOutlined /> Bearbeiten
                 </div>
             ]}

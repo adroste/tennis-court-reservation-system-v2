@@ -1,3 +1,8 @@
 .card > div {
     padding: 10px 0;
 }
+
+.editButton,
+.editButton * {
+    user-select: none;
+}

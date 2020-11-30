@@ -6,6 +6,11 @@
     flex-direction: column;
 }
 
+.menu,
+.menu * {
+    user-select: none;
+}
+
 .horizontal {
     flex-direction: row;
 }
