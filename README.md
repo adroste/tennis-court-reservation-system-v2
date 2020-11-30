@@ -4,9 +4,9 @@
 
 *License: AGPL*
 
-🇺🇸 Free, modern, open source tennis court reservation system that works on any cheap web-hosting plan.
+🇺🇸 Free, modern, open source tennis court reservation system that works on any cheap web-hosting plan. *GDPR compliant*
 
-🇩🇪 Kostenloses, modernes, Open Source Tennisplatz Reservierungssystem, das mit jedem günstigen Web-Hosting Anbieter funktioniert.
+🇩🇪 Kostenloses, modernes, Open Source Tennisplatz Reservierungssystem, das mit jedem günstigen Web-Hosting Anbieter funktioniert. *DSGVO konform*
 
 
 
@@ -25,6 +25,7 @@
 
 ## Funktionen
 
+* DSGVO konform
 * Kiosk Modus
 * // todo
 
@@ -40,7 +41,7 @@ Im Kioskmodus wird die Tabelle mit den Reservierungen automatisch aktualisiert.
 Im Regelfall ist eine solche Anfrage < 10kB. 
 Das Zeitintervall für die Aktualisierungen kann manuell angegeben werden, indem der Kioskmodus mittels `/kiosk?update=x` aufgerufen wird. `x` gibt hierbei die Anzahl der Sekunden an. Der Standardwert ist eine Minute.
 
-Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich für ein Aktualisierungsintervall von `x=300` (5 Minuten) ein Datenverbrauch von ca. 3MB pro Tag.
+Beispiel (x=300): Bei einem Durchschnitt von 10kB pro Anfrage ergibt sich für ein Aktualisierungsintervall von `x=300` (5 Minuten) ein Datenverbrauch von ca. 3MB pro Tag.
 
 &nbsp;
 
@@ -48,6 +49,7 @@ Beispiel (x=300): Bei einem Datentarif mit einer Taktung von 10kB ergibt sich f�
 
 ## Features
 
+* GDPR compliant
 * Kiosk Mode
 * // todo
 
