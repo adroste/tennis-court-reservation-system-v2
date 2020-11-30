@@ -1,6 +1,6 @@
 import { Button, Radio } from 'antd';
 import { DeleteOutlined, LockOutlined, PlusOutlined } from '@ant-design/icons';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { ScrollRadioGroup } from './ScrollRadioGroup';
 import { appContext } from '../AppContext';
@@ -36,6 +36,7 @@ export function RepeatReservationForm({
     const [repeatValue, setRepeatValue] = useState(0);
     const [visibleDates, setVisibleDates] = useState([]);
     const [selectedDates, _setSelectedDates] = useState([]);
+    const prevValRef = useRef({});
 
     const dateToReservation = useCallback(from => ({
         courtId,
@@ -44,8 +45,8 @@ export function RepeatReservationForm({
     }), [courtId, to]);
 
     const checkIfTooFarAhead = useCallback(date => (
-        date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day')
-    ), [now, reservationDaysInAdvance]);
+        !user?.admin && date.isAfter(now.add(reservationDaysInAdvance, 'day'), 'day')
+    ), [now, reservationDaysInAdvance, user?.admin]);
 
     const checkIfNotAvailable = useCallback(date => {
         if (!unavailableReservations)
@@ -63,18 +64,19 @@ export function RepeatReservationForm({
             let dates = selectedDates;
             if (typeof selectedDates === 'function')
                 dates = selectedDates(_selectedDates);
-            return dates.filter(d => !checkIfNotAvailable(d));
+            return dates.filter(d => !checkIfNotAvailable(d) && !checkIfTooFarAhead(d));
         });
-    }, [checkIfNotAvailable]);
+    }, [checkIfNotAvailable, checkIfTooFarAhead]);
 
     useEffect(() => {
         onChange(selectedDates.map(dateToReservation));
     }, [selectedDates, onChange, dateToReservation]);
 
     // automatically unchecks unavailable dates if unavailableDates changes
+    // or time/config changes
     useEffect(() => setSelectedDates(s => s), [setSelectedDates]);
 
-    useEffect(() => {
+    const reset = useCallback(() => {
         let selectedDates = [];
         let visibleDates = [];
 
@@ -106,8 +108,7 @@ export function RepeatReservationForm({
             for (let i = 0; i <= defaultAddCount; ++i) {
                 const date = from.add(i * repeatValue, 'day');
                 visibleDates.push(date);
-                if (!checkIfNotAvailable(date))
-                    selectedDates.push(date);
+                selectedDates.push(date);
             }
         } else {
             selectedDates = [from];
@@ -115,27 +116,34 @@ export function RepeatReservationForm({
         }
 
         setVisibleDates(visibleDates);
-        _setSelectedDates(selectedDates);
-    }, [
-        checkIfNotAvailable,
-        courtId, 
-        currentReservations, 
-        defaultAddCount, 
-        from, 
-        repeatValue, 
-        repeatValuesMap, 
-        to, 
-    ]);
+        setSelectedDates(selectedDates);
+    }, [currentReservations, defaultAddCount, from, repeatValue, repeatValuesMap, setSelectedDates]);
+
+    useEffect(() => {
+        if (
+            prevValRef.current.courtId !== courtId
+            || prevValRef.current.currentReservations !== currentReservations
+            || prevValRef.current.from !== from
+            || prevValRef.current.repeatValue !== repeatValue
+            || prevValRef.current.to !== to
+        ) {
+            prevValRef.current.courtId = courtId;
+            prevValRef.current.currentReservations = currentReservations;
+            prevValRef.current.from = from;
+            prevValRef.current.repeatValue = repeatValue;
+            prevValRef.current.to = to;
+            reset();
+        }
+    }, [courtId, currentReservations, from, repeatValue, reset, to]);
 
     const addDate = useCallback(() => {
         setVisibleDates(visibleDates => {
             const last = visibleDates[visibleDates.length - 1];
             const add = last.add(repeatValue, 'day');
-            if (!checkIfTooFarAhead(add))
-                setSelectedDates(selectedDates => [...selectedDates, add]);
+            setSelectedDates(selectedDates => [...selectedDates, add]);
             return [...visibleDates, add];
         });
-    }, [repeatValue, setSelectedDates, checkIfTooFarAhead]);
+    }, [repeatValue, setSelectedDates]);
 
     const handleRepeatValueChange = useCallback(e => {
         const newRepeatValue = e.target.value;
@@ -173,7 +181,7 @@ export function RepeatReservationForm({
     const dates = useMemo(() => {
         return visibleDates.map(d => {
             const r = dateToReservation(d);
-            const reserved = currentReservations?.some(cr => 
+            const reserved = currentReservations?.some(cr =>
                 cr.from.isSame(r.from, 'hour') && cr.to.isSame(r.to, 'hour'));
             const checked = selectedDates.some(sd => sd.isSame(d, 'day'));
             return {
@@ -188,14 +196,14 @@ export function RepeatReservationForm({
             };
         });
     }, [
-        checkIfNotAvailable, 
-        checkIfTooFarAhead, 
-        currentReservations, 
-        dateToReservation, 
+        checkIfNotAvailable,
+        checkIfTooFarAhead,
+        currentReservations,
+        dateToReservation,
         handleCheckedChange,
-        now, 
-        selectedDates, 
-        visibleDates, 
+        now,
+        selectedDates,
+        visibleDates,
     ]);
 
 
@@ -229,7 +237,7 @@ export function RepeatReservationForm({
                                 onClick={onClick}
                                 type="link"
                                 icon={
-                                    ((!user?.admin && (past || tooFarAhead)) || notAvailable || disabled) 
+                                    ((!user?.admin && (past || tooFarAhead)) || notAvailable || disabled)
                                         ? <LockOutlined />
                                         : checked ? <DeleteOutlined /> : <PlusOutlined />
                                 }
