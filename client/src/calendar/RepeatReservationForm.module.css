@@ -33,6 +33,13 @@
     opacity: 0.7;
 }
 
+.dateButton[disabled],
+.dateButton[disabled]:hover,
+.dateButton[disabled]:focus,
+.dateButton[disabled]:active {
+    color: #888;
+}
+
 .dates .danger,
 .dates .danger .date,
 .dates .danger .extra,
