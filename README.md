@@ -1,5 +1,7 @@
 # Tennis Court Reservation System v2
 
+**WICHTIG: Dieses Projekt befindet sich noch in der Entwicklung. Fertigstellung: Mitte 2021**
+
 *React SPA, PHP 7, MySQL*
 
 *License: AGPL*
@@ -95,6 +97,9 @@ Beispiel (x=300): Bei einem Durchschnitt von 10kB pro Anfrage ergibt sich für e
 * [ ] activity table backend
 * [ ] trainer type
 * [ ] bug: DST where day has two hours, reservation is not visible
+* [ ] automatische Anzeigenamen generieren (z.B. GastXXX)
+* [ ] Anzeigename/Guthaben in Navigationsleiste anzeigen (personaisieren) 
+* [ ] Dynamic page Title (React helmet? or SSR)
 
 
 ### tables
