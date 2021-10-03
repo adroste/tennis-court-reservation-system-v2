@@ -1,6 +1,6 @@
 # Tennis Court Reservation System v2
 
-**WICHTIG: Dieses Projekt befindet sich noch in der Entwicklung. Fertigstellung: Mitte 2021**
+**WICHTIG: Dieses Projekt befindet sich noch in der Entwicklung. Bei Interesse bitte per E-Mail an tennis /at/ adroste /dot/ com wenden.**
 
 *React SPA, PHP 7, MySQL*
 
